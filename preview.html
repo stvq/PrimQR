@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Приморск.QR</title>
+    <style>
+        /* 
+            МОБИЛЬНАЯ АДАПТАЦИЯ БЕЗ ПОТЕРИ ВНЕШНЕГО ВИДА
+            - Сохранены все стили, цвета, эффекты
+            - Убрана горизонтальная прокрутка
+            - Адаптированы сетки под мобильные
+            - Все элементы выглядят так же красиво
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0c0f;
+            --bg-secondary: #14181f;
+            --bg-card: #1a1f28;
+            --text-primary: #f0f4fa;
+            --text-secondary: #a8b3cf;
+            
+            /* Цвета эпох */
+            --imperial: #f9c35c;  /* желто-оранжевый — до 1917 */
+            --soviet: #ff5e7c;     /* красный — 1917-1991 */
+            --modern: #4a9eff;      /* синий — с 1991 */
+            
+            /* Дополнительные акценты */
+            --accent-2: #4ec9b0;    /* мятный */
+            --accent-3: #b392f0;    /* лавандовый */
+            
+            --glass-bg: rgba(26, 31, 40, 0.7);
+            --border-glow: rgba(255, 107, 74, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.7);
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Прогресс-бар */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
+            z-index: 1000;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px var(--imperial);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Шапка */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 12, 15, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff, var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 30%;
+            height: 2px;
+            background: var(--soviet);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        /* Герой */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a0a8c0 50%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(78, 201, 176, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 94, 124, 0.5)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--soviet);
+            padding-left: 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-2);
+            font-family: var(--font-mono);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Заголовки секций */
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* Легенда эпох */
+        .era-legend {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .era-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .era-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .era-dot.imperial { background: var(--imperial); box-shadow: 0 0 10px var(--imperial); }
+        .era-dot.soviet { background: var(--soviet); box-shadow: 0 0 10px var(--soviet); }
+        .era-dot.modern { background: var(--modern); box-shadow: 0 0 10px var(--modern); }
+
+        /* Хронология — карточки с цветом эпохи */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .timeline-card {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            /* +++ Добавить эти три строки +++ */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .timeline-card[data-era="imperial"] {
+            --era-color: var(--imperial);
+            --era-glow: rgba(249, 195, 92, 0.3);
+        }
+        .timeline-card[data-era="soviet"] {
+            --era-color: var(--soviet);
+            --era-glow: rgba(255, 94, 124, 0.3);
+        }
+        .timeline-card[data-era="modern"] {
+            --era-color: var(--modern);
+            --era-glow: rgba(74, 158, 255, 0.3);
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            border-color: var(--era-color);
+            box-shadow: 0 30px 40px -20px var(--era-glow),
+                        0 0 0 1px var(--era-color);
+        }
+
+        .timeline-year {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: rgba(255, 255, 255, 0.03);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-card:hover .timeline-year {
+            color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .timeline-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-era-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--era-color);
+            color: #000;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            border-radius: 50px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-glow {
+            margin-top: auto;
+            width: 100%;
+            height: 200px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #222834, #1a1f28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5162;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .image-glow.has-image {
+            border: 2px solid transparent;
+            color: transparent;
+            text-indent: -9999px;
+        }
+
+        .image-glow::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--era-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .timeline-card:hover .image-glow {
+            border-color: var(--era-color);
+            box-shadow: 0 0 30px var(--era-glow);
+        }
+
+        .timeline-card:hover .image-glow::before {
+            opacity: 0.15;
+        }
+
+        /* Личности */
+        .person-section {
+            margin: 6rem 0;
+        }
+
+        .person-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .person-card-modern {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            /* +++ Добавить эти три строки +++ */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .person-card-modern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(179, 146, 240, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .person-card-modern:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-3);
+        }
+
+        .person-card-modern:hover::after {
+            opacity: 1;
+        }
+
+        .person-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-role {
+            color: var(--accent-3);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .person-bio {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .person-image-mini {
+            margin-top: auto;
+            width: 100%;
+            aspect-ratio: 1 / 1;  /* Это делает блок квадратным */
+            background: linear-gradient(145deg, #222834, #1a1f28);
+            border-radius: 20px;   /* Скругление сохраняется */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5162;
+            font-family: var(--font-mono);
+            border: 2px solid rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+            background-image: repeating-linear-gradient(45deg, rgba(179, 146, 240, 0.02) 0px, rgba(179, 146, 240, 0.02) 10px, transparent 10px, transparent 20px);
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .person-image-mini.has-image {
+            border: 2px solid transparent;
+            color: transparent;
+            text-indent: -9999px;
+            background-image: none;
+        }
+
+        .person-card-modern:hover .person-image-mini {
+            border-color: var(--accent-3);
+        }
+
+        /* Галерея */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .gallery-item {
+            background: var(--bg-card);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(255, 184, 107, 0.3);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(145deg, #222834, #1a1f28);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 2rem 1.5rem 1.5rem;
+            color: #fff;
+        }
+
+        .gallery-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-year {
+            color: var(--accent-2);
+            font-family: var(--font-mono);
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--soviet);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(145deg, #222834, #1a1f28);
+            border-radius: 20px;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5162;
+            border: 2px dashed rgba(255, 255, 255, 0.05);
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .modal-image.has-image {
+            border: 2px solid transparent;
+            color: transparent;
+            text-indent: -9999px;
+        }
+
+        /* Футер */
+        .site-footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 4rem 0;
+            margin-top: 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
+            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>');
+            mask-size: cover;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-2);
+        }
+
+        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
+        /* Все стили выше сохранены полностью */
+        /* Добавляем только медиа-запросы для мобильных устройств */
+
+        @media (max-width: 768px) {
+            /* Контейнер с меньшими отступами */
+            .container {
+                padding: 0 1.25rem;
+            }
+
+            /* Шапка */
+            .site-header {
+                padding: 0.75rem 0;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .nav-links a {
+                font-size: 0.95rem;
+            }
+
+            /* Герой */
+            .hero {
+                min-height: auto;
+                padding: 3rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+                padding-left: 1.25rem;
+                border-left-width: 3px;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+
+            /* Заголовки секций */
+            .section-title {
+                font-size: 2rem;
+            }
+
+            /* Легенда эпох */
+            .era-legend {
+                gap: 1rem;
+                flex-wrap: wrap;
+                margin: 1.5rem 0;
+                padding: 0.75rem 0;
+            }
+
+            .era-tag {
+                font-size: 0.8rem;
+            }
+
+            /* Хронология - делаем карточки на всю ширину */
+            .timeline-grid {
+                grid-template-columns: 1fr; /* Одна колонка на мобильных */
+                gap: 1.25rem;
+                margin: 2rem 0;
+            }
+
+            .timeline-card {
+                padding: 1.5rem;
+                width: 100%;
+            }
+
+            .timeline-card:hover {
+                transform: translateY(-5px) rotateX(1deg); /* Уменьшаем эффект для мобильных */
+            }
+
+            .timeline-year {
+                font-size: 3rem;
+                top: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .timeline-title {
+                font-size: 1.6rem;
+                padding-right: 2.5rem; /* Чтобы не наезжало на год */
+            }
+
+            .image-glow {
+                height: 160px;
+            }
+
+            /* Личности - одна колонка */
+            .person-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .person-card-modern {
+                padding: 1.5rem;
+            }
+
+            .person-name {
+                font-size: 1.6rem;
+            }
+
+            .person-image-mini {
+                height: 130px;
+            }
+
+            /* Галерея - одна колонка */
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+                margin: 2rem 0;
+            }
+
+            .gallery-image {
+                height: 200px;
+            }
+
+            .gallery-overlay {
+                padding: 1.5rem;
+            }
+
+            .gallery-title {
+                font-size: 1.2rem;
+            }
+
+            /* Модальное окно */
+            .modal-content {
+                padding: 1.5rem;
+                width: 92%;
+                max-height: 85vh;
+                overflow-y: auto;
+            }
+
+            .modal-image {
+                height: 200px;
+                margin: 1rem 0;
+            }
+
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                font-size: 2rem;
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Футер */
+            .site-footer {
+                padding: 2.5rem 0;
+                margin-top: 4rem;
+            }
+
+            .footer-wave {
+                top: -25px;
+                height: 25px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-logo {
+                font-size: 1.6rem;
+            }
+
+            /* Убираем горизонтальную прокрутку */
+            body {
+                overflow-x: hidden;
+            }
+
+            img, svg, video, .container, .hero, .timeline-card, .person-card-modern, .gallery-item {
+                max-width: 100%;
+            }
+
+            /* Улучшаем tap-области для мобильных */
+            .nav-links a,
+            .filter-tag,
+            .timeline-card,
+            .person-card-modern,
+            .gallery-item,
+            .modal-close,
+            .footer-links a {
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .timeline-card:active,
+            .person-card-modern:active,
+            .gallery-item:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+        }
+
+        /* Для очень маленьких телефонов */
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.6rem;
+            }
+
+            .timeline-title {
+                font-size: 1.4rem;
+            }
+
+            .timeline-year {
+                font-size: 2.5rem;
+            }
+
+            .person-name {
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--imperial), var(--soviet), var(--modern));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(var(--soviet), var(--modern), var(--imperial));
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">ХРОНИКИ·ГОРОДА</div>
+          
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content">
+                <h1>Приморск</h1>
+                <div class="hero-subtitle">
+                    Хронология событий, судьбы людей и визуальная история
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">событий</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">14</div>
+                        <div class="stat-label">личностей</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">17</div>
+                        <div class="stat-label">изображений</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Легенда эпох -->
+            <div class="era-legend">
+                <span class="era-tag"><span class="era-dot imperial"></span> Российская империя (до 1917)</span>
+                <span class="era-tag"><span class="era-dot soviet"></span> Советский период (1917–1991)</span>
+                <span class="era-tag"><span class="era-dot modern"></span> Современность (с 1991)</span>
+            </div>
+
+            <!-- Хронология с цветовой дифференциацией по эпохам -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">Хронология событий</h2>
+                </div>
+
+                <div class="timeline-grid" id="timelineGrid">
+                    <!-- Имперский период (до 1917) — желто-оранжевый -->
+                    <div class="timeline-card" data-year="1871" data-era="imperial">
+                        <div class="timeline-year">1799</div>
+                        <span class="timeline-era-badge">Денисово</span>
+                        <h3 class="timeline-title">Освоение территории</h3>
+                        <p class="timeline-desc">За участие в русско-турецкой войне 1768-1774 гг. при взятии Измаила графским титулом награждён Фёдор Петрович Денисов. В 1799 году ему выделены земли по берегу Азовского моря вдоль реки Обиточной. В 1807 году основано село Денисово. Фёдор Петрович ходатайствовал о передаче графского титула внуку - Василию Орлову.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gOHNKzTxwKZUkfWL0aiycCftu9sN9hvXkosgz45V9.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1807</div>
+                        <span class="timeline-era-badge">Обиточное</span>
+                        <h3 class="timeline-title">Свято-Троицкий храм</h3>
+                        <p class="timeline-desc">Василий Васильевич Орлов-Денисов переселил в унаследованные земли крепостных крестьян из Рязанской, Курской, Калужской и Владимирской губерний. Так было основано село Обиточное. В честь победы над Наполеоном здесь решили возвести Свято-Троицкую церковь. Деревянное здание построили к 1814 году, а каменное строительство затянулось на 18 лет. Престол церкви освятили 17 августа 1838 года.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/g3jIjJWxl1aZf9eudMtftyvnitERggSmCAl3f8CKL.png')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1808</div>
+                        <span class="timeline-era-badge">Ногайцы</span>
+                        <h3 class="timeline-title">Уроки садоводства</h3>
+                        <p class="timeline-desc">К началу 19 века на "Молочных водах" проживало 43 ногайских аула. На государственные средства строили мечети. В 1808 году приставом ногайских орд назначили графа Якова де Мезона. Он обосновался у реки Обиточной, в 1811 году заложил сад и пытался приучить кочевников к домам. Заметил удивительное явление: построенные жилища пустовали, а ногайцы жили рядом в кибитках. Тогда де Мезон приказал сжечь все кибитки. Действия пристава вызвали возмущение, генерал-губернатор Ланжерон предписал де Мезону прекратить "несообразности".</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gKLkQiSxlZ0GsNRq0IPYTl6XPpenEIBCadwQr0zdP.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1817</div>
+                        <span class="timeline-era-badge">Устье р.Обиточная</span>
+                        <h3 class="timeline-title">Порт?</h3>
+                        <p class="timeline-desc">По указанию Новороссийского генерал-губернатора Ришельё в устье реки Обиточная начали строить порт. Однако неблагоприятные географические условия сделали невозможным развитие Обиточного как портового города. Строительство продолжили на восточном берегу Бердянского залива.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/th_geEo7I2xGy1GYwIzZVSNysG7DmyL1j8ObpOwc5Mj7.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1821</div>
+                        <span class="timeline-era-badge">Ногайск</span>
+                        <h3 class="timeline-title">"Город Ногайск учредить..."</h3>
+                        <p class="timeline-desc">Яков де Мезон настаивал на открытии города, которому намеревался дать название "Менилъ-Мезонъ". Но губернское правительство отвергло инициативу. Высочайшим указом от 18 января 1821 года образован город Ногайск — заштатный город Бердянского уезда Таврической губернии.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/giIiQfaxyUvb9r0JUeEvoliDPkZRUk2YWk1Hltazg.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1858</div>
+                        <span class="timeline-era-badge">Ногайск</span>
+                        <h3 class="timeline-title">Церковь Успения Пресвятой Богородицы</h3>
+                        <p class="timeline-desc">Посетивший Ногайск в 1854 году архитектор Андрей Михайлович Достоевский писал: "В нем нет русской Церкви, а есть только Часовня, и кроме того имеется Армянская Григорианская Церковь". Проект церкви Успения Пресвятой Богородицы разработали в 1858 году. Храм возвели и открыли к 1868 году, позже пристроили колокольню. Архитектурный ансамбль украшал городскую площадь.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/goGT3sVx9sBRUo7JQUjXwU1rG6Mjt6tmvXboTscgy.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1861</div>
+                        <span class="timeline-era-badge">Преслав и др.</span>
+                        <h3 class="timeline-title">Болгарские села</h3>
+                        <p class="timeline-desc">Ногайцы постепенно уходили из Северного Приазовья. Их место заняли болгарские колонисты. В течение 1861-1863 годов на территории нынешней Запорожской области они основали 47 сел. Занимались огородничеством, табаководством, хлебопашеством, овцеводством. Болгарская кухня, традиции и язык оказали большое влияние на культуру региона.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gLTBa2DxHLeTK82jb53GPF9yYZMfpigggc07nv7Au.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1861</div>
+                        <span class="timeline-era-badge">Обиточное</span>
+                        <h3 class="timeline-title">Восстание Обиточенских крестьян</h3>
+                        <p class="timeline-desc">Экономия Орлова-Денисова в селе Обиточном досталась дочери - Софье Толстой. После отмены крепостного права в 1861 году из крестьян выдвинулись вожаки: Василий Голик, Тимофей Мамонов, Андрей Еременко и другие. Разгневанные грабительскими условиями, крестьяне разгромили помещичий особняк. Прибывшие жандармы арестовали бунтовщиков, жестоко избили и бросили в бердянскую тюрьму. В хозяйстве графини Глебовой использовали металлические боны - монеты с надписью "Обиточенская.Глебовой" - для оплаты труда.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gicbnjSx2pvEKIt7YfTTp6uRmbCB7kKwcJkFQZb18.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1875</div>
+                        <span class="timeline-era-badge">Обиточное</span>
+                        <h3 class="timeline-title">Латунные боны</h3>
+                        <p class="timeline-desc">Имение унаследовала племянница графини Толстой - Софья Николаевна Трубецкая (Глебова). В её хозяйстве использовали металлические боны - монеты с надписью "Обиточенская.Глебовой" - для оплаты труда. В это время процветало выращивание зерновых, виноделие, овцеводство. На побережье Азовского моря построили усадьбу. В советское время там находился совхоз, затем пионерский лагерь. С 1990-х годов здание пришло в упадок.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/th_gugjalOxJZSz8GApXpLVhkZGLIIoi46Qg6IB49IdT.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1880</div>
+                        <span class="timeline-era-badge">Ногайск</span>
+                        <h3 class="timeline-title">Земский врач</h3>
+                        <p class="timeline-desc">Больница на 15 коек появилась в 1876 году. Но настоящий толчок развитию здравоохранения дал приезд в Ногайск земского врача В.Н. Фомина. Продолжалось обустройство здания на 30 коек, подготовка медперсонала. Василий Николаевич также преподавал в реальном училище и женской гимназии, лечил детей-сирот. Память о нём в Приморске хранит здание усадьбы и дуб, посаженный в честь рождения дочери в 1892 году.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gaWOPlNxoIQM257Q0bp5rVz1ss4OFrgenzNjUsQvY.png')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1896</div>
+                        <span class="timeline-era-badge">Ногайск</span>
+                        <h3 class="timeline-title">Благоустройство</h3>
+                        <p class="timeline-desc">"Прежде всего меня поразило в Ногайске отсутствие освещения и полное безлюдье, — вспоминал этнограф Дмитрий Эварницкий, посетивший город в 1890-х. — Только где-то вдали на площади два подслеповатых фонаря: один покосился налево, а другой наклонился направо". Благоустройством города занялся избранный в 1896 году городской голова К.Е. Звороно. При нём соорудили артезианский колодец, восстановили сад, построили пристань, развивалась торговля, открылось реальное училище и женская гимназия.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gsYgNu0xSBKhXJOLZDXPk35bEqUDoRVd3inF8GXhQ.jpg')"></div>
+                    </div>
+
+                    <!-- Имперский период -->
+                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                        <div class="timeline-year">1914</div>
+                        <span class="timeline-era-badge">Перед первой мировой</span>
+                        <h3 class="timeline-title">Бурная жизнь</h3>
+                        <p class="timeline-desc">В 1914 году в Ногайске работало около 20 заводов: кирпичные, мыловаренный и пивоваренный, мельницы и пекарни. Открыли отделение банка и 36 торговых лавок. Ремеслом занимались более 1500 человек. Дважды в год шумели ярмарки. У горожан пользовались популярностью частный театр Ангеловского, синематограф Мироненко, фотография Зиньковского. В городе стояли церкви разных конфессий: 3 православных, армянская, немецкая кирха, еврейская синагога. Работали почта и телеграф, через речку проложили мост, рядом находилась городская баня.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gbf1Di6xhNU46Haft9Pvl7mz3m97EflKjHo2d6twL.jpg')"></div>
+                    </div>
+
+                    <!-- ... -->
+                    <div class="timeline-card" data-year="1943" data-era="soviet">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">СССР</span>
+                        <h3 class="timeline-title">заголовок</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/hospital.jpg')">[ ... ]</div>
+                    </div>
+
+                    <!-- Советский период -->
+                    <div class="timeline-card" data-year="1985" data-era="soviet">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">СССР</span>
+                        <h3 class="timeline-title">заголовок</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/university.jpg')">[ ... ]</div>
+                    </div>
+
+                    <!-- Советский период -->
+                    <div class="timeline-card" data-year="1985" data-era="soviet">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">СССР</span>
+                        <h3 class="timeline-title">заголовок</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/university.jpg')">[ ... ]</div>
+                    </div>
+
+                    <!-- Современный период (с 1991) — синий -->
+                    <div class="timeline-card" data-year="2001" data-era="modern">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">совр</span>
+                        <h3 class="timeline-title">заголовок</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/center.jpg')">[ ... ]</div>
+                    </div>
+
+                    <!-- Современный период (с 1991) — синий -->
+                    <div class="timeline-card" data-year="2001" data-era="modern">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">совр</span>
+                        <h3 class="timeline-title">заголовок</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/center.jpg')">[ ... ]</div>
+                    </div>
+
+
+                    <!-- Современный период -->
+                    <div class="timeline-card" data-year="2024" data-era="modern">
+                        <div class="timeline-year">год</div>
+                        <span class="timeline-era-badge">совр</span>
+                        <h3 class="timeline-title">заголовок.</h3>
+                        <p class="timeline-desc">текст текст текст.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/archive.jpg')">[ ... ]</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Личности -->
+            <section class="person-section">
+                <div class="section-header">
+                    <h2 class="section-title">Исторические личности</h2>
+                </div>
+
+                <div class="person-grid" id="personGrid">
+                    <div class="person-card-modern">
+                        <div class="person-name">Фёдор Петрович Денисов</div>
+                        <div class="person-role">граф · донской казак</div>
+                        <div class="person-bio">Донской казак, дослужившийся до чина генерала от кавалерии. Участник русско-турецких войн, от неприятеля получил прозвище "Денис-паша".</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/grb2xHMxzgVXK1yEDb55dwkOaRcIUG2iSSesvSIV4.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Василий Васильевич Орлов-Денисов</div>
+                        <div class="person-role">донской казак · внук Ф.П.Денисова</div>
+                        <div class="person-bio">Участник Отечественной войны 1812 года. Современники говорили: "богатырски сложенный, высокого роста, могучий всадник... он любил жизнь роскошную, весёлую, и часто восходящее солнце заставало его за картами".</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gbImwAoxohItoV65OcERDReaTJjaAH1JJQJZKnKvR.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Яков де Мезон</div>
+                        <div class="person-role">пристав ногайских орд · основатель города</div>
+                        <div class="person-bio">Покинул Францию во время революции. Новую трудную службу начал в преклонных годах, но проявлял в ней усердие и юношескую горячность. Принуждал ногайцев к оседлому образу жизни, нередко конфликтовал с ними. В 1822 ушёл в отставку и провёл остаток жизни в Крыму.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Клерфон</div>
+                        <div class="person-role">садовник</div>
+                        <div class="person-bio">В 1811 под руководством Клерфона посадили сад фруктовых и декоративных деревьев, где ногайцы учились садоводству. Принудительные работы использовали как наказания за провинности. Ногайский сад восхищал губернских чиновников многообразием сортов, но прекратил существование в 1920-х.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Софья Васильевна Толстая</div>
+                        <div class="person-role">дочь Орлова-Денисова</div>
+                        <div class="person-bio">Фрейлина при императорском дворе. Вышла замуж за графа Владимира Петровича Толстого.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gZ5kymixFq6sE9MJlbVJW0RLqzUuUEjmtsVzhQd64.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Софья Николаевна Глебова</div>
+                        <div class="person-role">внучка Орлова-Денисова</div>
+                        <div class="person-bio">Владела имением в селе Обиточное. Вышла замуж за крупного предпринимателя Владимира Петровича Глебова. Семья Глебовых была близка с семьёй Льва Толстого. После революции 1917 года эмигрировала.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gb5t5lOx3WlR4b9EFNuFUng65aWIV8Bdbp26joFKj.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Восставшие крестьяне</div>
+                        <div class="person-role">1861-1863</div>
+                        <div class="person-bio">Василий Голик, Тимофей Мамонов, Андрей Еременко, Василий Баклажков, Григорий Гиренко, Антон Улазко — вожаки крестьянского восстания против грабительских условий отмены крепостного права.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gicbnjSx2pvEKIt7YfTTp6uRmbCB7kKwcJkFQZb18.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Василий Николаевич Фомин</div>
+                        <div class="person-role">земский врач</div>
+                        <div class="person-bio">Окончил Киевский университет. Участвовал в русско-турецкой войне 1877-1878 годов, за что получил орден. В 1880 назначен на должность земского врача города Ногайска. Более 40 лет занимался медициной и преподаванием.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gEgk3FDxVQ6F1o6bq2dVq6Gsdso6BPvEdzzKszObz.jpg')"></div>
+                    </div>
+
+                    <div class="person-card-modern">
+                        <div class="person-name">Константин Евстафьевич Звороно</div>
+                        <div class="person-role">городской голова</div>
+                        <div class="person-bio">Избран городским головой в 1896 году. Плодотворная деятельность не отнимала всего его времени: он также состоял председателем попечительского совета женской гимназии и председателем городского попечительства о бедных.</div>
+                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gmjBrPKxjFLzebowKLhFeCOeKoXTX2DnrFR1sLtX9.jpg')"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Галерея -->
+            <section>
+                <div class="section-header">
+                    <h2 class="section-title">Визуальная история</h2>
+                </div>
+
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openModal('gallery', this)">
+                        <div class="gallery-image" style="background-image: url('https://example.com/gallery/panorama-1927.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Панорама города</h3>
+                            <span class="gallery-year">1927</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openModal('gallery', this)">
+                        <div class="gallery-image" style="background-image: url('https://example.com/gallery/factory-1954.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Парк</h3>
+                            <span class="gallery-year">1954</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openModal('gallery', this)">
+                        <div class="gallery-image" style="background-image: url('https://example.com/gallery/embankment-2001.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Набережная</h3>
+                            <span class="gallery-year">2001</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="openModal('gallery', this)">
+                        <div class="gallery-image" style="background-image: url('https://example.com/gallery/modern-center-2024.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Современный центр</h3>
+                            <span class="gallery-year">2024</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модальное окно -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 id="modalTitle">Детальный просмотр</h2>
+            <div class="modal-image" id="modalImage">
+                
+            </div>
+            <p id="modalDescription">Здесь будет подробное описание выбранного элемента.</p>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                <span style="background: var(--soviet); color: #fff; padding: 0.4rem 1rem; border-radius: 50px;">архив</span>
+                <span style="background: transparent; border: 1px solid #4a5162; padding: 0.4rem 1rem; border-radius: 50px;">#история</span>
+                <span style="background: transparent; border: 1px solid #4a5162; padding: 0.4rem 1rem; border-radius: 50px;">#город</span>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-wave"></div>
+        <div class="container footer-content">
+            <div>
+                <div class="footer-logo">ХРОНИКИ·ГОРОДА</div>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">История в цвете эпох: имперский янтарь, советский красный, современный синий</p>
+            </div>
+            <div>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 1.5rem;">Контакты</h4>
+                <div class="footer-links">
+                    <a href="#">@st_vq1</a>
+                    <a href="#">г. Приморск, Запорожская область</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Прогресс-бар
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Модальное окно
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        
+        function openModal(type, element) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            const titles = {
+                'timeline': 'Историческое событие',
+                'person': 'Биография',
+                'gallery': 'Архивное фото'
+            };
+            
+            modalTitle.textContent = titles[type] || 'Детали';
+            
+            // Если есть элемент с изображением, пытаемся получить его фон
+            if (element) {
+                const bgImage = window.getComputedStyle(element).backgroundImage;
+                if (bgImage && bgImage !== 'none') {
+                    // Извлекаем URL из background-image: url("...")
+                    const urlMatch = bgImage.match(/url\(["']?([^"')]+)["']?\)/);
+                    if (urlMatch && urlMatch[1]) {
+                        modalImage.style.backgroundImage = `url('${urlMatch[1]}')`;
+                        modalImage.classList.add('has-image');
+                    } else {
+                        modalImage.style.backgroundImage = 'none';
+                        modalImage.classList.remove('has-image');
+                    }
+                } else {
+                    modalImage.style.backgroundImage = 'none';
+                    modalImage.classList.remove('has-image');
+                }
+            }
+            
+            // Здесь можно добавить разный текст описания в зависимости от типа
+            if (type === 'person') {
+                modalDescription.textContent = 'Биографические данные исторической личности.';
+            } else if (type === 'timeline') {
+                modalDescription.textContent = 'Подробности исторического события.';
+            } else {
+                modalDescription.textContent = 'Архивное фотографическое изображение.';
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Анимация появления при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-card, .person-card-modern, .gallery-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Параллакс для героя (только на десктопах)
+        if (window.innerWidth > 768) {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                    hero.style.opacity = 1 - scrolled * 0.002;
+                }
+            });
+        }
+
+        // Обработка кликов по навигации
+        document.querySelectorAll('[data-modal]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const modalType = link.getAttribute('data-modal');
+                openModal(modalType);
+            });
+        });
+    </script>
+</body>
+</html>
