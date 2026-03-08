@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Приморск · Трактор</title>
+    <style>
+        /* ===== СТАНДАРТНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0c0f;
+            --bg-secondary: #14181f;
+            --bg-card: #1a1f28;
+            --text-primary: #f0f4fa;
+            --text-secondary: #a8b3cf;
+            
+            --imperial: #f9c35c;
+            --soviet: #ff5e7c;
+            --modern: #4a9eff;
+            --accent-2: #b1b3b3; /* салатовый */
+            --accent-3: #b392f0;
+            
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .site-header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .logo-accent {
+            color: var(--accent-2);
+        }
+
+        /* ===== СТАНДАРТИЗИРОВАННЫЕ БЛОКИ ===== */
+        
+        /* все блоки имеют одинаковую структуру */
+        .block {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .block:hover {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 1px var(--accent-2), 0 8px 20px -8px var(--accent-2);
+        }
+
+        .block:hover .block-image {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 1px var(--accent-2);
+        }
+
+        /* все изображения с одинаковым скруглением */
+        .block-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .block-image:hover {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 2px var(--accent-2);
+        }
+
+        /* заголовки блоков */
+        .block-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.3px;
+        }
+
+        /* текст блоков */
+        .block-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0.75rem 0;
+        }
+
+        /* мета-информация */
+        .block-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* теги */
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* легенда */
+        .legend {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.imperial { background: var(--imperial); }
+        .dot.soviet { background: var(--soviet); }
+        .dot.modern { background: var(--modern); }
+
+        /* ===== СТАНДАРТНАЯ СЕТКА ===== */
+        
+        /* два блока в ряд */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* три блока в ряд */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* четыре блока в ряд */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* блок с большим изображением */
+        .feature-block {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-image {
+            aspect-ratio: 16/9;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feature-image:hover {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 2px var(--accent-2);
+        }
+
+        /* блок с изображением слева */
+        .image-left-block {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .image-left {
+            aspect-ratio: 2/1;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .image-left:hover {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 2px var(--accent-2);
+        }
+
+        /* ===== ФУТЕР ===== */
+        .site-footer {
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ===== МОДАЛКА ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            max-width: 800px;
+            width: 90%;
+        }
+        .modal-content img {
+            border-radius: 20px;
+            width: 100%;
+            height: auto;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        .modal-content img:hover {
+            border-color: var(--accent-2);
+        }
+        .modal-close {
+            position: absolute;
+            top: 2rem; right: 2rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            opacity: 0.5;
+        }
+        .modal-close:hover {
+            opacity: 1;
+            color: var(--accent-2);
+        }
+
+        /* ===== АДАПТАЦИЯ ===== */
+        @media (max-width: 800px) {
+            .grid-2, .grid-3, .grid-4, .feature-block, .image-left-block {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">ПРИМОРСК <span class="logo-accent">·</span> трактор</div>
+            <div class="tag">история памятника</div>
+        </div>
+    </header>
+
+    <main class="container">
+
+
+        <!-- ряд 1: два стандартных блока -->
+        <div class="grid-2">
+
+            <div class="block">
+                <div class="block-title">"Универсал-2"</div>
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gZgZAKhxLgOX1UAVrgH3PSS6ZN2u2iErLVFeS6hNI.jpg');" onclick="openModal(this)"></div>
+                <div class="block-text">Трактор выпускался на Владимирском тракторном заводе в 1944-1955 годах. В качестве памятника машинно-тракторным станциям установлен в Примосрке по ул.Чапаева.</div>
+            </div>
+
+            <div class="block">
+                <div class="block-title">Трояновская МТС</div>
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/ga68ypmxdSmn2AWplA6e3CWDZu8Ntr9gzqvP2KCZj.png');" onclick="openModal(this)"></div>
+                <div class="block-text">В период коллективизации и вплоть до 1958г. машинно-тракторные станции обеспечивали сельскохазяйственной техникой колхозы. Трояновская МТС обслуживала 15 хозяйств.</div>
+            </div>
+
+        </div>
+
+        <!-- ряд 2: три блока -->
+        <div class="grid-3">
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gA8LZz6xmgMwCZiPzGYLc1HbdnoJgAWJVFwfzl9dE.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="margin-top: 0.75rem;">Трактор "Фордзон"</div>
+                <span>Первый массовый трактор в СССР. Лицензионная копия "Фордзон-Путиловец" производилась на ленинградском заводе "Красный Путиловец".</span>
+                <div class="block-meta">
+                    <span>📅 1924-1932</span>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gL3re3KxJGm7wH937WDcE4jI73CNKnbDXiNTKWNff.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="margin-top: 0.75rem;">А.А. Карпека</div>
+                <span>Первая женщина-тракторист колхоза "Новая жизнь" с.Партизаны 1932г.</span>
+                <div class="block-meta">
+                    <span>📅 1932</span>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/06/gR0WbhAxmLF0ipRCZezu7G98z2Y2d6VumvpUDv4JL.jpg');" onclick="openModal(this)"></div>
+                <div class="block-title" style="margin-top: 0.75rem;">Чернев Ф.К.</div>
+                <span>Ударник колхоза "Коллективист" отправляет зерно, заработанное на трудодни (13,5 т).</span>
+                <div class="block-meta">
+                    <span>📅 1935</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ряд 3: блок с изображением слева -->
+        <div class="image-left-block">
+            <div class="image-left" style="background-image: url('https://s10.iimage.su/s/08/gGFV4ToxVq7QK1b7dQaU7kgGAKkPz8B3AdTaQL59v.png');" onclick="openModal(this)"></div>
+            <div class="block">
+                <div class="block-title">Павильон колхоза им. Димитрова на с/х выставке</div>
+                <div class="block-text">Последствия разрушительной войны оказали разрушительное воздействие на развитие сельского хозяйства в регионе. После освобождения Ногайского района от немецких захватчиков начинается восстановление. Уже с 1950 года ежегодно организовываются с/х выставки.</div>
+                <div class="block-meta">
+                    <span>📅 сентябрь 1955г.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ряд 4: широкий блок (текст + большое фото) -->
+        <div class="feature-block">
+            <div class="block">
+                <div class="block-title">Дом культуры колхоза им. Димитрова, с. Бановка</div>
+                <div class="block-text">Колхозы укрупняются. Открываются сельские клубы, ясли и школы. Благоустраиваются парки, стадионы. Работники культуры проводят множество мероприятий, выступлений. Передовики района получают награды за трудовые успехи.</div>
+                <div class="block-meta">
+                    <span>📅 1967г.</span>
+                </div>
+            </div>
+            <div class="feature-image" style="background-image: url('https://s10.iimage.su/s/08/gWY1EIZxX5BiOU5sMWh0CLqhjq86wN5HfI2lqDa4w.png');" onclick="openModal(this)"></div>
+        </div>
+
+        <!-- ряд 5: четыре блока -->
+        <div class="grid-4">
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/griW2opx14baB4wjNhmOQqyhfduIOTh6Luf8WkOHS.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="font-size: 1rem; margin-top: 0.5rem;">Комсомольцы колхоза "1 Мая" на комсомольском воскреснике.</div>
+                <div class="block-meta">📅 1951г.</div>
+            </div>
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gfI9Ewtx0pbTqSfGjZ0isrvUmVZT5sTrTV6r4tNoC.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="font-size: 1rem; margin-top: 0.5rem;">Комбайнер Тафров Л., колхоз "Прогресс", с.Петровка.</div>
+                <div class="block-meta">📅 1967г.</div>
+            </div>
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gQqTUgUxv3KBOrFD5i0yVlh6RmHhF7Hjul9M9qyCm.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="font-size: 1rem; margin-top: 0.5rem;">Выступление коллектива художественной самодеятельности с. Бановка в с.Лозоватка.</div>
+                <div class="block-meta">📅 1969г.</div>
+            </div>
+            <div class="block">
+                <div class="block-image" style="background-image: url('https://s10.iimage.su/s/08/gF7j0XIxTgU7hU38YTJ5DISnfVkWVRHfCgN63A4Za.png');" onclick="openModal(this)"></div>
+                <div class="block-title" style="font-size: 1rem; margin-top: 0.5rem;">Лучший класс по успеваемости Юрьевской школы, колхоз "Память Ильича".</div>
+                <div class="block-meta">📅 1970г.</div>
+            </div>
+        </div>
+
+        <!-- ряд 6: два блока с дополнительной информацией -->
+        <div class="grid-2">
+            <div class="block">
+                <div class="block-title">Ликвидация МТС</div>
+                <div class="block-text">Проведена масштабная реформа по ликвидации и реорганизации машинно-тракторных станций, инициированная Н.С.Хружевым. Технику передали непосредственно колхозам. На базе ликвидированных МТС создавались ремонтно-технические станции - РТС.</div>
+                <div class="block-meta">
+                    <span>📅 1958г</span>
+                </div>
+            </div>
+            <div class="block">
+                <div class="block-title">Значение трактора "Универсал"</div>
+                <div class="block-text">Первый отечественный трактор, поставлявшийся на экспорт. Выпускался в 1934-1955гг. Модель сконструирована по образцу американского трактора Farmall F-20. Именно такие машины составляли основу механизации хозяйства в первые десятилетия работы МТС.</div>
+                <div class="block-meta">
+                    <span>* * *</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div>ПРИМОРСК.QR</div>
+            <div>Запорожская обл.</div>
+        </div>
+    </footer>
+
+    <!-- модалка -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImg" src="">
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(el) {
+            modal.classList.add('active');
+            // получаем фон из style.backgroundImage
+            const bg = el.style.backgroundImage;
+            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+            if (match && match[1]) {
+                modalImg.src = match[1];
+            }
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.openModal = openModal;
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        window.closeModal = closeModal;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
