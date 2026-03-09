@@ -91,6 +91,15 @@
             z-index: 2;
         }
 
+        .tag {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -369,7 +378,7 @@
     <header class="site-header">
         <div class="container header-content">
             <div class="logo">ПРИМОРСК <span>·</span> Ракурс Эпохи</div>
-            <a href="#" class="nav-link" onclick="history.back(); return false;">← НАЗАД</a>
+            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
         </div>
     </header>
 
