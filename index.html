@@ -495,9 +495,6 @@
             background-image: none;
         }
 
-        .person-card-modern:hover .person-image-mini {
-            border-color: var(--accent-3);
-        }
 
         /* Галерея */
         .gallery {
@@ -551,83 +548,57 @@
             font-family: var(--font-mono);
         }
 
-        /* Модальное окно */
+        /* модалка */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
-            background: var(--bg-secondary);
-            border-radius: 40px;
-            padding: 3rem;
-            max-width: 600px;
-            width: 90%;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: modalSlide 0.3s ease;
+            max-width: 90vw;
+            max-height: 90vh;
         }
 
-        @keyframes modalSlide {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .modal-content img:hover {
+            border-color: var(--accent);
         }
 
         .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+            position: fixed;
+            top: 1rem; right: 1rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            opacity: 0.7;
             background: none;
             border: none;
-            color: var(--text-secondary);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: color 0.2s ease;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 1001;
+            line-height: 1;
         }
 
         .modal-close:hover {
-            color: var(--soviet);
+            opacity: 1;
+            color: var(--accent);
         }
 
-        .modal-image {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(145deg, #222834, #1a1f28);
-            border-radius: 20px;
-            margin: 2rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a5162;
-            border: 2px dashed rgba(255, 255, 255, 0.05);
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .modal-image.has-image {
-            border: 2px solid transparent;
-            color: transparent;
-            text-indent: -9999px;
-        }
 
         /* Футер */
         .site-footer {
@@ -1662,20 +1633,11 @@
         </div>
     </main>
 
-    <!-- Модальное окно -->
-    <div class="modal" id="modal">
+    <!-- модалка -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h2 id="modalTitle">Детальный просмотр</h2>
-            <div class="modal-image" id="modalImage">
-                
-            </div>
-            <p id="modalDescription">Здесь будет подробное описание выбранного элемента.</p>
-            <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
-                <span style="background: var(--soviet); color: #fff; padding: 0.4rem 1rem; border-radius: 50px;">архив</span>
-                <span style="background: transparent; border: 1px solid #4a5162; padding: 0.4rem 1rem; border-radius: 50px;">#история</span>
-                <span style="background: transparent; border: 1px solid #4a5162; padding: 0.4rem 1rem; border-radius: 50px;">#город</span>
-            </div>
+            <img id="modalImg" src="">
         </div>
     </div>
 
@@ -1726,68 +1688,29 @@
             document.getElementById('progressBar').style.width = scrolled + '%';
         });
 
-        // Модальное окно
         const modal = document.getElementById('modal');
-        const modalImage = document.getElementById('modalImage');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        
-        function openModal(type, element) {
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(type, el) {
             modal.classList.add('active');
+            const bg = el.style.backgroundImage;
+            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+            if (match && match[1]) {
+                modalImg.src = match[1];
+            }
             document.body.style.overflow = 'hidden';
-            
-            const titles = {
-                'timeline': 'Историческое событие',
-                'person': 'Биография',
-                'gallery': 'Архивное фото'
-            };
-            
-            modalTitle.textContent = titles[type] || 'Детали';
-            
-            // Если есть элемент с изображением, пытаемся получить его фон
-            if (element) {
-                const bgImage = window.getComputedStyle(element).backgroundImage;
-                if (bgImage && bgImage !== 'none') {
-                    // Извлекаем URL из background-image: url("...")
-                    const urlMatch = bgImage.match(/url\(["']?([^"')]+)["']?\)/);
-                    if (urlMatch && urlMatch[1]) {
-                        modalImage.style.backgroundImage = `url('${urlMatch[1]}')`;
-                        modalImage.classList.add('has-image');
-                    } else {
-                        modalImage.style.backgroundImage = 'none';
-                        modalImage.classList.remove('has-image');
-                    }
-                } else {
-                    modalImage.style.backgroundImage = 'none';
-                    modalImage.classList.remove('has-image');
-                }
-            }
-            
-            // Здесь можно добавить разный текст описания в зависимости от типа
-            if (type === 'person') {
-                modalDescription.textContent = 'Биографические данные исторической личности.';
-            } else if (type === 'timeline') {
-                modalDescription.textContent = 'Подробности исторического события.';
-            } else {
-                modalDescription.textContent = 'Архивное фотографическое изображение.';
-            }
         }
+
+        window.openModal = openModal;
 
         function closeModal() {
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+        window.closeModal = closeModal;
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
         });
 
         // Анимация появления при скролле
