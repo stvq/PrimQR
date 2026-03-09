@@ -1814,114 +1814,138 @@
                 openModal(modalType);
             });
         });
-
+    </script>
+    <script>
         // Управление нижней панелью навигации
+        let lastScrollTop = 0;
         let hideTimeout;
-        let isScrolling = false;
-        
-        // Функция для показа панели
-        function showNav() {
+
+        function hideNavOnMobile() {
             const nav = document.querySelector('.bottom-nav');
-            if (!nav) return;
-            
-            // Показываем панель
-            nav.classList.add('visible');
-            
-            // На мобильных добавляем специальный класс
-            if (window.innerWidth <= 768) {
-                nav.classList.add('mobile-visible');
-            }
-            
-            // Очищаем предыдущий таймер
-            clearTimeout(hideTimeout);
-            
-            // Устанавливаем таймер на скрытие через 3 секунды
-            hideTimeout = setTimeout(() => {
-                hideNav();
-            }, 3000);
-        }
-        
-        // Функция для скрытия панели
-        function hideNav() {
-            const nav = document.querySelector('.bottom-nav');
-            if (!nav) return;
-            
-            // На мобильных убираем класс mobile-visible
             if (window.innerWidth <= 768) {
                 nav.classList.remove('mobile-visible');
-            } else {
-                // На десктопе убираем visible, если не наведена мышь
-                if (!nav.matches(':hover')) {
-                    nav.classList.remove('visible');
+                if (hideTimeout) {
+                    clearTimeout(hideTimeout);
                 }
             }
         }
-        
-        // Отслеживаем прокрутку (ТОЛЬКО ЗДЕСЬ ПОКАЗЫВАЕМ ПАНЕЛЬ)
+
         window.addEventListener('scroll', () => {
-            showNav();
-        }, { passive: true });
-        
-        // Скрываем при клике ВНЕ панели
-        document.addEventListener('click', (event) => {
             const nav = document.querySelector('.bottom-nav');
-            const isClickOnNav = nav && nav.contains(event.target);
-            const isClickOnNavLink = event.target.classList.contains('nav-link');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            // Если кликнули не по панели и не по ссылке в панели
-            if (!isClickOnNav && !isClickOnNavLink) {
-                // Немедленно скрываем панель
-                const nav = document.querySelector('.bottom-nav');
-                if (nav) {
-                    nav.classList.remove('visible');
-                    nav.classList.remove('mobile-visible');
+            // Показываем панель при прокрутке вниз
+            if (scrollTop > lastScrollTop) {
+                // Прокрутка вниз
+                nav.classList.add('visible');
+                
+                // Для мобильных - добавляем отдельный класс и таймер
+                if (window.innerWidth <= 768) {
+                    nav.classList.add('mobile-visible');
+                    
+                    // Сбрасываем предыдущий таймер
                     clearTimeout(hideTimeout);
+                    
+                    // Устанавливаем новый таймер на 4 секунды
+                    hideTimeout = setTimeout(() => {
+                        nav.classList.remove('mobile-visible');
+                    }, 4000);
                 }
             }
-        });
-        
-        // НЕ показываем при касании - убираем эти обработчики
-        // Панель показывается ТОЛЬКО при прокрутке
-        
-        // Показываем при загрузке страницы (один раз)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                showNav();
-            }, 500);
-        });
-        
-        // На десктопе - показываем при наведении
-        const nav = document.querySelector('.bottom-nav');
-        if (nav) {
-            nav.addEventListener('mouseenter', () => {
-                if (window.innerWidth > 768) {
-                    nav.classList.add('visible');
-                    clearTimeout(hideTimeout);
-                }
-            });
             
-            nav.addEventListener('mouseleave', () => {
-                if (window.innerWidth > 768) {
-                    hideTimeout = setTimeout(() => {
-                        nav.classList.remove('visible');
-                    }, 500);
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+
+        // Для мобильных - показываем при касании экрана
+        if ('ontouchstart' in window) {
+            document.addEventListener('touchstart', (e) => {
+                // Не показываем панель, если клик был по карточке
+                if (e.target.closest('.timeline-card') || 
+                    e.target.closest('.person-card-modern') || 
+                    e.target.closest('.gallery-item')) {
+                    return;
                 }
+                
+                const nav = document.querySelector('.bottom-nav');
+                nav.classList.add('mobile-visible');
+                
+                clearTimeout(hideTimeout);
+                hideTimeout = setTimeout(() => {
+                    nav.classList.remove('mobile-visible');
+                }, 4000);
             });
         }
-        
-        // Обработка кликов по ссылкам в панели
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                    // Показываем панель после клика по ссылке
-                    showNav();
-                }
-            });
+
+        // На десктопе убираем класс visible, когда пользователь перестал скроллить
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth > 768) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    if (!document.querySelector('.bottom-nav:hover')) {
+                        document.querySelector('.bottom-nav').classList.remove('visible');
+                    }
+                }, 1500);
+            }
         });
+
+        // Скрываем панель при клике на карточки
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                const cards = document.querySelectorAll('.timeline-card, .person-card-modern, .gallery-item');
+                const nav = document.querySelector('.bottom-nav');
+                
+                cards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        nav.classList.remove('mobile-visible');
+                        if (hideTimeout) {
+                            clearTimeout(hideTimeout);
+                        }
+                    });
+                });
+            }
+        });
+
+        // Скрываем панель при загрузке страницы, если не было скролла
+        window.addEventListener('load', function() {
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    if (window.scrollY === 0) {
+                        document.querySelector('.bottom-nav').classList.remove('mobile-visible');
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+    <script>
+    // Скрываем нижнюю панель при клике на карточки на мобильных
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.innerWidth <= 768) {
+            // Находим все карточки событий и личностей
+            const cards = document.querySelectorAll('.timeline-card, .person-card-modern, .gallery-item');
+            const nav = document.querySelector('.bottom-nav');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Скрываем панель навигации
+                    nav.classList.remove('mobile-visible');
+                    
+                    // Сбрасываем таймер, если он есть
+                    if (window.hideTimeout) {
+                        clearTimeout(window.hideTimeout);
+                    }
+                });
+                
+                // Отключаем стандартное поведение, если карточка не ссылка
+                card.addEventListener('touchstart', function(e) {
+                    // Не блокируем клики по ссылкам внутри карточек
+                    if (!e.target.closest('a')) {
+                        e.stopPropagation();
+                    }
+                });
+            });
+        }
+    });
     </script>
 </body>
 </html>
