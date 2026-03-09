@@ -1815,32 +1815,51 @@
             });
         });
     </script>
-    <script>
-    // Для десктопа - показываем при прокрутке вниз
+<script>
+    // Управление нижней панелью навигации
     let lastScrollTop = 0;
     let hideTimeout;
+    let activityTimeout;
+    let isScrolling = false;
 
+    function hideNavOnMobile() {
+        if (window.innerWidth <= 768) {
+            const nav = document.querySelector('.bottom-nav');
+            // Очищаем предыдущий таймер
+            clearTimeout(hideTimeout);
+            // Устанавливаем новый таймер на 3 секунды
+            hideTimeout = setTimeout(() => {
+                nav.classList.remove('mobile-visible');
+            }, 3000);
+        }
+    }
+
+    function showNav() {
+        const nav = document.querySelector('.bottom-nav');
+        nav.classList.add('visible');
+        
+        if (window.innerWidth <= 768) {
+            nav.classList.add('mobile-visible');
+            hideNavOnMobile();
+        }
+    }
+
+    // Отслеживаем прокрутку
     window.addEventListener('scroll', () => {
         const nav = document.querySelector('.bottom-nav');
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Показываем панель при прокрутке вниз
-        if (scrollTop > lastScrollTop) {
-            // Прокрутка вниз
-            nav.classList.add('visible');
-            
-            // Для мобильных - добавляем отдельный класс и таймер
-            if (window.innerWidth <= 768) {
-                nav.classList.add('mobile-visible');
-                
-                // Сбрасываем предыдущий таймер
-                clearTimeout(hideTimeout);
-                
-                // Устанавливаем новый таймер на 4 секунды
-                hideTimeout = setTimeout(() => {
-                    nav.classList.remove('mobile-visible');
-                }, 4000);
-            }
+        // Показываем панель при прокрутке
+        showNav();
+        
+        // Для десктопа скрываем через 1.5 секунды после остановки
+        if (window.innerWidth > 768) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                if (!document.querySelector('.bottom-nav:hover')) {
+                    nav.classList.remove('visible');
+                }
+            }, 1500);
         }
         
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -1849,28 +1868,45 @@
     // Для мобильных - показываем при касании экрана
     if ('ontouchstart' in window) {
         document.addEventListener('touchstart', () => {
-            const nav = document.querySelector('.bottom-nav');
-            nav.classList.add('mobile-visible');
-            
-            clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(() => {
-                nav.classList.remove('mobile-visible');
-            }, 4000);
+            showNav();
+        });
+
+        // Также показываем при движении пальца по экрану
+        document.addEventListener('touchmove', () => {
+            showNav();
         });
     }
 
-    // На десктопе убираем класс visible, когда пользователь перестал скроллить
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
+    // Показываем при наведении мыши (для десктопа)
+    const nav = document.querySelector('.bottom-nav');
+    nav.addEventListener('mouseenter', () => {
         if (window.innerWidth > 768) {
+            nav.classList.add('visible');
             clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                if (!document.querySelector('.bottom-nav:hover')) {
-                    document.querySelector('.bottom-nav').classList.remove('visible');
-                }
-            }, 1500);
         }
     });
-    </script>
+
+    nav.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 768) {
+            scrollTimeout = setTimeout(() => {
+                nav.classList.remove('visible');
+            }, 500);
+        }
+    });
+
+    // Показываем при загрузке страницы на 3 секунды
+    window.addEventListener('load', () => {
+        if (window.innerWidth <= 768) {
+            showNav();
+        }
+    });
+
+    // Также показываем при клике на любую ссылку в навигации
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            showNav();
+        });
+    });
+</script>
 </body>
 </html>
