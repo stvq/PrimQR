@@ -1818,6 +1818,7 @@
     <script>
         // Управление нижней панелью навигации
         let hideTimeout;
+        let isScrolling = false;
         
         // Функция для показа панели
         function showNav() {
@@ -1857,23 +1858,33 @@
             }
         }
         
-        // Отслеживаем прокрутку
+        // Отслеживаем прокрутку (ТОЛЬКО ЗДЕСЬ ПОКАЗЫВАЕМ ПАНЕЛЬ)
         window.addEventListener('scroll', () => {
             showNav();
+        }, { passive: true });
+        
+        // Скрываем при клике ВНЕ панели
+        document.addEventListener('click', (event) => {
+            const nav = document.querySelector('.bottom-nav');
+            const isClickOnNav = nav && nav.contains(event.target);
+            const isClickOnNavLink = event.target.classList.contains('nav-link');
+            
+            // Если кликнули не по панели и не по ссылке в панели
+            if (!isClickOnNav && !isClickOnNavLink) {
+                // Немедленно скрываем панель
+                const nav = document.querySelector('.bottom-nav');
+                if (nav) {
+                    nav.classList.remove('visible');
+                    nav.classList.remove('mobile-visible');
+                    clearTimeout(hideTimeout);
+                }
+            }
         });
         
-        // Для мобильных - показываем при касании
-        if ('ontouchstart' in window) {
-            document.addEventListener('touchstart', () => {
-                showNav();
-            });
-            
-            document.addEventListener('touchmove', () => {
-                showNav();
-            });
-        }
+        // НЕ показываем при касании - убираем эти обработчики
+        // Панель показывается ТОЛЬКО при прокрутке
         
-        // Показываем при загрузке страницы
+        // Показываем при загрузке страницы (один раз)
         window.addEventListener('load', () => {
             setTimeout(() => {
                 showNav();
@@ -1899,7 +1910,7 @@
             });
         }
         
-        // Обработка кликов по ссылкам
+        // Обработка кликов по ссылкам в панели
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1907,8 +1918,9 @@
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'smooth' });
+                    // Показываем панель после клика по ссылке
+                    showNav();
                 }
-                showNav();
             });
         });
     </script>
