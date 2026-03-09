@@ -22,7 +22,7 @@
         :root {
             --bg-primary: #0a0c0f;
             --bg-secondary: #14181f;
-            --bg-card: #1a1f28;
+            --bg-card: rgba(255,255,255,0.02);
             --text-primary: #f0f4fa;
             --text-secondary: #a8b3cf;
             
@@ -271,7 +271,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255,255,255,0.05);
             transform-style: preserve-3d;
             perspective: 1000px;
             /* +++ Добавить эти три строки +++ */
@@ -1132,18 +1132,20 @@
                 </div>
             </section>
 
-            <!-- Легенда эпох -->
-            <div class="era-legend">
-                <span class="era-tag"><span class="era-dot imperial"></span> Российская империя (до 1917)</span>
-                <span class="era-tag"><span class="era-dot soviet"></span> Советский период (1917–1991)</span>
-                <span class="era-tag"><span class="era-dot modern"></span> Современность (с 1991)</span>
-            </div>
+           
 
             <!-- Хронология с цветовой дифференциацией по эпохам -->
             <section>
                 <div class="section-header">
                     <h2 class="section-title">Хронология событий</h2>
                 </div>
+
+        <!-- Легенда эпох -->
+            <div class="era-legend">
+                <span class="era-tag"><span class="era-dot imperial"></span> Российская империя (до 1917)</span>
+                <span class="era-tag"><span class="era-dot soviet"></span> Советский период (1917–1991)</span>
+                <span class="era-tag"><span class="era-dot modern"></span> Современность (с 1991)</span>
+            </div>
 
                 <div class="timeline-grid" id="timelineGrid">
                     <!-- Имперский период (до 1917) — желто-оранжевый -->
