@@ -175,17 +175,6 @@
             z-index: 2;
         }
 
-        /* единый ховер-эффект для всей карточки */
-        .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent), 0 8px 20px -8px var(--accent);
-        }
-
-        /* при ховере на карточку рамка появляется и у изображения */
-        .card:hover .card-image {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent);
-        }
 
         .card-header {
             display: flex;
@@ -256,16 +245,6 @@
             transition: all 0.3s ease;
             opacity: 0;
             animation: fadeUp 0.6s ease-out forwards;
-        }
-
-        .compact-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-        }
-
-        .compact-card:hover .card-image {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent);
         }
 
         .compact-card .card-image {

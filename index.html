@@ -678,6 +678,126 @@
             color: var(--accent-2);
         }
 
+
+
+    .bottom-nav {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        min-width: 400px;
+        max-width: 90%;
+        background: rgba(20, 20, 20, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 15px 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        border: 0px solid rgba(255, 255, 255, 0.15);
+        z-index: 1000;
+        
+        /* Изначально скрыта и прозрачна */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+            }
+
+        /* Показываем при наведении на десктопе */
+        .bottom-nav:hover {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Показываем при прокрутке (будет управляться через JS) */
+        .bottom-nav.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .bottom-nav {
+                bottom: 20px;
+                padding: 12px 20px;
+                border-radius: 12px;
+                min-width: 300px;
+                
+                /* На мобильных скрыта по умолчанию */
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+            
+            /* Класс для показа на мобильных */
+            .bottom-nav.mobile-visible {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* Контейнер для ссылок */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+        }
+
+        /* Стили для ссылок */
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 8px; /* Уменьшил скругление кнопок с 40px до 8px */
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            border: 0px solid rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .nav-link:hover {
+            background: rgba(179, 146, 240, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(179, 146, 240, 0.1);
+        }
+
+        /* Активная ссылка (для JS) */
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        /* Анимация появления */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 30px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* Плавная прокрутка */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 30px;
+        }
+
+
         /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
         /* Все стили выше сохранены полностью */
         /* Добавляем только медиа-запросы для мобильных устройств */
@@ -1047,7 +1167,7 @@
 
                 <div class="timeline-grid" id="timelineGrid">
                     <!-- Имперский период (до 1917) — желто-оранжевый -->
-                    <div class="timeline-card" data-year="1871" data-era="imperial">
+                    <div class="timeline-card" data-year="1871" data-era="imperial" id="y1799">
                         <div class="timeline-year">1799</div>
                         <span class="timeline-era-badge">Денисово</span>
                         <h3 class="timeline-title">Освоение территории</h3>
@@ -1083,7 +1203,7 @@
                     </div>
 
                     <!-- Имперский период -->
-                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                    <div class="timeline-card" data-year="1904" data-era="imperial" id="y1821">
                         <div class="timeline-year">1821</div>
                         <span class="timeline-era-badge">Ногайск</span>
                         <h3 class="timeline-title">"Город Ногайск учредить..."</h3>
@@ -1101,7 +1221,7 @@
                     </div>
 
                     <!-- Имперский период -->
-                    <div class="timeline-card" data-year="1904" data-era="imperial">
+                    <div class="timeline-card" data-year="1904" data-era="imperial" id="y1861">
                         <div class="timeline-year">1861</div>
                         <span class="timeline-era-badge">Преслав и др.</span>
                         <h3 class="timeline-title">Български села</h3>
@@ -1165,7 +1285,7 @@
 
 
                     <!-- ... -->
-                    <div class="timeline-card" data-year="1943" data-era="soviet">
+                    <div class="timeline-card" data-year="1943" data-era="soviet" id="y1917">
                         <div class="timeline-year">1917</div>
                         <span class="timeline-era-badge">Гражданская война</span>
                         <h3 class="timeline-title">Первый Ногайский Совет</h3>
@@ -1242,7 +1362,7 @@
 
 
                     <!-- Советский период -->
-                    <div class="timeline-card" data-year="1985" data-era="soviet">
+                    <div class="timeline-card" data-year="1985" data-era="soviet" id="y1941">
                         <div class="timeline-year">1941</div>
                         <span class="timeline-era-badge">ВОВ</span>
                         <h3 class="timeline-title">Грозный час испытаний</h3>
@@ -1291,11 +1411,11 @@
                     </div>
 
                     <!-- Советский период -->
-                    <div class="timeline-card" data-year="1985" data-era="soviet">
+                    <div class="timeline-card" data-year="1985" data-era="soviet" id="y1965">
                         <div class="timeline-year">1965</div>
                         <span class="timeline-era-badge">Приморский район</span>
                         <h3 class="timeline-title">Приморское</h3>
-                        <p class="timeline-desc">К концу 40-х годов возобновили деятельность библиотека, дом пионеров. Работниками культуры только за 1958 год дано 325 концертов на полевых станах, проведено множество мероприятий. В ходе месячника культпросветучреждений высажено 3200 деревьев, отремонтированы здание библиотеки, клубы. 1487 жителей района охвачено работой в 102 кружках художественной самодеятельности. В 1961 году открылся районный кинотеатр. Развернулось государственное строительство. 1964г. Ногайск переименован в Приморск, спустя год станет центром Примосркого района. Однако статус города Приморск получит лишь в 1972г.</p>
+                        <p class="timeline-desc">К концу 40-х годов возобновили деятельность библиотека, дом пионеров. Работниками культуры только за 1958 год дано 325 концертов на полевых станах, проведено множество мероприятий. В ходе месячника культпросветучреждений высажено 3200 деревьев, отремонтированы здание библиотеки, клубы. 1487 жителей района охвачено работой в 102 кружках художественной самодеятельности. В 1961 году открылся районный кинотеатр. Развернулось государственное строительство. 1964г. Ногайск переименован в Приморск, спустя год станет центром Примосркого района. Однако статус города Приморск получит лишь в 1969г.</p>
                         <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/08/g1p9Z4sx2DHqpwfOnXiEcXAV2sOMQzJtSuVAfEEE0.png')">[ ... ]</div>
                     </div>
 
@@ -1550,6 +1670,25 @@
         </div>
     </div>
 
+
+
+<!-- Нижняя панель навигации -->
+    <div class="bottom-nav">
+        <div class="nav-container">
+            <a href="#y1799" class="nav-link">1799</a>
+            <a href="#y1821" class="nav-link">1821</a>
+            <a href="#y1861" class="nav-link">1861</a>
+            <a href="#y1917" class="nav-link">1917</a>
+            <a href="#y1941" class="nav-link">1941</a>
+            <a href="#y1965" class="nav-link">1965</a>
+            <a href="#y1991" class="nav-link">1991</a>
+            <a href="#y2022" class="nav-link">2022</a>
+        </div>
+    </div>
+
+
+
+
     <footer class="site-footer">
         <div class="footer-wave"></div>
         <div class="container footer-content">
@@ -1675,6 +1814,63 @@
                 openModal(modalType);
             });
         });
+    </script>
+    <script>
+    // Для десктопа - показываем при прокрутке вниз
+    let lastScrollTop = 0;
+    let hideTimeout;
+
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.bottom-nav');
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Показываем панель при прокрутке вниз
+        if (scrollTop > lastScrollTop) {
+            // Прокрутка вниз
+            nav.classList.add('visible');
+            
+            // Для мобильных - добавляем отдельный класс и таймер
+            if (window.innerWidth <= 768) {
+                nav.classList.add('mobile-visible');
+                
+                // Сбрасываем предыдущий таймер
+                clearTimeout(hideTimeout);
+                
+                // Устанавливаем новый таймер на 4 секунды
+                hideTimeout = setTimeout(() => {
+                    nav.classList.remove('mobile-visible');
+                }, 4000);
+            }
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    });
+
+    // Для мобильных - показываем при касании экрана
+    if ('ontouchstart' in window) {
+        document.addEventListener('touchstart', () => {
+            const nav = document.querySelector('.bottom-nav');
+            nav.classList.add('mobile-visible');
+            
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                nav.classList.remove('mobile-visible');
+            }, 4000);
+        });
+    }
+
+    // На десктопе убираем класс visible, когда пользователь перестал скроллить
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (window.innerWidth > 768) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                if (!document.querySelector('.bottom-nav:hover')) {
+                    document.querySelector('.bottom-nav').classList.remove('visible');
+                }
+            }, 1500);
+        }
+    });
     </script>
 </body>
 </html>
