@@ -93,7 +93,7 @@
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: -1px;
-            background: var(--text-secondary);
+            background: var(--accent-2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
@@ -167,7 +167,7 @@
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: #a0a8c0;
+            background: linear-gradient(135deg, #fff 0%, #a0a8c0 50%, var(--accent-2) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: titleGlow 4s ease-in-out infinite;
@@ -199,7 +199,7 @@
         .stat-number {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--accent-2);
+            color: var(--text-secondary);
             font-family: var(--font-mono);
         }
 
@@ -656,7 +656,7 @@
         .footer-logo {
             font-size: 2rem;
             font-weight: 700;
-            background: var(--accent-2);
+            background: linear-gradient(135deg, #fff, var(--accent-2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
@@ -1815,51 +1815,32 @@
             });
         });
     </script>
-<script>
-    // Управление нижней панелью навигации
+    <script>
+    // Для десктопа - показываем при прокрутке вниз
     let lastScrollTop = 0;
     let hideTimeout;
-    let activityTimeout;
-    let isScrolling = false;
 
-    function hideNavOnMobile() {
-        if (window.innerWidth <= 768) {
-            const nav = document.querySelector('.bottom-nav');
-            // Очищаем предыдущий таймер
-            clearTimeout(hideTimeout);
-            // Устанавливаем новый таймер на 3 секунды
-            hideTimeout = setTimeout(() => {
-                nav.classList.remove('mobile-visible');
-            }, 3000);
-        }
-    }
-
-    function showNav() {
-        const nav = document.querySelector('.bottom-nav');
-        nav.classList.add('visible');
-        
-        if (window.innerWidth <= 768) {
-            nav.classList.add('mobile-visible');
-            hideNavOnMobile();
-        }
-    }
-
-    // Отслеживаем прокрутку
     window.addEventListener('scroll', () => {
         const nav = document.querySelector('.bottom-nav');
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Показываем панель при прокрутке
-        showNav();
-        
-        // Для десктопа скрываем через 1.5 секунды после остановки
-        if (window.innerWidth > 768) {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                if (!document.querySelector('.bottom-nav:hover')) {
-                    nav.classList.remove('visible');
-                }
-            }, 1500);
+        // Показываем панель при прокрутке вниз
+        if (scrollTop > lastScrollTop) {
+            // Прокрутка вниз
+            nav.classList.add('visible');
+            
+            // Для мобильных - добавляем отдельный класс и таймер
+            if (window.innerWidth <= 768) {
+                nav.classList.add('mobile-visible');
+                
+                // Сбрасываем предыдущий таймер
+                clearTimeout(hideTimeout);
+                
+                // Устанавливаем новый таймер на 4 секунды
+                hideTimeout = setTimeout(() => {
+                    nav.classList.remove('mobile-visible');
+                }, 4000);
+            }
         }
         
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -1868,45 +1849,28 @@
     // Для мобильных - показываем при касании экрана
     if ('ontouchstart' in window) {
         document.addEventListener('touchstart', () => {
-            showNav();
-        });
-
-        // Также показываем при движении пальца по экрану
-        document.addEventListener('touchmove', () => {
-            showNav();
+            const nav = document.querySelector('.bottom-nav');
+            nav.classList.add('mobile-visible');
+            
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                nav.classList.remove('mobile-visible');
+            }, 4000);
         });
     }
 
-    // Показываем при наведении мыши (для десктопа)
-    const nav = document.querySelector('.bottom-nav');
-    nav.addEventListener('mouseenter', () => {
+    // На десктопе убираем класс visible, когда пользователь перестал скроллить
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
         if (window.innerWidth > 768) {
-            nav.classList.add('visible');
             clearTimeout(scrollTimeout);
-        }
-    });
-
-    nav.addEventListener('mouseleave', () => {
-        if (window.innerWidth > 768) {
             scrollTimeout = setTimeout(() => {
-                nav.classList.remove('visible');
-            }, 500);
+                if (!document.querySelector('.bottom-nav:hover')) {
+                    document.querySelector('.bottom-nav').classList.remove('visible');
+                }
+            }, 1500);
         }
     });
-
-    // Показываем при загрузке страницы на 3 секунды
-    window.addEventListener('load', () => {
-        if (window.innerWidth <= 768) {
-            showNav();
-        }
-    });
-
-    // Также показываем при клике на любую ссылку в навигации
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            showNav();
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
