@@ -32,8 +32,9 @@
             --modern: #4a9eff;      /* синий — с 1991 */
             
             /* Дополнительные акценты */
-            --accent-2: #4ec9b0;    /* мятный */
-            --accent-3: #b392f0;    /* лавандовый */
+            --accent-2: rgba(255, 255, 255, 0.9);    /* заголовки */
+            --accent-3: rgba(255, 255, 255, 0.6);    /* заголовки */
+            --accent-4: linear-gradient(135deg, #00ffa3 10%, #00d4ff 50%);    /* заголовки */
             
             --glass-bg: rgba(26, 31, 40, 0.7);
             --border-glow: rgba(255, 107, 74, 0.3);
@@ -106,7 +107,7 @@
             left: 0;
             width: 30%;
             height: 2px;
-            background: var(--soviet);
+            background: var(--accent-4);
             transition: width 0.3s ease;
         }
 
@@ -153,7 +154,8 @@
 
         h2 {
             color: #9590a6;
-            margin: 30px;
+            margin: 5px;
+            margin-top: 25px;
         }
 
         .hero-content {
@@ -167,7 +169,7 @@
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #fff 0%, #a0a8c0 50%, var(--accent-2) 100%);
+            background: var(--accent-4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: titleGlow 4s ease-in-out infinite;
@@ -183,13 +185,15 @@
             color: var(--text-secondary);
             max-width: 600px;
             margin-bottom: 2rem;
-            border-left: 4px solid var(--soviet);
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
             padding-left: 2rem;
+            position: relative;
+            left: 10px;
         }
 
         .hero-stats {
             display: flex;
-            gap: 3rem;
+            gap: 5rem;
         }
 
         .stat-item {
@@ -212,7 +216,8 @@
 
         /* Заголовки секций */
         .section-header {
-            margin-bottom: 3rem;
+            margin-bottom: 0rem;
+            margin-top: 4rem;
         }
 
         .section-title {
@@ -1107,6 +1112,10 @@
                     <div class="stat-item">
                         <div class="stat-number">30</div>
                         <div class="stat-label">личностей</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">+4</div>
+                        <div class="stat-label">статьи</div>
                     </div>
                 </div>
             </div>
