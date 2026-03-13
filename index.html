@@ -257,6 +257,14 @@
         .era-dot.modern { background: var(--modern); box-shadow: 0 0 10px var(--modern); }
 
         /* Хронология — карточки с цветом эпохи */
+        .tag {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: rgb(150,150,150);
+        }
         .timeline-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -398,102 +406,7 @@
             opacity: 0.15;
         }
 
-        /* Личности */
-        .person-section {
-            margin: 6rem 0;
-        }
 
-        .person-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 2rem;
-        }
-
-        .person-card-modern {
-            background: var(--bg-card);
-            border-radius: 30px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            /* +++ Добавить эти три строки +++ */
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .person-card-modern::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 0%, rgba(179, 146, 240, 0.1), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .person-card-modern:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-3);
-        }
-
-        .person-card-modern:hover::after {
-            opacity: 1;
-        }
-
-        .person-name {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-
-        .person-role {
-            color: var(--accent-3);
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .person-bio {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .person-image-mini {
-            margin-top: auto;
-            width: 100%;
-            aspect-ratio: 1 / 1;  /* Это делает блок квадратным */
-            background: linear-gradient(145deg, #222834, #1a1f28);
-            border-radius: 20px;   /* Скругление сохраняется */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a5162;
-            font-family: var(--font-mono);
-            border: 2px solid rgba(255, 255, 255, 0.02);
-            transition: all 0.3s ease;
-            background-image: repeating-linear-gradient(45deg, rgba(179, 146, 240, 0.02) 0px, rgba(179, 146, 240, 0.02) 10px, transparent 10px, transparent 20px);
-            cursor: pointer;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .person-image-mini.has-image {
-            border: 2px solid transparent;
-            color: transparent;
-            text-indent: -9999px;
-            background-image: none;
-        }
 
 
         /* Галерея */
@@ -514,8 +427,7 @@
         }
 
         .gallery-item:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 30px -10px rgba(255, 184, 107, 0.3);
+            transform: scale(1.05);
         }
 
         .gallery-image {
@@ -1097,11 +1009,11 @@
             <!-- Галерея -->
             <section>
                 <div class="gallery">
-                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/kolxos.html'">
-                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/gvbEcizxfztzR8tTzlkjSZUN88M1WgL5Q707YwS6o.jpg')"></div>
+<div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/person.html'">
+                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/13/gV0UCqrx1sqe1FDMTBr0N2yDI8L4sPahc4CQyv02I.jpg')"></div>
                         <div class="gallery-overlay">
-                            <h3 class="gallery-title">Трактор</h3>
-                            <span class="gallery-year">"Универсал-2". МТС</span>
+                            <h3 class="gallery-title">Имена и портреты</h3>
+                            <span class="gallery-year">в интерьере истории</span>
                         </div>
                     </div>
 
@@ -1110,22 +1022,6 @@
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Между строк</h3>
                             <span class="gallery-year">Газеты. Купюры. Документы</span>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/1980.html'">
-                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwrSNwnxyfIt4Nsd4vPiHvyqCkcD4aTF2msHEEU9c.png')"></div>
-                        <div class="gallery-overlay">
-                            <h3 class="gallery-title">Ракурс эпохи</h3>
-                            <span class="gallery-year">Приморск. 1980-е</span>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/slon.html'">
-                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwM8NcUxLq23ioPZePmeNh1ah16eNTyeZWzAB6Bqq.jpg')"></div>
-                        <div class="gallery-overlay">
-                            <h3 class="gallery-title">Ногайский слон</h3>
-                            <span class="gallery-year">Арт-объект. Ископаемые</span>
                         </div>
                     </div>
 
@@ -1142,6 +1038,30 @@
                         <div class="gallery-overlay">
                             <h3 class="gallery-title">Бой у косы</h3>
                             <span class="gallery-year">Обиточной. 1920</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/1980.html'">
+                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwrSNwnxyfIt4Nsd4vPiHvyqCkcD4aTF2msHEEU9c.png')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Ракурс эпохи</h3>
+                            <span class="gallery-year">Приморск. 1980-е</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/kolxos.html'">
+                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/gvbEcizxfztzR8tTzlkjSZUN88M1WgL5Q707YwS6o.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Трактор</h3>
+                            <span class="gallery-year">"Универсал-2". МТС</span>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/slon.html'">
+                        <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwM8NcUxLq23ioPZePmeNh1ah16eNTyeZWzAB6Bqq.jpg')"></div>
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">Ногайский слон</h3>
+                            <span class="gallery-year">Арт-объект. Ископаемые</span>
                         </div>
                     </div>
 
@@ -1170,6 +1090,7 @@
                         <span class="timeline-era-badge">Денисово</span>
                         <h3 class="timeline-title">Освоение территории</h3>
                         <p class="timeline-desc">За участие в русско-турецкой войне 1768-1774 гг. при взятии Измаила графским титулом награждён Фёдор Петрович Денисов. В 1799 году ему выделены земли по берегу Азовского моря вдоль реки Обиточной. В 1807 году основано село Денисово. Фёдор Петрович ходатайствовал о передаче графского титула внуку - Василию Орлову.</p>
+            
                         <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gOHNKzTxwKZUkfWL0aiycCftu9sN9hvXkosgz45V9.jpg')"></div>
                     </div>
 
@@ -1269,7 +1190,7 @@
                         <span class="timeline-era-badge">Перед первой мировой</span>
                         <h3 class="timeline-title">Бурная жизнь</h3>
                         <p class="timeline-desc">В 1914 году в Ногайске работало около 20 заводов: кирпичные, мыловаренный и пивоваренный, мельницы и пекарни. Открыли отделение банка и 36 торговых лавок. Ремеслом занимались более 1500 человек. Дважды в год шумели ярмарки. У горожан пользовались популярностью частный театр Ангеловского, синематограф Мироненко, фотография Зиньковского. В городе стояли церкви разных конфессий: 3 православных, армянская, немецкая кирха, еврейская синагога. Работали почта и телеграф, через речку проложили мост, рядом находилась городская баня.</p>
-                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/05/gbf1Di6xhNU46Haft9Pvl7mz3m97EflKjHo2d6twL.jpg')"></div>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/13/gmYC5DQxLLXfdCVXdKPmGGYVTtEHBr8IIGYlZH4MV.jpg')"></div>
                     </div>
 
                     <!-- ... -->
@@ -1439,14 +1360,14 @@
                     <div class="timeline-card" data-year="1985" data-era="soviet">
                         <div class="timeline-year">1979</div>
                         <span class="timeline-era-badge">СССР</span>
-                        <h3 class="timeline-title">заголовок</h3>
-                        <p class="timeline-desc">[  Афганская война  ]</p>
-                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://example.com/placeholders/university.jpg')">[ ... ]</div>
+                        <h3 class="timeline-title">Пламя свечи осветило...</h3>
+                        <p class="timeline-desc">Афганская война - девять лет песка, гор и цинковых гробов. Среди воинов-интернационалистов 80 жителей Приморского района с честью выполняли свой долг. Четверо парней не вернулись домой: А.Н.Дудниченко, А.С.Данилов, В.И.Матвиенко, В.А.Климов. 15 февраля 1989 года завершился вывод советских войск из Афганистана.</p>
+                        <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/13/g6Y3VJ9xyZzhXnuoL4VIHI4bu2KdH5R94opwazoiB.jpg')"></div>
                     </div>
 
 
                     <!-- Советский период -->
-                    <div class="timeline-card" data-year="1985" data-era="soviet">
+                    <div class="timeline-card" data-year="1985" data-era="soviet" id="y1980">
                         <div class="timeline-year">1980</div>
                         <span class="timeline-era-badge">Приморск</span>
                         <h3 class="timeline-title">"Олимпиец"</h3>
@@ -1459,8 +1380,8 @@
                     <div class="timeline-card" data-year="1985" data-era="soviet">
                         <div class="timeline-year">1985</div>
                         <span class="timeline-era-badge">СССР</span>
-                        <h3 class="timeline-title">заголовок</h3>
-                        <p class="timeline-desc">[ наводнение + Чернобыль ]</p>
+                        <h3 class="timeline-title">Противодействие катастрофе</h3>
+                        <p class="timeline-desc">Весеннее наводнение 1985 года принесло немало бед и разрушений. Много усилий направили на ликвидацию его последствий, провели реконструкцию теплосети, отстроили 260 домов и возвели ещё 100 новых. Личное участие принимал председатель горсовета Л.В.Булашев. 26 апреля 1986 трагедией разразился Чернобыль. Некоторые жители Приморского района приняли участие в ликвидации последствий аварии. Памятный знак им установлен в центральном парке.</p>
                         <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gXx6wfhxGk53NKaXJw3Dz4wZBAY6kqsS8c9XosL3R.png')"></div>
                     </div>
 
@@ -1469,7 +1390,7 @@
                     <div class="timeline-card" data-year="1985" data-era="soviet">
                         <div class="timeline-year">1989</div>
                         <span class="timeline-era-badge">Приморск</span>
-                        <h3 class="timeline-title">заголовок</h3>
+                        <h3 class="timeline-title">На наших глазах</h3>
                         <p class="timeline-desc">80-е годы - рождение знакомого нам микрорайона. Каждый год под ключ сдавалось в среднем 25-30 квартир. Детским садом, школой №2, районной больницей, аптекой, торговыми рядами застраивается ул.Морская. Через р.Обиточную к Юбилейному парку установлен пешеходный мост Елагина. В начале десятилетия введены в очистные сооружения, а 1989 организована городская теплосеть. Работами руководил Д.Ф.Петрик и архитектор В.В.Станишевский. В общепроизводственный ритм вписывалась комсомольская организация, руководимая Н.И.Иванченко.</p>
                         <div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gkOh8m8xN4i4Aa2SvVhr3bRrnCVzfahyuWZdEvOdP.png')"></div>
                     </div>
@@ -1506,252 +1427,7 @@
                 </div>
             </section>
 
-            <!-- Личности -->
-            <section class="person-section">
-                <div class="section-header">
-                    <h2 class="section-title">Исторические личности</h2>
-                </div>
-
-                <h2>
-                    Истоки. Заштатный город
-                </h2>
-
-                <div class="person-grid" id="personGrid">
-                    <div class="person-card-modern">
-                        <div class="person-name">Фёдор Петрович Денисов</div>
-                        <div class="person-role">граф · донской казак</div>
-                        <div class="person-bio">Донской казак, дослужившийся до чина генерала от кавалерии. Участник русско-турецких войн, от неприятеля получил прозвище "Денис-паша".</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/grb2xHMxzgVXK1yEDb55dwkOaRcIUG2iSSesvSIV4.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Василий Васильевич Орлов-Денисов</div>
-                        <div class="person-role">донской казак · внук Ф.П.Денисова</div>
-                        <div class="person-bio">Участник Отечественной войны 1812 года. Современники говорили: "богатырски сложенный, высокого роста, могучий всадник... он любил жизнь роскошную, весёлую, и часто восходящее солнце заставало его за картами".</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gbImwAoxohItoV65OcERDReaTJjaAH1JJQJZKnKvR.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Яков де Мезон</div>
-                        <div class="person-role">пристав ногайских орд · основатель города</div>
-                        <div class="person-bio">Покинул Францию во время революции. Новую трудную службу начал в преклонных годах, но проявлял в ней усердие и юношескую горячность. Принуждал ногайцев к оседлому образу жизни, нередко конфликтовал с ними. В 1822 ушёл в отставку и провёл остаток жизни в Крыму.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Клерфон</div>
-                        <div class="person-role">садовник</div>
-                        <div class="person-bio">В 1811 под руководством Клерфона посадили сад фруктовых и декоративных деревьев, где ногайцы учились садоводству. Принудительные работы использовали как наказания за провинности. Ногайский сад восхищал губернских чиновников многообразием сортов. Упадок сада пришёлся на 1920-е.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Софья Васильевна Толстая</div>
-                        <div class="person-role">дочь Орлова-Денисова</div>
-                        <div class="person-bio">Фрейлина при императорском дворе. Вышла замуж за графа Владимира Петровича Толстого.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gZ5kymixFq6sE9MJlbVJW0RLqzUuUEjmtsVzhQd64.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Софья Николаевна Глебова</div>
-                        <div class="person-role">внучка Орлова-Денисова</div>
-                        <div class="person-bio">Владела имением в селе Обиточное. Вышла замуж за крупного предпринимателя Владимира Петровича Глебова. Семья Глебовых была близка с семьёй Льва Толстого. После революции 1917 года эмигрировала.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gb5t5lOx3WlR4b9EFNuFUng65aWIV8Bdbp26joFKj.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Восставшие крестьяне</div>
-                        <div class="person-role">1861-1863</div>
-                        <div class="person-bio">Василий Голик, Тимофей Мамонов, Андрей Еременко, Василий Баклажков, Григорий Гиренко, Антон Улазко — вожаки крестьянского восстания против грабительских условий отмены крепостного права.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gicbnjSx2pvEKIt7YfTTp6uRmbCB7kKwcJkFQZb18.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Василий Николаевич Фомин</div>
-                        <div class="person-role">земский врач</div>
-                        <div class="person-bio">Окончил Киевский университет. Участвовал в русско-турецкой войне 1877-1878 годов, за что получил орден. В 1880 назначен на должность земского врача города Ногайска. Более 40 лет занимался медициной и преподаванием.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gEgk3FDxVQ6F1o6bq2dVq6Gsdso6BPvEdzzKszObz.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Константин Евстафьевич Звороно</div>
-                        <div class="person-role">городской голова</div>
-                        <div class="person-bio">Избран городским головой в 1896 году. Плодотворная деятельность не отнимала всего его времени: он также состоял председателем попечительского совета женской гимназии и председателем городского попечительства о бедных.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/gmjBrPKxjFLzebowKLhFeCOeKoXTX2DnrFR1sLtX9.jpg')"></div>
-                </div>
-            </div>
-
-                    <h2>
-                        Художники
-                    </h2>
-
-                <div class="person-grid" id="personGrid">
-                    <div class="person-card-modern">
-                        <div class="person-name">Гордей Данилович Смоктий</div>
-                        <div class="person-role">художник</div>
-                        <div class="person-bio">Сведения о нём оставил историк-краевед Эраницкий в статье "Славный город Ногайск, он же город черных пауков". Гордей Смоктий занимался зодчеством и церковной живописью. Его сын, Анастас Гордеевич Смоктий - художник и музыкант, учил живописи Афанасия Сластиона.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Афанасий Георгиевич Сластион</div>
-                        <div class="person-role">художник</div>
-                        <div class="person-bio">Провёл детство в Ногайске. Выдающийся художник, архитектор, этнограф. Создал "кобзарскую серию" - свыше 50 портретов кобзарей и лирников. Одним из первых начал записывать пение кобзарей на фонограф.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/09/gtJKTWHxLsWBiZC2cvcJG8V2c3sK8KTjo5W7bymnb.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Саул Раскин</div>
-                        <div class="person-role">художник</div>
-                        <div class="person-bio">Родился в НОгайске в апреле 1878г. Учился в Одессе. Путешествовал по Европе. С 1904г. эмигрировал в Нью-Йорк. Известен как художник, писатель и лектор. Писал картины, посвященные еврейской культуре и религиозным сюжетам.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/09/goj3dJYxNpaiwgVYDczyQswXc91MR6TmFOTYrwJ8W.png')"></div>
-                </div>
-            </div>
-
-
-                    <h2>
-                        Революция и Гражданская война
-                    </h2>
-
-            <div class="person-grid" id="personGrid">
-                    <div class="person-card-modern">
-                        <div class="person-name">Первый Ногайский Совет</div>
-                        <div class="person-role">расстрелянные дроздовцами</div>
-                        <div class="person-bio">Председатель: Антон Антонович Новицкий. Сергей Антонович Новицкий, Ефим Антонович Голубенко, Григорий Кириллович Кокошко, Владимир Прокофьевич Гарбузов и др. выжил Иван Иванович Ечин.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/07/gYBw6vYxpdR9QXSTdz8se88QkBgYzEaenKloY6DuA.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Георгий Захарович Голик</div>
-                        <div class="person-role">Гражданская война</div>
-                        <div class="person-bio">Командир первого ногайского повстанческого отряда. Оказывал поддержку РККА в сражениях с деникинцами и врангелевцами. За успехи против войск генерала Шкуро под деревней Чумаки на Херсонщине награждён орденом Красного Знамени.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/06/gww5FNdxghXpibWR1zlClsK7YmTMVzcyHGINLDocI.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">С.И.Кара</div>
-                        <div class="person-role">Гражданская война</div>
-                        <div class="person-bio">Бывший балтийский матрос. Председатель второго ногайского совета 1919г.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/06/gq81oUGxbw2cZyvRPuScLu5hK3vviQWVuLa8TBw79.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">А.Д.Леванисов</div>
-                        <div class="person-role">Гражданская война</div>
-                        <div class="person-bio">Комиссар первого ногайского повстанческого отряда. В январе 1921г. избран председателем нового Ногайского Совета.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/06/gq81oUGxbw2cZyvRPuScLu5hK3vviQWVuLa8TBw79.jpg')"></div>
-                    </div>
-                </div>
-
-                    <h2>
-                        1920-1930-е гг.
-                    </h2>
-
-            <div class="person-grid" id="personGrid">
-
-                    <div class="person-card-modern">
-                        <div class="person-name">М.М.Сопильник</div>
-                        <div class="person-role">КП(б)У</div>
-                        <div class="person-bio">Секретарь ногайской партийной организации в 1920-е гг.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Н.И.Кошкарёва</div>
-                        <div class="person-role">ЛКСМУ</div>
-                        <div class="person-bio">Возглавила комсомол г.Ногайск. Также в рядах первых комсомольцев: Ю.П.Ганина, М.И.Гладкова, Л.Захарова</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/08/gTw4yynxWruEjr6GGaskMAzmze80qmktgj6JbUD4e.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">М.М.Онищенко</div>
-                        <div class="person-role">"Всеработземлес"</div>
-                        <div class="person-bio">Руководил ногайским профсоюзом, созданным по инициативе местного комсомола.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Александр Николаевич Грибанов</div>
-                        <div class="person-role">Врач-хирург</div>
-                        <div class="person-bio">Окончил первый Московский медицинский институт. Более 30 лет проработал в ногайской районной больнице. Был очень чутким человеком и квалифицированным специалистом. В годы Великой Отечественной войны служил полевым хирургом. Имел огромный авторитет и уважение среди жителей города. Провёл более 40000 операций. В 1949 ему присвоено почётное звание Заслуженного врача УССР.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/07/gzo2KStxtyhcXBify9wZ4Bs0ZeGZwKeW2Th76Kbou.jpg')"></div>
-                    </div>
-
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Георгий Иович Савинов</div>
-                        <div class="person-role">Председатель райсовета</div>
-                        <div class="person-bio">В 1939 году состоялись выборы в местные советы народных депутатов. Всего по району в органы представительской власти выбрано 305 человек, из них 28 - райсовет.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/05/g6GEnzJxfl4rKMZNk3OhznXlr6d6QS2zo2MZzeNJ4.png')"></div>
-                    </div>
-                </div>
-
-                    <h2>
-                        Великая Отечественная Война
-                    </h2>
-
-            <div class="person-grid" id="personGrid">
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Кударь Петр Сергеевич</div>
-                        <div class="person-role">Герой Советского Союза · ВОВ</div>
-                        <div class="person-bio">Родился в с.Новоалексеевка в 1913г. Окончил Бердянский индустриальный техникум. Работал на заводе в г.Крюково. В армии с 1935г. Окончил Чугуевское военно-авиационное училище. Воевал с августа 1941 в составе Юго-Западного фронта командиром эскадрильи 44-й истребительной авиадивизии 6-й армии. Погиб при выполнении боевого задания на Харьковщине 30.10.41. Награжден званием Героя Советского Союза посмертно.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/07/gajRlQExzLe7ZwOXqG6VoF9eAsNcl4kbdranuY4Zk.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Нестеренко Федор Григорьевич</div>
-                        <div class="person-role">Герой Советского Союза · ВОВ</div>
-                        <div class="person-bio">Родился в с.Новоалексеевка в 1923г. На фронт ушёл добровольцем 23 июня 1941г. Оружейный расчёт под командыванием Нестеренко одним из первых в 6-й гвардейской стрелковой дивизии в январе 1945 форсировал Одер. Тяжело ранен в боях на плацдарме. Умер в госпитале 1 марта 1945. Похоронен в Збрау. Посмертно присвоено звание Героя Советского Союза.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/07/ghyHVeJxzRWy16dQwNEirI3dtplAWsvtTvZiZbJmM.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Дерипаско Александр Васильевич</div>
-                        <div class="person-role">Участник Парада Победы · ВОВ</div>
-                        <div class="person-bio">Рядовой гвардии. Прошёл через переломные сражения Великой Отечественной: бои под Ельней, Орлом и Курском, где получил ранение, пуля от которого осталась в плече ветерана на всю жизнь. Принимал участие в Параде Победы 24 июня 1945г.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/09/gh3kV57xwSfbgQzjuVSaw1vhUPJPBmRv87wczIETB.jpg')"></div>
-                    </div>
-
-                </div>
-
-                    <h2>
-                        Будни созиданий
-                    </h2>
-
-            <div class="person-grid" id="personGrid">
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Москальков Петр Иванович</div>
-                        <div class="person-role">Первый секретарь райкома</div>
-                        <div class="person-bio">Заслуженный работник сельского хозяйства УССР. С 1965 избирается првым секретарем Примосркого райкома. За 9 лет его работы урожайность районв увеличилась втрое, выросло поголовье скота, улучшались условия труда механизаторов. Все сёла стали связаны асфальтированными дорогами, шло активное строительство типовых школ, домов культуры, жилья. С 1974 заместитель председателя Запорожского облисполкома, затем председатель. в 80-х депутат Президиума Верховного Совета Украины.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/11/guOScz1xrK2miJnTbRqAVH1kzF1aMr8XeVO18yZNN.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Финарёв Израил Абрамович</div>
-                        <div class="person-role">Здравоохранение</div>
-                        <div class="person-bio">Уроженец Одесской области. Будучи военным врачом в годы Великой Отечественной, тяжело контужен. Закончил войну в 1945 в Японии. Прибыл в Ногайск, где с 1951 по 1970 возглавляет здравоохранение района. В должности главврача привлекает медперсонал, расширяет коечный фонд с 50 до 175. Открывает участковые больницы и грязелечебницу. После выхода на пенсию специализируется врачом-психиатром.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/11/gvCKVGFxH7SLvo6SKuQscVf7nw0SFOXvln1yiytTO.jpg')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Попова Н.С.</div>
-                        <div class="person-role">Заслуженный учитель</div>
-                        <div class="person-bio">Заслуженный учитель УССР. Приморская средняя школа.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/11/gW3kZeSxRya2n4YEBvRWTzLTXTy82oGqzmjAYoTZU.png')"></div>
-                    </div>
-
-                    <div class="person-card-modern">
-                        <div class="person-name">Неусыхина Н.И.</div>
-                        <div class="person-role">Заслуженный учитель</div>
-                        <div class="person-bio">Заслуженный учитель математики УССР. Приморская средняя школа.</div>
-                        <div class="person-image-mini" onclick="openModal('person', this)" style="background-image: url('https://s10.iimage.su/s/11/gbH2aThxEUeSYNTavZnNP1VZPN5kPJnPOMDYel6ar.png')"></div>
-                    </div>
-
-
-                </div>
-            </section>
+           
 
         </div>
     </main>
@@ -1775,7 +1451,7 @@
             <a href="#y1917" class="nav-link">1917</a>
             <a href="#y1941" class="nav-link">1941</a>
             <a href="#y1965" class="nav-link">1965</a>
-            <a href="#y1991" class="nav-link">1991</a>
+            <a href="#y1980" class="nav-link">1980</a>
             <a href="#y2022" class="nav-link">2022</a>
         </div>
     </div>
@@ -1787,7 +1463,7 @@
         <div class="footer-wave"></div>
         <div class="container footer-content">
             <div>
-                <div class="footer-logo">ХРОНИКИ·ГОРОДА</div>
+                <div class="footer-logo">ХРОНИКИ · ГОРОДА</div>
                 <p style="color: var(--text-secondary); margin-top: 1rem;">История в цвете эпох: имперский янтарь, советский красный, современный синий</p>
             </div>
             <div>
@@ -1795,7 +1471,7 @@
             <div>
                 <h4 style="color: #fff; margin-bottom: 1.5rem;">Контакты</h4>
                 <div class="footer-links">
-                    <a href="#">* * *</a>
+                    <a href="https://stvq.github.io/PrimQR/ist.html">[ список литературы ]</a>
                     <a href="#">г. Приморск, Запорожская область</a>
                 </div>
             </div>
