@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Приморск · Ногайскъ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0c0f;
+            --card: #14181f;
+            --text: #f0f4fa;
+            --text-dim: #a8b3cf;
+            --accent: #b1b3b3;
+            --border: rgba(255,255,255,0.05);
+            --spacing: 1.5rem;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
+        .background-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+        }
+
+        .decor-item {
+            position: absolute;
+            color: var(--accent);
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px rgba(177, 179, 179, 0.3));
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .decor-item.city1::before { content: "🏛️"; }  
+        .decor-item.city2::before { content: "🕍"; }  
+        .decor-item.city3::before { content: "🕰️"; }  
+        .decor-item.city4::before { content: "🏡"; }  
+        .decor-item.city5::before { content: "🌳"; } 
+        .decor-item.city6::before { content: "🗝️"; }  
+        .decor-item.city7::before { content: "📜"; } 
+        .decor-item.city8::before { content: "🏘️"; }  
+
+        .decor-1 { top: 10%; left: 1%; animation-delay: 0s; font-size: 2.5rem; }
+        .decor-2 { top: 20%; right: 2%; animation-delay: 2s; font-size: 2rem; }
+        .decor-3 { bottom: 15%; left: 3%; animation-delay: 1.5s; font-size: 3rem; }
+        .decor-4 { top: 60%; right: 4%; animation-delay: 3s; font-size: 2.2rem; }
+        .decor-5 { bottom: 40%; left: 5%; animation-delay: 2.2s; font-size: 2.8rem; }
+        .decor-6 { top: 80%; right: 1%; animation-delay: 4s; font-size: 2.4rem; }
+        .decor-7 { bottom: 5%; right: 7%; animation-delay: 5s; font-size: 2.6rem; }
+        .decor-8 { top: 30%; left: 6%; animation-delay: 1.2s; font-size: 2rem; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(3deg); }
+            75% { transform: translateY(10px) rotate(-3deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* шапка */
+        .site-header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d8dde5;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-link {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+
+        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comparison-card, .text-block {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* ===== ОСНОВНОЙ БЛОК СРАВНЕНИЯ ===== */
+        .comparison-card {
+            background: var(--card);
+            border-radius: 28px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .comparison-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d0d6e0;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .photo-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .photo-item {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 16px;
+            margin-top: 0.2rem;
+        }
+        .photo-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.01);
+        }
+
+        .photo-label {
+            background: rgba(10, 12, 15, 0.7);
+            backdrop-filter: blur(4px);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.8rem;
+            display: inline-block;
+            border-radius: 30px;
+            margin: 0.8rem 0 0.2rem 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .photo-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 16px;
+            margin-top: 0.2rem;
+        }
+        .photo-image:hover {
+            opacity: 0.9;
+        }
+
+        .photo-caption {
+            padding: 0.8rem 1rem 1rem 1rem;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+            margin-top: 0.2rem;
+        }
+
+        /* текстовый блок (общий для пары) */
+        .text-block {
+            margin-top: 15px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            padding: 1.8rem;
+            margin: 1rem 0 1.5rem 0;
+            border: 1px solid var(--border);
+            font-size: 1.05rem;
+            color: #d3d9e6;
+        }
+
+        .text-block p {
+            margin-bottom: 1rem;
+        }
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .block-footer {
+            margin-top: 3rem;
+            margin-bottom: 2.7rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        /* дополнительные карточки (по желанию) */
+        .mini-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .mini-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+        .mini-card .photo-image {
+            aspect-ratio: 4/3;
+            margin-bottom: 0.5rem;
+        }
+        .mini-card .card-title {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .mini-card .card-date {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* футер */
+        .site-footer {
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* модалка */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 1rem; right: 1rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            opacity: 0.7;
+            background: none;
+            border: none;
+            z-index: 1001;
+            line-height: 1;
+        }
+        .modal-close:hover { opacity: 1; color: var(--accent); }
+
+        @media (max-width: 600px) {
+            .photo-pair {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .comparison-title {
+                font-size: 1.6rem;
+            }
+            .mini-gallery {
+                grid-template-columns: 1fr;
+            }
+            .decor-item { opacity: 0.1; font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- фоновые элементы (городская тематика) -->
+    <div class="background-decor">
+        <div class="decor-item city1 decor-1"></div>
+        <div class="decor-item city2 decor-2"></div>
+        <div class="decor-item city3 decor-3"></div>
+        <div class="decor-item city4 decor-4"></div>
+        <div class="decor-item city5 decor-5"></div>
+        <div class="decor-item city6 decor-6"></div>
+        <div class="decor-item city7 decor-7"></div>
+        <div class="decor-item city8 decor-8"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">НОГАЙСКЪ <span>·</span> дореволюцiонный</div>
+            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+        </div>
+    </header>
+
+    <main class="container">
+
+
+
+            <!-- Пара фото: 1980-е и сейчас -->
+            <div class="photo-pair">
+                <!-- фото -->
+                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/10/gUXyvZDxbna9YbMcg1aK6XmOYmIBEKsmElJiksaqa.jpg');" onclick="openModal(this)">
+                    <span class="photo-label">План Ногайска</span>
+                </div>
+                <!-- фото -->
+                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/05/gsYgNu0xSBKhXJOLZDXPk35bEqUDoRVd3inF8GXhQ.jpg');" onclick="openModal(this)">
+                    <span class="photo-label">Реальное училище</span>
+                </div>
+            </div>
+            <div class="photo-pair">
+                <!-- фото -->
+                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/13/gRRdaF6xm8s7BnOs5Q1PkjWzopLR8QnambK6cNCem.png');" onclick="openModal(this)">
+                    <span class="photo-label">Гимназия</span>
+                </div>
+                <!-- фото -->
+                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/13/gRlBNK0xFOMX5iak3DHUwUr4btZyOSU6fuhzEgRrC.jpg');" onclick="openModal(this)">
+                    <span class="photo-label">Театр Ангеловского</span>
+                </div>
+            </div>
+            <!-- Единый блок текста -->
+            <div class="text-block">
+С середины 19 века Ногайск постепенно приобетает черты заштатного города. Сейчас главными памятниками дореволюционного времени остаются здания реального училища и женской гимназии - ныне библиотека и "Сопки". Многие здания безвозвратно утеряны за долгие годы, например театр Ангеловского. Каким он был - Ногайскъ?
+            </div>
+
+            <div class="block-footer">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+
+            
+
+
+
+
+        <!-- Мини-галерея для дополнительных кадров (опционально) -->
+        <h3 style="color: #d0d6e0; margin: 2rem 0 1rem; font-size: 1.5rem;">Ещё кадры города</h3>
+        <div class="mini-gallery">
+            <div class="mini-card">
+                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%A2%D1%80%D0%B0%D0%BC%D0%B2%D0%B0%D0%B9');" onclick="openModal(this)"></div>
+                <div class="card-title">Текст текст</div>
+                <div class="card-date">...</div>
+            </div>
+            <div class="mini-card">
+                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%9F%D0%B0%D1%80%D0%BA');" onclick="openModal(this)"></div>
+                <div class="card-title">Текст текст</div>
+                <div class="card-date">...</div>
+            </div>
+            <div class="mini-card">
+                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%9C%D0%BE%D1%81%D1%82');" onclick="openModal(this)"></div>
+                <div class="card-title">Текст текст</div>
+                <div class="card-date">...</div>
+            </div>
+            <div class="mini-card">
+                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%A6%D0%B8%D1%80%D0%BA');" onclick="openModal(this)"></div>
+                <div class="card-title">Текст текст</div>
+                <div class="card-date">...</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div>ПРИМОРСК · ИСТОРИЯ В ФОТОГРАФИЯХ</div>
+            <div></div>
+        </div>
+    </footer>
+
+    <!-- модалка (увеличение фото) -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImg" src="">
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(el) {
+            modal.classList.add('active');
+            const bg = el.style.backgroundImage;
+            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+            if (match && match[1]) {
+                modalImg.src = match[1];
+            } else {
+                // fallback для placeholder / если через url не получилось
+                modalImg.src = 'https://via.placeholder.com/1200x800?text=Photo';
+            }
+            document.body.style.overflow = 'hidden';
+        }
+        window.openModal = openModal;
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        window.closeModal = closeModal;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Наблюдатель для анимаций (на случай подгрузки)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.comparison-card, .text-block, .mini-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
