@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Приморск · Трактор</title>
     <style>
+        /* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ (темы подключаются позже) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -12,13 +13,30 @@
         }
 
         :root {
+            /* цвета эпох и акценты (не зависят от темы) */
+            --imperial: #f9c35c;
+            --soviet: #ff5e7c;
+            --modern: #4a9eff;
+            --accent: #b1b3b3;
+            
+            /* системные цвета – будут меняться */
             --bg: #0a0c0f;
             --card: rgba(255,255,255,0.02);
             --text: #f0f4fa;
             --text-dim: #a8b3cf;
-            --accent: #b1b3b3;
             --border: rgba(255,255,255,0.05);
             --spacing: 1.5rem;
+            --logo-color: #d8dde5;
+        }
+
+        /* Светлая тема */
+        body.light {
+            --bg: #eef2f6;
+            --card: #ffffff;
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0,0,0,0.08);
+            --logo-color: #2d3748;
         }
 
         body {
@@ -28,6 +46,7 @@
             line-height: 1.5;
             position: relative;
             overflow-x: hidden;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
@@ -50,7 +69,6 @@
             animation: float 20s infinite ease-in-out;
         }
 
-        /* колоски и звёздочки */
         .decor-item::before {
             content: "🌾";
         }
@@ -71,7 +89,6 @@
             content: "🔨";
         }
 
-        /* позиционирование */
         .decor-1 { top: 15%; left: 2%; animation-delay: 0s; font-size: 2.5rem; }
         .decor-2 { top: 15%; right: 3%; animation-delay: 3s; font-size: 2rem; }
         .decor-3 { bottom: 10%; left: 5%; animation-delay: 1s; font-size: 3rem; }
@@ -95,13 +112,14 @@
             z-index: 2;
         }
 
-        /* шапка */
+        /* ===== ШАПКА ===== */
         .site-header {
             padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 2rem;
             position: relative;
             z-index: 2;
+            transition: border-color 0.2s ease;
         }
 
         .header-content {
@@ -115,11 +133,36 @@
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #d8dde5;
+            color: var(--logo-color);
+            transition: color 0.2s ease;
         }
 
         .logo span {
             color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--text);
+            background-color: var(--card);
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
         }
 
         .tag {
@@ -129,6 +172,15 @@
             font-size: 0.8rem;
             border: 1px solid var(--border);
             color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        body.light .tag {
+            background: rgba(0,0,0,0.02);
+        }
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--text);
         }
 
         /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
@@ -145,10 +197,9 @@
 
         .card, .compact-card {
             animation: fadeUp 0.6s ease-out forwards;
-            opacity: 0; /* начальное состояние */
+            opacity: 0;
         }
 
-        /* задержки для каскадного появления */
         .card:nth-child(1) { animation-delay: 0.1s; }
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
@@ -157,13 +208,12 @@
         .card:nth-child(6) { animation-delay: 0.6s; }
         .card:nth-child(7) { animation-delay: 0.7s; }
         .card:nth-child(8) { animation-delay: 0.8s; }
-
         .compact-card:nth-child(1) { animation-delay: 0.9s; }
         .compact-card:nth-child(2) { animation-delay: 1.0s; }
         .compact-card:nth-child(3) { animation-delay: 1.1s; }
         .compact-card:nth-child(4) { animation-delay: 1.2s; }
 
-        /* карточки */
+        /* ===== КАРТОЧКИ ===== */
         .card {
             background: var(--card);
             border-radius: 24px;
@@ -174,7 +224,9 @@
             position: relative;
             z-index: 2;
         }
-
+        body.light .card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
 
         .card-header {
             display: flex;
@@ -186,7 +238,7 @@
         }
 
         .card-title {
-            color: #d0d6e0;
+            color: var(--text);
             font-size: 1.5rem;
             font-weight: bold;
             letter-spacing: -0.5px;
@@ -198,14 +250,19 @@
             background: rgba(255,255,255,0.02);
             padding: 0.3rem 0.8rem;
             border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+        body.light .card-date {
+            background: rgba(0,0,0,0.02);
         }
 
         .card-image {
             width: 100%;
             aspect-ratio: 16/9;
             border-radius: 20px;
-            background-size: cover;
-            background-position: center;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             margin: 1rem 0;
             cursor: pointer;
             border: 1px solid var(--border);
@@ -264,7 +321,7 @@
             display: inline-block;
         }
 
-        /* футер */
+        /* ===== ФУТЕР ===== */
         .site-footer {
             padding: 2rem 0;
             margin-top: 2rem;
@@ -282,7 +339,7 @@
             gap: 1rem;
         }
 
-        /* модалка */
+        /* ===== МОДАЛКА ===== */
         .modal {
             display: none;
             position: fixed;
@@ -307,12 +364,6 @@
             max-height: 90vh;
             object-fit: contain;
             border-radius: 16px;
-            border: 2px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .modal-content img:hover {
-            border-color: var(--accent);
         }
 
         .modal-close {
@@ -333,7 +384,7 @@
             color: var(--accent);
         }
 
-        /* мобилки */
+        /* ===== МОБИЛКИ ===== */
         @media (max-width: 600px) {
             .card {
                 padding: 1.2rem;
@@ -351,10 +402,18 @@
                 aspect-ratio: 16/9;
             }
 
-            /* меньше фона на мобилках */
             .decor-item {
                 opacity: 0.1;
                 font-size: 1.5rem;
+            }
+            
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+                font-size: 1rem;
             }
         }
     </style>
@@ -375,7 +434,10 @@
     <header class="site-header">
         <div class="container header-content">
             <div class="logo">ПРИМОРСК <span>·</span> Трактор</div>
-            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+            </div>
         </div>
     </header>
 
@@ -388,10 +450,7 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gZgZAKhxLgOX1UAVrgH3PSS6ZN2u2iErLVFeS6hNI.jpg');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Трактор выпускался на Владимирском тракторном заводе. В качестве памятника машинно-тракторным станциям установлен в Приморске по ул.Чапаева.
-            </div>
-            <div class="card-footer">
-                <span>🚜 ВТЗ</span>
+                Этот трактор сошел с конвейера Владимирского тракторного завода – одного из флагманов советского машиностроения. Сегодня он стоит как памятник на улице Чапаева в Приморске, напоминая о тех временах, когда машинно-тракторные станции были сердцем сельского хозяйства. «Универсал» стал первой отечественной машиной, которую отправляли на экспорт, – настолько удачной оказалась конструкция.
             </div>
         </div>
 
@@ -403,7 +462,7 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/ga68ypmxdSmn2AWplA6e3CWDZu8Ntr9gzqvP2KCZj.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Машинно-тракторные станции обеспечивали техникой колхозы. Слёт трактористов, бригадиров тракторных бригад Ногайской МТС, г. Ногайск.
+                Машинно-тракторные станции – это целая эпоха. Они обеспечивали техникой окрестные колхозы. На снимке – слёт трактористов и бригадиров Ногайской МТС. Лица серьезные, ведь за каждым – ответственность за урожай и будущее страны.
             </div>
         </div>
 
@@ -411,11 +470,11 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">Трактор "Фордзон"</div>
-                <div class="card-date">📅 1924-1932</div>
+                <div class="card-date">📅 1924–1932</div>
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gA8LZz6xmgMwCZiPzGYLc1HbdnoJgAWJVFwfzl9dE.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Первый массовый трактор в СССР. Лицензионная копия "Фордзон-Путиловец" производилась на ленинградском заводе "Красный Путиловец".
+                С этой машины всё начиналось. «Фордзон-Путиловец» – лицензионная копия американского трактора, которую выпускал ленинградский завод «Красный Путиловец». Для крестьян 1920-х годов он был чем-то невиданным: железный конь, который не устаёт и пашет быстрее любой лошади. Именно с «Фордзонов» началась массовая механизация сельского хозяйства СССР.
             </div>
         </div>
 
@@ -427,7 +486,7 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gL3re3KxJGm7wH937WDcE4jI73CNKnbDXiNTKWNff.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Первая женщина-тракторист колхоза «Новая жизнь», с. Партизаны.
+                Первая женщина-тракторист колхоза «Новая жизнь» из села Партизаны. В те годы управлять трактором женщине было не только физически трудно, но и социально смело – профессия считалась мужской. Она стала примером для многих: её имя гремело на районных досках почёта, а подруги по бригаде равнялись на неё.
             </div>
         </div>
 
@@ -439,7 +498,7 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/06/gR0WbhAxmLF0ipRCZezu7G98z2Y2d6VumvpUDv4JL.jpg');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Ударник колхоза "Коллективист" отправляет зерно, заработанное на трудодни (13,5 т).
+                На снимке ударник колхоза «Коллективист» грузит зерно, заработанное на трудодни – 13,5 тонн – результат упорного труда и веры в новую жизнь. Такие люди держали на своих плечах продовольственную безопасность страны.
             </div>
         </div>
 
@@ -451,7 +510,7 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gGFV4ToxVq7QK1b7dQaU7kgGAKkPz8B3AdTaQL59v.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Последствия войны оказали разрушительное воздействие на развитие сельского хозяйства в регионе. После освобождения Ногайского района от немецких захватчиков начинается восстановление. Уже с 1950 года ежегодно организовываются с/х выставки.
+                После освобождения района от немецкой оккупации к 1943 году хозяйства лежали в руинах. Но уже в 1950-е возродилась традиция сельскохозяйственных выставок. Колхозы соревновались не только урожаем, но и умением красиво представить свои достижения. Павильон имени Димитрова – образец гордости за восстановленное хозяйство.
             </div>
         </div>
 
@@ -463,16 +522,13 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gWY1EIZxX5BiOU5sMWh0CLqhjq86wN5HfI2lqDa4w.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Колхозы укрупняются. Открываются сельские клубы, ясли и школы. Благоустраиваются парки, стадионы. Работники культуры проводят множество мероприятий, выступлений. Передовики района получают награды за трудовые успехи.
-            </div>
-            <div class="card-footer">
-                <span>🏫 с. Бановка</span>
+                Клуб в селе Бановка был настоящим центром культурной жизни. Сюда приходили не только на собрания, здесь проводили концерты художественной самодеятельности. Для сельской молодёжи ДК был окном в мир искусства, а для ветеранов – местом, где чествовали их трудовые заслуги.
             </div>
         </div>
 
         <!-- 8. Компактная сетка для четырёх фото -->
         <div style="margin-bottom: 1rem;">
-            <h3 style="color: ; margin-bottom: 1rem; font-weight: bold; color: #d0d6e0; font-size: 1.5rem;">Кадры истории</h3>
+            <h3 style="margin-bottom: 1rem; font-weight: bold; color: var(--text); font-size: 1.5rem;">Кадры истории</h3>
             <div class="compact-grid">
                 <div class="compact-card">
                     <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/griW2opx14baB4wjNhmOQqyhfduIOTh6Luf8WkOHS.png');" onclick="openModal(this)"></div>
@@ -481,7 +537,7 @@
                 </div>
                 <div class="compact-card">
                     <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gfI9Ewtx0pbTqSfGjZ0isrvUmVZT5sTrTV6r4tNoC.png');" onclick="openModal(this)"></div>
-                    <div class="card-title">Комбайнер Тафров Л.</div>
+                    <div class="card-title">Комбайнер Л.Тафров</div>
                     <div class="card-date">📅 1967</div>
                 </div>
                 <div class="compact-card">
@@ -497,8 +553,7 @@
             </div>
         </div>
 
-
-<!-- жатва -->
+        <!-- жатва -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">Жатва</div>
@@ -506,13 +561,9 @@
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/09/gYth5gNx6zSEd9HNJSIaONNrkdnDzYOrXXazi4Uk8.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Жатва в СССР была ключевым событием сельскохозяйственного года, имевшим не только экономическое, но и огромное идеологическое значение. Передовики (комбайнеры, трактористы) становились героями газетных полос и телерепортажей. Между колхозами и целыми областями устраивались социалистические соревнования за право первыми рапортовать о выполнении плана хлебозаготовок.
-            </div>
-            <div class="card-footer">
-                <span>Проводы механизаторов на жатву, г. Приморск, лето 1973 г</span>
+                Жатва в СССР была не просто уборкой урожая – это была битва за хлеб, за выполнение плана, за право первыми рапортовать партии о победе. Каждый комбайнер знал: от его темпа зависит, будет ли страна с хлебом. Проводы механизаторов в поле превращались в праздник с гармонью и напутственными речами. На фото – торжественные проводы на жатву в Приморске летом 1973 года.
             </div>
         </div>
-
 
         <!-- 9. Ликвидация МТС -->
         <div class="card">
@@ -521,7 +572,7 @@
                 <div class="card-date">📅 1958</div>
             </div>
             <div class="card-text">
-                В 1958г. проведена масштабная реформа по ликвидации и реорганизации машинно-тракторных станций, инициированная Н.С.Хружевым. Технику передали непосредственно колхозам. На базе ликвидированных МТС создавались ремонтно-технические станции - РТС.
+                Реформа Хрущёва 1958 года стала поворотным моментом. Машинно-тракторные станции, бывшие основой механизации, расформировали. Технику передали самим колхозам. На месте МТС возникли ремонтно-технические станции (РТС), но прежней системы уже не стало. Для многих трактористов это было время неопределённости, хотя цель реформы – приблизить технику к земле – в итоге оправдалась.
             </div>
         </div>
 
@@ -532,9 +583,14 @@
                 <div class="card-date">📅 1934–1955</div>
             </div>
             <div class="card-text">
-                Первый отечественный трактор, поставлявшийся на экспорт. Выпускался в 1934-1955гг. Модель сконструирована по образцу американского трактора Farmall F-20. К 1950-м годам "Универсал" морально устарел. Однако именно такие машины составляли основу механизации хозяйства в первые десятилетия работы МТС.
+                Созданный по образцу американского Farmall F-20, «Универсал» стал поистине народной машиной. Он умел всё: пахать, сеять, культивировать. На нём работали и мужчины, и женщины – именно «Универсал» открыл дорогу женским тракторным бригадам. К 1950-м он морально устарел, но свой вклад в победу на полях сделал сполна. Не случайно именно его поставили на пьедестал в Приморске – в знак уважения к труду механизаторов.
             </div>
         </div>
+
+            <div class="header-right">
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            </div>
+
 
     </main>
 
@@ -554,6 +610,49 @@
     </div>
 
     <script>
+        // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            // определение системной темы
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            // установка темы
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    body.classList.remove('light');
+                    themeToggle.textContent = '🌙';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            // инициализация
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            // переключение по клику
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            // слушаем изменение системной темы
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
+        // ===== МОДАЛКА =====
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
 
@@ -579,7 +678,7 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // наблюдатель для анимации при скролле (на случай если блоки загрузились не все сразу)
+        // наблюдатель для анимации при скролле
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {

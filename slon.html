@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Приморск · Южный Слон</title>
     <style>
+        /* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -12,13 +13,30 @@
         }
 
         :root {
+            /* акценты (не зависят от темы) */
+            --imperial: #f9c35c;
+            --soviet: #ff5e7c;
+            --modern: #4a9eff;
+            --accent: #b1b3b3;
+            
+            /* системные цвета – будут меняться */
             --bg: #0a0c0f;
             --card: rgba(255,255,255,0.02);
             --text: #f0f4fa;
             --text-dim: #a8b3cf;
-            --accent: #b1b3b3;
             --border: rgba(255,255,255,0.05);
             --spacing: 1.5rem;
+            --logo-color: #d8dde5;
+        }
+
+        /* Светлая тема */
+        body.light {
+            --bg: #eef2f6;
+            --card: #ffffff;
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0,0,0,0.08);
+            --logo-color: #2d3748;
         }
 
         body {
@@ -28,6 +46,7 @@
             line-height: 1.5;
             position: relative;
             overflow-x: hidden;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
@@ -50,28 +69,12 @@
             animation: float 20s infinite ease-in-out;
         }
 
-        /* колоски и звёздочки */
-        .decor-item::before {
-            content: "🦴";
-        }
+        .decor-item::before { content: "🦴"; }
+        .decor-item.star::before { content: "🦴"; }
+        .decor-item.gear::before { content: "🐾"; }
+        .decor-item.wheat::before { content: "📜"; }
+        .decor-item.sickle::before { content: "🐘"; }
 
-        .decor-item.star::before {
-            content: "🦴";
-        }
-
-        .decor-item.gear::before {
-            content: "🐾";
-        }
-
-        .decor-item.wheat::before {
-            content: "📜";
-        }
-
-        .decor-item.sickle::before {
-            content: "🐘";
-        }
-
-        /* позиционирование */
         .decor-1 { top: 15%; left: 2%; animation-delay: 0s; font-size: 2.5rem; }
         .decor-2 { top: 15%; right: 3%; animation-delay: 3s; font-size: 2rem; }
         .decor-3 { bottom: 10%; left: 5%; animation-delay: 1s; font-size: 3rem; }
@@ -95,13 +98,14 @@
             z-index: 2;
         }
 
-        /* шапка */
+        /* ===== ШАПКА ===== */
         .site-header {
             padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 2rem;
             position: relative;
             z-index: 2;
+            transition: border-color 0.2s ease;
         }
 
         .header-content {
@@ -115,11 +119,36 @@
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #d8dde5;
+            color: var(--logo-color);
+            transition: color 0.2s ease;
         }
 
         .logo span {
             color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--text);
+            background-color: var(--card);
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
         }
 
         .tag {
@@ -129,6 +158,15 @@
             font-size: 0.8rem;
             border: 1px solid var(--border);
             color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        body.light .tag {
+            background: rgba(0,0,0,0.02);
+        }
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--text);
         }
 
         /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
@@ -145,10 +183,9 @@
 
         .card, .compact-card {
             animation: fadeUp 0.6s ease-out forwards;
-            opacity: 0; /* начальное состояние */
+            opacity: 0;
         }
 
-        /* задержки для каскадного появления */
         .card:nth-child(1) { animation-delay: 0.1s; }
         .card:nth-child(2) { animation-delay: 0.2s; }
         .card:nth-child(3) { animation-delay: 0.3s; }
@@ -157,13 +194,12 @@
         .card:nth-child(6) { animation-delay: 0.6s; }
         .card:nth-child(7) { animation-delay: 0.7s; }
         .card:nth-child(8) { animation-delay: 0.8s; }
-
         .compact-card:nth-child(1) { animation-delay: 0.9s; }
         .compact-card:nth-child(2) { animation-delay: 1.0s; }
         .compact-card:nth-child(3) { animation-delay: 1.1s; }
         .compact-card:nth-child(4) { animation-delay: 1.2s; }
 
-        /* карточки */
+        /* ===== КАРТОЧКИ ===== */
         .card {
             background: var(--card);
             border-radius: 24px;
@@ -173,6 +209,9 @@
             transition: all 0.3s ease;
             position: relative;
             z-index: 2;
+        }
+        body.light .card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .card-header {
@@ -185,7 +224,7 @@
         }
 
         .card-title {
-            color: #d0d6e0;
+            color: var(--text);
             font-size: 1.5rem;
             font-weight: bold;
             letter-spacing: -0.5px;
@@ -197,14 +236,19 @@
             background: rgba(255,255,255,0.02);
             padding: 0.3rem 0.8rem;
             border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+        body.light .card-date {
+            background: rgba(0,0,0,0.02);
         }
 
         .card-image {
             width: 100%;
             aspect-ratio: 16/9;
             border-radius: 20px;
-            background-size: cover;
-            background-position: center;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             margin: 1rem 0;
             cursor: pointer;
             border: 1px solid var(--border);
@@ -228,7 +272,7 @@
             flex-wrap: wrap;
         }
 
-        /* компактная карточка */
+        /* компактная карточка для галереи */
         .compact-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -246,25 +290,12 @@
             animation: fadeUp 0.6s ease-out forwards;
         }
 
-
         .compact-card .card-image {
-            margin: 0 0 0.75rem 0;
+            margin: 0;
             aspect-ratio: 4/3;
         }
 
-        .compact-card .card-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
-
-        .compact-card .card-date {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.6rem;
-            display: inline-block;
-        }
-
-        /* футер */
+        /* ===== ФУТЕР ===== */
         .site-footer {
             padding: 2rem 0;
             margin-top: 2rem;
@@ -282,7 +313,7 @@
             gap: 1rem;
         }
 
-        /* модалка */
+        /* ===== МОДАЛКА ===== */
         .modal {
             display: none;
             position: fixed;
@@ -307,12 +338,6 @@
             max-height: 90vh;
             object-fit: contain;
             border-radius: 16px;
-            border: 2px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .modal-content img:hover {
-            border-color: var(--accent);
         }
 
         .modal-close {
@@ -333,7 +358,7 @@
             color: var(--accent);
         }
 
-        /* мобилки */
+        /* ===== МОБИЛКИ ===== */
         @media (max-width: 600px) {
             .card {
                 padding: 1.2rem;
@@ -351,10 +376,18 @@
                 aspect-ratio: 16/9;
             }
 
-            /* меньше фона на мобилках */
             .decor-item {
                 opacity: 0.1;
                 font-size: 1.5rem;
+            }
+            
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+                font-size: 1rem;
             }
         }
     </style>
@@ -375,108 +408,112 @@
     <header class="site-header">
         <div class="container header-content">
             <div class="logo">ПРИМОРСК <span>·</span> Южный Слон</div>
-            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+            </div>
         </div>
     </header>
 
     <main class="container">
 
-        <!-- 1. слон -->
+        <!-- 1. Арт-объект -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Арт-объект</div>
+                <div class="card-title">Арт-объект «Южный слон»</div>
                 <div class="card-date">📅 2021</div>
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gwM8NcUxLq23ioPZePmeNh1ah16eNTyeZWzAB6Bqq.jpg');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Прибрежная полоса между Приморском и Борисовскими кручами с недавних пор называется «Побережье слоновой кости». Именно здесь при поддержке местных общественных организаций и за счёт гранта в рамках программы ООН создан арт-объект в виде черепа южного мамонта. К каким удивительным находкам отсылает нас данная инсталляция?
+                Прибрежная полоса между Приморском и Борисовскими кручами с недавних пор носит неофициальное название «Побережье слоновой кости». Именно здесь при поддержке местных общественных организаций и благодаря гранту в рамках программы ООН появился арт-объект – скульптура, изображающая череп южного мамонта. Авторы проекта – скульпторы Андрей Соловьев и Андрей Гатаулин – создали эту работу как напоминание о древних обитателях приазовских степей.
             </div>
             <div class="card-footer">
-                <span>Скульпторы: Андрей Соловьев, Андрей Гатаулин. </span>
-            </div>
+                <span>Скульпторы: Андрей Соловьев, Андрей Гатаулин</span>
             </div>
         </div>
 
-        <!-- 4 -->
+        <!-- 2. История находки -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">История находки</div>
+                <div class="card-title">Как нашли древнего гиганта</div>
                 <div class="card-date">📅 1941</div>
             </div>
             <div class="card-text">
- 12 июня 1941г. в газете "Большевик Запорожья" опубликованы первые сведения об обнаружении остатков южного мамонта. Во время работ на береговом обрыве Азовского моря тракторист Семён Иванович Сирица в 7км от райцентра наткнулся на кости древнего животного. Сотрудники краеведческих музеев осмотрели останки. Георгий Васильевич Манохин - палеонтолог из Осипенко (Бердянск) - определил принадлежность находки: южный слон.
+                12 июня 1941 года – дата, которая могла бы остаться незамеченной, если бы не случайность. Тракторист Семён Иванович Сирица, работая на береговом обрыве Азовского моря в семи километрах от райцентра, наткнулся на необычные кости. Они торчали из глиняного обрыва, словно просясь наружу. О находке сообщили в краеведческий музей. Прибывший палеонтолог Георгий Васильевич Манохин из соседнего Осипенко (ныне Бердянск) определил: останки принадлежат южному слону – Mammuthus meridionalis.
             </div>
         </div>
 
-        <!-- 2 -->
+        <!-- 3. Mammuthus meridionalis -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Mammuthus meridionalis</div>
+                <div class="card-title">Mammuthus meridionalis – странник из Африки</div>
                 <div class="card-date">📅 2 млн лет назад</div>
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/ghLNFTTx299EWzrtJBc2280OaBnITE44vJbTjOkUp.jpg');" onclick="openModal(this)"></div>
             <div class="card-text">
-                Южный мамонт был одним из более древних видов мамонтов и жил в раннем плейстоцене от 2,6 до 0,7 миллиона лет назад. Он первым покинул африканскую родину мамонтов, проникнув в Евразию. 
+                Южный мамонт – один из самых древних представителей слоновьих. Он первым из всего рода отправился в далёкое путешествие из африканской саванны, чтобы освоить просторы Евразии. Жил он в раннем плейстоцене, примерно 2,6 – 0,7 миллиона лет назад. Это был настоящий великан: рост до четырёх с половиной метров, бивни – как два изогнутых копья. В отличие от своих более поздних родственников – шерстистых мамонтов – южный слон почти не имел шерсти и был приспособлен к тёплому климату.
             </div>
         </div>
 
-
-        <!-- 5 -->
+        <!-- 4. Характеристики находки -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Похищение</div>
-                <div class="card-date">📅 1942</div>
-            </div>
-            <div class="card-text">
-                Раскопки затягивались, а позже и вовсе сорваны войной. Полностью скелет был достали только в октябре 1942 года усилиями немецких военных. Считая, что осенние штормы могут уничтожить ценную находку, Манохин обратился за помощью к немецкому командованию. В Бердянск из Берлина прибыл специальный батальон под руководством зондерфюрера Каспари, задачей которого было вывезти скелет в Германию. 
-
-Изучением остатков занимался профессор Геологического института Берлинского университета В. Дитрих. Манохин участвовал в подготовке выставки. В мае 1943 года он опубликовал статью о находке в специализированном немецком журнале Neus Jahrbuch für Mineralogie, Geologie und Paläontologie.<br>
-
-            </div>
-        </div>
-
-        <!-- 3-->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">Кто ты, воин?</div>
+                <div class="card-title">Портрет ветерана</div>
             </div>
             <div class="card-image" style="background-image: url('https://s10.iimage.su/s/08/gCAaGoAxHClZazka1YC8GYcedziDJWNDXwChi6Voe.png');" onclick="openModal(this)"></div>
             <div class="card-text">
-  Позже учёные выяснили, найденный слон - старый самец, возрастом 80-100 лет. Высотой 4,4 метра от пят до макушки. Ещё при жизни он повредил левый бивень.
+                Когда учёные тщательно изучили останки, они смогли воссоздать облик древнего гиганта. Это был старый самец, проживший около 80–100 лет – солидный возраст даже по меркам слонов. Рост его достигал 4,4 метра от пят до макушки. Особую ценность представляла деталь: левый бивень был повреждён ещё при жизни животного. Видимо, мамонт немало повоевал на своём веку. Эта «боевая травма» делала его ещё более уникальным в глазах палеонтологов.
             </div>
         </div>
 
-
-
-        <!-- 7 -->
+        <!-- 5. Похищение -->
         <div class="card">
             <div class="card-header">
-                <div class="card-title">Возвращение в СССР</div>
-                <div class="card-date">📅 1949</div>
+                <div class="card-title">Похищение века</div>
+                <div class="card-date">📅 1942</div>
             </div>
             <div class="card-text">
-После войны 12 ящиков с костями по ошибке оказались в Эрмитаже. Изучая их, кандидат биологических наук Вадим Евгеньевич Гарутт выявил, что скелет поступил из Северного Приазовья. В 1951 году скелет южного слона выставлен в мамонтовом зале ленинградского Зоологического музея. 
-<br>
-Данная находка значительно выделяется среди других экспонатов и является самым крупным из всех известных экземпляров южного мамонта. В Европе насчитывается всего семь скелетов подобных слонов, три из которых — полные — находятся в России (один в Санкт-Петербурге и два в Ставрополе). В музеях Парижа, Флоренции, Абруццо и Тбилиси представлены лишь частично восстановленные образцы.
-
-            </div>
-            <div class="card-footer">
-                <span>После окончания войны Георгий Манохин был арестован советскими властями за сотрудничество с оккупантами и умер в харьковском ИТЛ «Холодная гора».</span>
+                Раскопки затянулись, а начавшаяся война и вовсе приостановила работы. Но учёный Манохин не мог допустить, чтобы уникальный скелет разрушили осенние штормы. Он обратился к немецкому командованию, и те неожиданно проявили интерес. В октябре 1942 года в Бердянск прибыл специальный батальон под руководством зондерфюрера Каспари. Задача – вывезти скелет в Германию. Профессор Дитрих из Берлинского университета занялся изучением останков. Манохину разрешили участвовать в подготовке экспоната. В мае 1943 года в немецком научном журнале «Neues Jahrbuch für Mineralogie, Geologie und Paläontologie» вышла статья Манохина об этой удивительной находке. Так ногайский слон пересёк границу – и не одну.
             </div>
         </div>
 
-        <!-- 8 -->
+        <!-- 6. Возвращение в СССР -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Возвращение домой</div>
+                <div class="card-date">📅 1949–1951</div>
+            </div>
+            <div class="card-text">
+                После войны двенадцать ящиков с костями по ошибке оказались в Эрмитаже. Там на них наткнулся кандидат биологических наук Вадим Евгеньевич Гарутт. Он сразу понял: скелет не простой, и родом он из Северного Приазовья. В 1951 году экспонат занял своё законное место в мамонтовом зале ленинградского Зоологического музея. Сегодня этот скелет считается самым крупным из всех известных экземпляров южного мамонта в мире. Всего в Европе насчитывается семь подобных скелетов, и только три из них – полные. Два находятся в Ставрополе, один – в Санкт-Петербурге. В музеях Парижа, Флоренции, Абруццо и Тбилиси – лишь фрагменты.
+            </div>
+        </div>
+
+        <!-- 7. Судьба Манохина -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Трагедия учёного</div>
+            </div>
+            <div class="card-text">
+                Судьба Георгия Манохина сложилась трагически. После освобождения региона он был арестован советскими властями за сотрудничество с оккупантами – хотя он всего лишь пытался спасти научное сокровище. Манохин умер в харьковском ИТЛ «Холодная гора», так и не узнав, что его имя останется в истории палеонтологии, а найденный им слон станет гордостью российской науки.
+            </div>
+        </div>
+
+        <!-- 8. Галерея -->
         <div style="margin-bottom: 1rem;">
-            <h3 style="color: ; margin-bottom: 1rem; font-weight: bold; color: #d0d6e0; font-size: 1.5rem;">Галерея</h3>
+            <h3 style="margin-bottom: 1rem; font-weight: bold; color: var(--text); font-size: 1.5rem;">Фрагменты скелета</h3>
             <div class="compact-grid">
-
+                <div class="compact-card">
                     <div class="card-image" style="background-image: url('https://s10.iimage.su/s/10/g75uOKcxUy2SB67LA6ZsuOhTN3evDsiu4lHPEd34Z.png');" onclick="openModal(this)"></div>
-
+                </div>
+                <div class="compact-card">
                     <div class="card-image" style="background-image: url('https://s10.iimage.su/s/10/gRkgVfixh8EM2cVNJRWr6UI6jEjzlUzFAejDuVQLl.png');" onclick="openModal(this)"></div>
-
+                </div>
             </div>
         </div>
 
+            <div class="header-right">
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            </div>
 
     </main>
 
@@ -496,6 +533,44 @@
     </div>
 
     <script>
+        // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    body.classList.remove('light');
+                    themeToggle.textContent = '🌙';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
+        // ===== МОДАЛКА =====
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
 
@@ -521,7 +596,7 @@
             if (e.key === 'Escape') closeModal();
         });
 
-        // наблюдатель для анимации при скролле (на случай если блоки загрузились не все сразу)
+        // наблюдатель для анимации при скролле
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
