@@ -720,7 +720,7 @@
             <div class="logo">ХРОНИКИ · ГОРОДА</div>
             <div class="header-right">
                 <!-- Кнопка темы (справа) -->
-                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">☀️</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
             </div>
         </div>
     </header>
@@ -849,10 +849,10 @@
             function setTheme(theme) {
                 if (theme === 'light') {
                     body.classList.add('light');
-                    themeToggle.textContent = '🌙';
+                    themeToggle.textContent = '☀️';
                 } else {
                     body.classList.remove('light');
-                    themeToggle.textContent = '☀️';
+                    themeToggle.textContent = '🌙';
                 }
                 localStorage.setItem('theme', theme);
             }
