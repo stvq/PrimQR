@@ -487,7 +487,7 @@
 
         .gallery-item {
             background: var(--bg-card);
-            border-radius: 25px;
+            border-radius: 15px;
             overflow: hidden;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -514,16 +514,22 @@
 
         .gallery-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: 2rem 1.5rem 1.5rem;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
             color: #fff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            z-index: 2;
         }
 
         .gallery-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
             color: #ffffff;  /* белый всегда */
         }
@@ -747,31 +753,31 @@
                 <div class="gallery">
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/person.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/13/gV0UCqrx1sqe1FDMTBr0N2yDI8L4sPahc4CQyv02I.jpg')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Имена и портреты</h3><span class="gallery-year">в интерьере истории</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Имена и портреты</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/newspaper.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/gEEUCx6x1V40Nb1EJG1GAi5Gq3dPSglAFW1s9LbD4.jpg')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Между строк</h3><span class="gallery-year">Газеты. Купюры. Документы</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Между строк</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/dorev.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/gUXyvZDxbna9YbMcg1aK6XmOYmIBEKsmElJiksaqa.jpg')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Ногайскъ</h3><span class="gallery-year">Дореволюцiонный</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Ногайскъ</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/kos.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/ggAiG8Cx97gZzdZ7W2fZ7h8a441Oo1pNtGC932CGP.png')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Бой у косы</h3><span class="gallery-year">Обиточной. 1920</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Бой у косы</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/1980.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwrSNwnxyfIt4Nsd4vPiHvyqCkcD4aTF2msHEEU9c.png')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Ракурс эпохи</h3><span class="gallery-year">Приморск. 1980-е</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Ракурс эпохи</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/kolxos.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/10/gvbEcizxfztzR8tTzlkjSZUN88M1WgL5Q707YwS6o.jpg')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Трактор</h3><span class="gallery-year">"Универсал-2". МТС</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Трактор. МТС</h3></div>
                     </div>
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/slon.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/08/gwM8NcUxLq23ioPZePmeNh1ah16eNTyeZWzAB6Bqq.jpg')"></div>
-                        <div class="gallery-overlay"><h3 class="gallery-title">Ногайский слон</h3><span class="gallery-year">Арт-объект. Ископаемые</span></div>
+                        <div class="gallery-overlay"><h3 class="gallery-title">Ногайский слон</h3></div>
                     </div>
                 </div>
             </section>
