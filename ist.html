@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Приморск · Источники</title>
+    <style>
+        /* ===== ОСНОВА ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0c0f;
+            --card: rgba(255, 255, 255, 0.02);
+            --text: #f0f4fa;
+            --text-dim: #a8b3cf;
+            --accent: #b1b3b3;
+            --border: rgba(255, 255, 255, 0.05);
+            --logo-color: #d8dde5;
+            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        body.light {
+            --bg: #eef2f6;
+            --card: rgba(255, 255, 255, 0.02);
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0, 0, 0, 0.05);
+            --logo-color: #2d3748;
+            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            transition: background-color 0.2s ease;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== ДЕКОР ===== */
+        .background-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+        }
+
+        .decor-item {
+            position: absolute;
+            color: var(--accent);
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px rgba(177, 179, 179, 0.3));
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .decor-item::before { content: "🏛️"; }
+        .decor-item.city1::before { content: "🏛️"; }
+        .decor-item.city2::before { content: "🕍"; }
+        .decor-item.city3::before { content: "🕰️"; }
+        .decor-item.city4::before { content: "🏡"; }
+        .decor-item.city5::before { content: "🌳"; }
+        .decor-item.city6::before { content: "🗝️"; }
+        .decor-item.city7::before { content: "📜"; }
+        .decor-item.city8::before { content: "🏘️"; }
+
+        .decor-1 { top: 10%; left: 1%; animation-delay: 0s; font-size: 2.5rem; }
+        .decor-2 { top: 20%; right: 2%; animation-delay: 2s; font-size: 2rem; }
+        .decor-3 { bottom: 15%; left: 3%; animation-delay: 1.5s; font-size: 3rem; }
+        .decor-4 { top: 60%; right: 4%; animation-delay: 3s; font-size: 2.2rem; }
+        .decor-5 { bottom: 40%; left: 5%; animation-delay: 2.2s; font-size: 2.8rem; }
+        .decor-6 { top: 80%; right: 1%; animation-delay: 4s; font-size: 2.4rem; }
+        .decor-7 { bottom: 5%; right: 7%; animation-delay: 5s; font-size: 2.6rem; }
+        .decor-8 { top: 30%; left: 6%; animation-delay: 1.2s; font-size: 2rem; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(3deg); }
+            75% { transform: translateY(10px) rotate(-3deg); }
+        }
+
+        /* ===== ШАПКА ===== */
+        .site-header {
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            background: var(--card);
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--logo-color);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s ease;
+        }
+        .theme-toggle:hover { transform: scale(1.05); }
+
+        .back-link {
+            background: var(--card);
+            padding: 0.4rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .back-link:hover {
+            color: var(--text);
+            transform: scale(1.02);
+        }
+
+        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-card, .photo-pair, .text-block, .mini-card {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .section-card:nth-child(1) { animation-delay: 0.1s; }
+        .section-card:nth-child(2) { animation-delay: 0.2s; }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin: 2.5rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--text);
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        /* ===== ТЕКСТОВЫЕ БЛОКИ ===== */
+        .text-block {
+            margin-bottom: 15px;
+            background: var(--card);
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 1px solid var(--border);
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            backdrop-filter: blur(4px);
+            box-shadow: var(--card-shadow);
+            line-height: 1.7;
+            width: 600px; /* ДОБАВЬТЕ ЭТУ СТРОКУ */
+            margin-left: auto; /* ДОБАВЬТЕ ЭТУ СТРОКУ для центрирования */
+            margin-right: auto; /* ДОБАВЬТЕ ЭТУ СТРОКУ для центрирования */
+        }
+
+
+        .text-block p {
+            margin-bottom: 1rem;
+        }
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .block-footer {
+            margin: 2rem 0 1rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+
+        /* ===== ФУТЕР ===== */
+        .site-footer {
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* ===== МОДАЛКА ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 1rem; right: 1rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            opacity: 0.7;
+            background: none;
+            border: none;
+            z-index: 1001;
+            line-height: 1;
+        }
+        .modal-close:hover { opacity: 1; color: var(--accent); }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            .photo-pair {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .mini-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .decor-item {
+                opacity: 0.1;
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .text-block {
+                padding: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Фоновые элементы (городская тематика) -->
+    <div class="background-decor">
+        <div class="decor-item city1 decor-1"></div>
+        <div class="decor-item city2 decor-2"></div>
+        <div class="decor-item city3 decor-3"></div>
+        <div class="decor-item city4 decor-4"></div>
+        <div class="decor-item city5 decor-5"></div>
+        <div class="decor-item city6 decor-6"></div>
+        <div class="decor-item city7 decor-7"></div>
+        <div class="decor-item city8 decor-8"></div>
+    </div>
+
+    <!-- Шапка -->
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">ПРИМ.QR <span>·</span> ИСТОЧНИКИ</div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+            <div class="text-block">
+    <p>1. Герасиванов. Военно-статистическое обозрение Российской империи. Таврическая губерния. — СПб., 1849.</p>
+</div>
+
+<div class="text-block">
+    <p>2. Яворницкий, Д. И. История запорожских казаков. Т. 1. — [Б. м.], 1900.</p>
+</div>
+
+<div class="text-block">
+    <p>3. Достоевский, А. Ф. Воспоминания. Переезд в Таврическую губернию. — [Б. м.], 1875–1895.</p>
+</div>
+
+<div class="text-block">
+    <p>4. Сергеев, А. Ногайцы на Молочных водах (1790–1832) // Известия Таврической Ученой Архивной Комиссии. — 1912. — № 48.</p>
+</div>
+
+<div class="text-block">
+    <p>5. Державин, Н. С. Болгарские колонии в России. — София, 1914.</p>
+</div>
+
+<div class="text-block">
+    <p>6. Весь Бердянск и его уезд : справочное издание. — Бердянск, 1911.</p>
+</div>
+
+<div class="text-block">
+    <p>7. Бутаков, Г. А. Бой у косы Обиточной. — [Б. м.], 1970.</p>
+</div>
+
+<div class="text-block">
+    <p>8. Кабузан, В. М. Заселение Новороссии (Екатеринославской и Херсонской губерний) в XVIII — первой половине XIX вв. (1719–1858). — Москва : Наука, 1976.</p>
+</div>
+
+<div class="text-block">
+    <p>9. История городов и сел Запорожской области. — Киев : Ин-т истории АН УССР, 1981.</p>
+</div>
+
+<div class="text-block">
+    <p>10. Солдатова, Л. И. Предания седого Азова. — Запорожье, 2014.</p>
+</div>
+
+<div class="text-block">
+    <p>11. Солдатова, Л. И. От вечного истока... — Запорожье, 2020.</p>
+</div>
+
+<div class="text-block">
+    <p>12. Папу, В. В. Приморск: годы и судьбы. Память огненных лет. — Запорожье, 2005.</p>
+</div>
+
+<div class="text-block">
+    <p>13. Папу, В. В. Приморск: годы и судьбы. Автограф поколений. — Запорожье, 2007.</p>
+</div>
+
+<div class="text-block">
+    <p>14. Города и районы Запорожской области : статистический ежегодник. — Запорожье, 2005.</p>
+</div>
+
+<div class="text-block">
+    <p>15. Госкаталог Музейного фонда Российской Федерации [Электронный ресурс]. — Режим доступа: https://goskatalog.ru/portal/#/ (дата обращения: 14.03.2026).</p>
+</div>
+
+<div class="text-block">
+    <p>16. Материалы из фондов районного краеведческого музея. — [Б. м.], [б. г.].</p>
+</div>
+
+            <div class="header-actions">
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div>НОГАЙСКЪ · ИСТОРИЯ В ФОТОГРАФИЯХ</div>
+            <div></div>
+        </div>
+    </footer>
+
+    <!-- Модалка (увеличение фото) -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImg" src="">
+        </div>
+    </div>
+
+    <script>
+        // Переключение темы
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    body.classList.remove('light');
+                    themeToggle.textContent = '🌙';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
+        // Модалка для изображений
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(el) {
+            modal.classList.add('active');
+            const bg = el.style.backgroundImage;
+            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+            if (match && match[1]) {
+                modalImg.src = match[1];
+            }
+            document.body.style.overflow = 'hidden';
+        }
+        window.openModal = openModal;
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        window.closeModal = closeModal;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Наблюдатель для анимации появления
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.photo-pair, .text-block, .mini-card, .photo-item').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
