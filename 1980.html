@@ -19,6 +19,17 @@
             --accent: #b1b3b3;
             --border: rgba(255,255,255,0.05);
             --spacing: 1.5rem;
+            --logo-color: #d8dde5;
+        }
+
+        /* Светлая тема */
+        body.light {
+            --bg: #eef2f6;
+            --card: #ffffff;
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0,0,0,0.08);
+            --logo-color: #2d3748;
         }
 
         body {
@@ -28,6 +39,7 @@
             line-height: 1.5;
             position: relative;
             overflow-x: hidden;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
@@ -99,6 +111,9 @@
             border: 1px solid var(--border);
             color: var(--text-dim);
         }
+        body.light .tag {
+            background: rgba(0,0,0,0.02);
+        }
 
         .header-content {
             display: flex;
@@ -111,11 +126,48 @@
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #d8dde5;
+            color: var(--logo-color);
+            transition: color 0.2s ease;
         }
 
         .logo span {
             color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            color: var(--text);
+            background-color: var(--card);
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
         }
 
         .nav-link {
@@ -132,6 +184,9 @@
         .nav-link:hover {
             background: rgba(255,255,255,0.08);
             color: #fff;
+        }
+        body.light .nav-link:hover {
+            color: #000;
         }
 
         /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
@@ -186,6 +241,7 @@
             transition: 0.3s;
             border-radius: 16px;
             margin-top: 0.2rem;
+            position: relative;
         }
         .photo-item:hover {
             border-color: var(--accent);
@@ -239,6 +295,9 @@
             border: 1px solid var(--border);
             font-size: 1.05rem;
             color: #d3d9e6;
+        }
+        body.light .text-block {
+            color: #2d3748;
         }
 
         .text-block p {
@@ -359,6 +418,19 @@
                 grid-template-columns: 1fr;
             }
             .decor-item { opacity: 0.1; font-size: 1.5rem; }
+            
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
@@ -377,282 +449,251 @@
 
     <header class="site-header">
         <div class="container header-content">
-            <div class="logo">ПРИМОРСК <span>·</span> Ракурс Эпохи</div>
-            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+            <div class="logo">РАКУРС ЭПОХИ</div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+                </button>
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+            </div>
         </div>
     </header>
 
     <main class="container">
 
-
-
-            <!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/goFXZMExWMs6EcTcSp1ZFiw8EsGvLovyRNBXREzYD.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/goFXZMExWMs6EcTcSp1ZFiw8EsGvLovyRNBXREzYD.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Дом культуры
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
             </div>
         </div>
-
-
-            <!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gjae8jfxdA6zgJhGaSTG3yJ0CNihKhQpVCvYz5Sa4.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Общий вид здания районного государственной администрации
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Дом культуры
         </div>
 
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gPJPzkdxBzUA3DuSJl6WoiRS2Z6NJDtDLZH4jJ3Jh.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Парк. Памятник Первому Ногайскому Совету
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <div class="block-footer">
+            <span></span>
+            <span></span>
         </div>
 
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gxGZepRx931PlmiuFzKBdueLkagYZX1mnGDnYphSo.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gjae8jfxdA6zgJhGaSTG3yJ0CNihKhQpVCvYz5Sa4.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Районный Дом быта, г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
             </div>
         </div>
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gsYNXXQx0HMTdDC0djHYnMoXAUcCCRD7vgkYWPzQN.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Автовокзал г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Общий вид здания районного государственной администрации
         </div>
 
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/g2f6DmUxdFDlzdPwEYLCEoJKQLbLJcNmIivhLBIj2.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Гостиница "Южная", г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <div class="block-footer">
+            <span></span>
+            <span></span>
         </div>
 
-
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/g5ZnFcTxSzUNdX1k0esATzyeyNuKdWuDGzOEv7RB1.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gPJPzkdxBzUA3DuSJl6WoiRS2Z6NJDtDLZH4jJ3Jh.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Районный узел связи.
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
             </div>
         </div>
-
-
-
-
-
-
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gSzPPT4x8UB2QQFyZ7Ldo2tApunaj5cE2SNy0JJrL.jpg');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Олимпиец стадион
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Парк. Памятник Первому Ногайскому Совету
         </div>
 
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/glKtlXEx6VhcZrkacAwfY68fjqgCY2bPqGs3lYQaa.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Детский сад "Сказка". г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <div class="block-footer">
+            <span></span>
+            <span></span>
         </div>
 
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gZAc0V8xi5A0OjRnQiODjPkraXHAAZpOrB2V91CRf.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gxGZepRx931PlmiuFzKBdueLkagYZX1mnGDnYphSo.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Строительство корпусов Центральной районной больницы, г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
             </div>
         </div>
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gFWWRfJxNgvjRn0PduS83NpVtH5muatsBkzY7N5BA.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Ногайский совхоз-техникум, г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
-            </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Районный Дом быта, г. Приморск
         </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gsYNXXQx0HMTdDC0djHYnMoXAUcCCRD7vgkYWPzQN.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Автовокзал г. Приморск
+        </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/g2f6DmUxdFDlzdPwEYLCEoJKQLbLJcNmIivhLBIj2.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Гостиница "Южная", г. Приморск
+        </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/g5ZnFcTxSzUNdX1k0esATzyeyNuKdWuDGzOEv7RB1.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Районный узел связи.
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gSzPPT4x8UB2QQFyZ7Ldo2tApunaj5cE2SNy0JJrL.jpg');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Олимпиец стадион
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/glKtlXEx6VhcZrkacAwfY68fjqgCY2bPqGs3lYQaa.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Детский сад "Сказка". г. Приморск
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gZAc0V8xi5A0OjRnQiODjPkraXHAAZpOrB2V91CRf.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Строительство корпусов Центральной районной больницы, г. Приморск
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- Пара фото: 1980-е и сейчас -->
+        <div class="photo-pair">
+            <!-- 1980-е -->
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/09/gFWWRfJxNgvjRn0PduS83NpVtH5muatsBkzY7N5BA.png');" onclick="openModal(this)">
+                <span class="photo-label">📷 1980</span>
+            </div>
+            <!-- сейчас -->
+            <div class="photo-item" style="background-image: url('ссылка');" onclick="openModal(this)">
+                <span class="photo-label">📷 2026</span>
+            </div>
+        </div>
+        <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="text-block">
+            Ногайский совхоз-техникум, г. Приморск
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
         <!-- Мини-галерея для дополнительных кадров (опционально) -->
-        <h3 style="color: #d0d6e0; margin: 2rem 0 1rem; font-size: 1.5rem;">Ещё кадры города</h3>
+        <h3 style="color: var(--text); margin: 2rem 0 1rem; font-size: 1.5rem;">Ещё кадры города</h3>
         <div class="mini-gallery">
             <div class="mini-card">
                 <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%A2%D1%80%D0%B0%D0%BC%D0%B2%D0%B0%D0%B9');" onclick="openModal(this)"></div>
@@ -693,6 +734,51 @@
     </div>
 
     <script>
+        // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+
+            // определение системной темы
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            // установка темы
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                    themeIcon.alt = 'Светлая тема';
+                } else {
+                    body.classList.remove('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                    themeIcon.alt = 'Тёмная тема';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            // инициализация
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            // переключение по клику
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            // слушаем изменение системной темы
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
 

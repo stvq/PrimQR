@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Приморск · Ногайскъ дореволюцiонный</title>
+    <title>Приморск · Ногайскъ</title>
     <style>
         /* ===== ОСНОВА ===== */
         * {
@@ -136,13 +136,29 @@
             border: 1px solid var(--border);
             border-radius: 40px;
             padding: 0.4rem 0.8rem;
-            font-size: 1.2rem;
             cursor: pointer;
             color: var(--text);
             backdrop-filter: blur(4px);
             transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .theme-toggle:hover { transform: scale(1.05); }
+        .theme-toggle:hover { 
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
+        }
 
         .back-link {
             background: var(--card);
@@ -394,6 +410,15 @@
             .text-block {
                 padding: 1.4rem;
             }
+
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
@@ -413,9 +438,11 @@
     <!-- Шапка -->
     <header class="site-header">
         <div class="container header-content">
-            <div class="logo">НОГАЙСКЪ <span>·</span> ДОРЕВОЛЮЦiОННЫЙ</div>
+            <div class="logo">ДОРЕВОЛЮЦiОННЫЙ НОГАЙСКЪ</div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+                </button>
                 <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
             </div>
         </div>
@@ -581,7 +608,6 @@
                 <div class="card-date">нач. XX века</div>
             </div>
 
-
             <div class="header-actions">
                 <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
             </div>
@@ -610,16 +636,19 @@
         (function() {
             const themeToggle = document.getElementById('themeToggle');
             const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
 
             const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 
             function setTheme(theme) {
                 if (theme === 'light') {
                     body.classList.add('light');
-                    themeToggle.textContent = '☀️';
+                    themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                    themeIcon.alt = 'Светлая тема';
                 } else {
                     body.classList.remove('light');
-                    themeToggle.textContent = '🌙';
+                    themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                    themeIcon.alt = 'Тёмная тема';
                 }
                 localStorage.setItem('theme', theme);
             }

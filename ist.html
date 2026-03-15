@@ -72,13 +72,13 @@
 
         .decor-item::before { content: "🏛️"; }
         .decor-item.city1::before { content: "🏛️"; }
-        .decor-item.city2::before { content: "🕍"; }
+        .decor-item.city2::before { content: "📜"; }
         .decor-item.city3::before { content: "🕰️"; }
-        .decor-item.city4::before { content: "🏡"; }
-        .decor-item.city5::before { content: "🌳"; }
+        .decor-item.city4::before { content: "⚱️"; }
+        .decor-item.city5::before { content: "🕯️"; }
         .decor-item.city6::before { content: "🗝️"; }
         .decor-item.city7::before { content: "📜"; }
-        .decor-item.city8::before { content: "🏘️"; }
+        .decor-item.city8::before { content: "🔍"; }
 
         .decor-1 { top: 10%; left: 1%; animation-delay: 0s; font-size: 2.5rem; }
         .decor-2 { top: 20%; right: 2%; animation-delay: 2s; font-size: 2rem; }
@@ -136,13 +136,29 @@
             border: 1px solid var(--border);
             border-radius: 40px;
             padding: 0.4rem 0.8rem;
-            font-size: 1.2rem;
             cursor: pointer;
             color: var(--text);
             backdrop-filter: blur(4px);
             transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .theme-toggle:hover { transform: scale(1.05); }
+        .theme-toggle:hover { 
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
+        }
 
         .back-link {
             background: var(--card);
@@ -198,6 +214,15 @@
         }
 
         /* ===== ТЕКСТОВЫЕ БЛОКИ ===== */
+        .sources-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 200px;
+        }
+
         .text-block {
             margin-bottom: 15px;
             background: var(--card);
@@ -209,11 +234,30 @@
             backdrop-filter: blur(4px);
             box-shadow: var(--card-shadow);
             line-height: 1.7;
-            width: 600px; /* ДОБАВЬТЕ ЭТУ СТРОКУ */
-            margin-left: auto; /* ДОБАВЬТЕ ЭТУ СТРОКУ для центрирования */
-            margin-right: auto; /* ДОБАВЬТЕ ЭТУ СТРОКУ для центрирования */
+            width: 600px;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
         }
 
+        /* Активный блок - чуть больше */
+        .text-block.active {
+            transform: scale(1.03);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            margin: 10px;
+            margin-bottom: 15px;
+            padding: 25px;
+            z-index: 10;
+        }
+
+        /* Неактивные блоки - темнее */
+        .text-block.inactive {
+            opacity: 0.6;
+            filter: brightness(0.7);
+        }
 
         .text-block p {
             margin-bottom: 1rem;
@@ -232,7 +276,6 @@
             border-top: 1px solid var(--border);
             padding-top: 1rem;
         }
-
 
         /* ===== ФУТЕР ===== */
         .site-footer {
@@ -316,7 +359,35 @@
             }
             
             .text-block {
-                padding: 1.4rem;
+                padding: 1.2rem;
+                width: 100%;
+            }
+
+            /* На мобильных тоже работает, но чуть слабее */
+            .text-block.active {
+                transform: scale(1.02);
+            }
+
+            .text-block.inactive {
+                opacity: 0.7;
+                filter: brightness(0.8);
+            }
+
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* Для очень маленьких экранов */
+        @media (max-width: 400px) {
+            .text-block {
+                font-size: 0.95rem;
+                padding: 1rem;
             }
         }
     </style>
@@ -337,83 +408,85 @@
     <!-- Шапка -->
     <header class="site-header">
         <div class="container header-content">
-            <div class="logo">ПРИМ.QR <span>·</span> ИСТОЧНИКИ</div>
+            <div class="logo">ИСТОЧНИКИ</div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+                </button>
                 <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
             </div>
         </div>
     </header>
 
     <main class="container">
-            <div class="text-block">
-    <p>1. Герасиванов. Военно-статистическое обозрение Российской империи. Таврическая губерния. — СПб., 1849.</p>
-</div>
-
-<div class="text-block">
-    <p>2. Яворницкий, Д. И. История запорожских казаков. Т. 1. — [Б. м.], 1900.</p>
-</div>
-
-<div class="text-block">
-    <p>3. Достоевский, А. Ф. Воспоминания. Переезд в Таврическую губернию. — [Б. м.], 1875–1895.</p>
-</div>
-
-<div class="text-block">
-    <p>4. Сергеев, А. Ногайцы на Молочных водах (1790–1832) // Известия Таврической Ученой Архивной Комиссии. — 1912. — № 48.</p>
-</div>
-
-<div class="text-block">
-    <p>5. Державин, Н. С. Болгарские колонии в России. — София, 1914.</p>
-</div>
-
-<div class="text-block">
-    <p>6. Весь Бердянск и его уезд : справочное издание. — Бердянск, 1911.</p>
-</div>
-
-<div class="text-block">
-    <p>7. Бутаков, Г. А. Бой у косы Обиточной. — [Б. м.], 1970.</p>
-</div>
-
-<div class="text-block">
-    <p>8. Кабузан, В. М. Заселение Новороссии (Екатеринославской и Херсонской губерний) в XVIII — первой половине XIX вв. (1719–1858). — Москва : Наука, 1976.</p>
-</div>
-
-<div class="text-block">
-    <p>9. История городов и сел Запорожской области. — Киев : Ин-т истории АН УССР, 1981.</p>
-</div>
-
-<div class="text-block">
-    <p>10. Солдатова, Л. И. Предания седого Азова. — Запорожье, 2014.</p>
-</div>
-
-<div class="text-block">
-    <p>11. Солдатова, Л. И. От вечного истока... — Запорожье, 2020.</p>
-</div>
-
-<div class="text-block">
-    <p>12. Папу, В. В. Приморск: годы и судьбы. Память огненных лет. — Запорожье, 2005.</p>
-</div>
-
-<div class="text-block">
-    <p>13. Папу, В. В. Приморск: годы и судьбы. Автограф поколений. — Запорожье, 2007.</p>
-</div>
-
-<div class="text-block">
-    <p>14. Города и районы Запорожской области : статистический ежегодник. — Запорожье, 2005.</p>
-</div>
-
-<div class="text-block">
-    <p>15. Госкаталог Музейного фонда Российской Федерации [Электронный ресурс]. — Режим доступа: https://goskatalog.ru/portal/#/ (дата обращения: 14.03.2026).</p>
-</div>
-
-<div class="text-block">
-    <p>16. Материалы из фондов районного краеведческого музея. — [Б. м.], [б. г.].</p>
-</div>
-
-            <div class="header-actions">
-                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+        <div class="sources-container" id="sourcesContainer">
+            <div class="text-block" data-index="0">
+                <p>1. Герасиванов. Военно-статистическое обозрение Российской империи. Таврическая губерния. — СПб., 1849.</p>
             </div>
 
+            <div class="text-block" data-index="1">
+                <p>2. Яворницкий, Д. И. История запорожских казаков. Т. 1. — [Б. м.], 1900.</p>
+            </div>
+
+            <div class="text-block" data-index="2">
+                <p>3. Достоевский, А. Ф. Воспоминания. Переезд в Таврическую губернию. — [Б. м.], 1875–1895.</p>
+            </div>
+
+            <div class="text-block" data-index="3">
+                <p>4. Сергеев, А. Ногайцы на Молочных водах (1790–1832) // Известия Таврической Ученой Архивной Комиссии. — 1912. — № 48.</p>
+            </div>
+
+            <div class="text-block" data-index="4">
+                <p>5. Державин, Н. С. Болгарские колонии в России. — София, 1914.</p>
+            </div>
+
+            <div class="text-block" data-index="5">
+                <p>6. Весь Бердянск и его уезд : справочное издание. — Бердянск, 1911.</p>
+            </div>
+
+            <div class="text-block" data-index="6">
+                <p>7. Бутаков, Г. А. Бой у косы Обиточной. — [Б. м.], 1970.</p>
+            </div>
+
+            <div class="text-block" data-index="7">
+                <p>8. Кабузан, В. М. Заселение Новороссии (Екатеринославской и Херсонской губерний) в XVIII — первой половине XIX вв. (1719–1858). — Москва : Наука, 1976.</p>
+            </div>
+
+            <div class="text-block" data-index="8">
+                <p>9. История городов и сел Запорожской области. — Киев : Ин-т истории АН УССР, 1981.</p>
+            </div>
+
+            <div class="text-block" data-index="9">
+                <p>10. Солдатова, Л. И. Предания седого Азова. — Запорожье, 2014.</p>
+            </div>
+
+            <div class="text-block" data-index="10">
+                <p>11. Солдатова, Л. И. От вечного истока... — Запорожье, 2020.</p>
+            </div>
+
+            <div class="text-block" data-index="11">
+                <p>12. Папу, В. В. Приморск: годы и судьбы. Память огненных лет. — Запорожье, 2005.</p>
+            </div>
+
+            <div class="text-block" data-index="12">
+                <p>13. Папу, В. В. Приморск: годы и судьбы. Автограф поколений. — Запорожье, 2007.</p>
+            </div>
+
+            <div class="text-block" data-index="13">
+                <p>14. Города и районы Запорожской области : статистический ежегодник. — Запорожье, 2005.</p>
+            </div>
+
+            <div class="text-block" data-index="14">
+                <p>15. Госкаталог Музейного фонда Российской Федерации [Электронный ресурс]. — https://goskatalog.ru/portal/#/.</p>
+            </div>
+
+            <div class="text-block" data-index="15">
+                <p>16. Материалы из фондов районного краеведческого музея.</p>
+            </div>
+        </div>
+
+        <div class="header-actions" style="margin-top: 30px; justify-content: center;">
+            <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
         </div>
     </main>
 
@@ -438,16 +511,19 @@
         (function() {
             const themeToggle = document.getElementById('themeToggle');
             const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
 
             const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 
             function setTheme(theme) {
                 if (theme === 'light') {
                     body.classList.add('light');
-                    themeToggle.textContent = '☀️';
+                    themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                    themeIcon.alt = 'Светлая тема';
                 } else {
                     body.classList.remove('light');
-                    themeToggle.textContent = '🌙';
+                    themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                    themeIcon.alt = 'Тёмная тема';
                 }
                 localStorage.setItem('theme', theme);
             }
@@ -507,6 +583,44 @@
 
         document.querySelectorAll('.photo-pair, .text-block, .mini-card, .photo-item').forEach(el => {
             observer.observe(el);
+        });
+
+        // Эффект при наведении на источники
+        const blocks = document.querySelectorAll('.text-block');
+        
+        blocks.forEach(block => {
+            block.addEventListener('mouseenter', function() {
+                // Убираем классы у всех блоков
+                blocks.forEach(b => {
+                    b.classList.remove('active', 'inactive');
+                });
+                
+                // Добавляем класс active текущему блоку
+                this.classList.add('active');
+                
+                // Добавляем класс inactive всем остальным блокам
+                blocks.forEach(b => {
+                    if (b !== this) {
+                        b.classList.add('inactive');
+                    }
+                });
+            });
+            
+            block.addEventListener('mouseleave', function() {
+                // Убираем все классы при уходе мыши
+                blocks.forEach(b => {
+                    b.classList.remove('active', 'inactive');
+                });
+            });
+        });
+
+        // Для touch-устройств добавляем возможность убрать выделение тапом по пустому месту
+        document.addEventListener('touchstart', function(e) {
+            if (!e.target.classList.contains('text-block')) {
+                blocks.forEach(b => {
+                    b.classList.remove('active', 'inactive');
+                });
+            }
         });
     </script>
 </body>

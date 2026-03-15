@@ -151,6 +151,17 @@
             transform: scale(1.05);
         }
 
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
+        }
+
         /* Навигация справа (лого + кнопка) */
         .header-right {
             display: flex;
@@ -727,7 +738,9 @@
             <div class="logo">ПРИМ.QR</div>
             <div class="header-right">
                 <!-- Кнопка темы (справа) -->
-                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+</button>
             </div>
         </div>
     </header>
@@ -848,17 +861,20 @@
             const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 
             // установка темы
-            function setTheme(theme) {
-                if (theme === 'light') {
-                    body.classList.add('light');
-                    themeToggle.textContent = '☀️';
-                } else {
-                    body.classList.remove('light');
-                    themeToggle.textContent = '🌙';
-                }
-                localStorage.setItem('theme', theme);
+        function setTheme(theme) {
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (theme === 'light') {
+                body.classList.add('light');
+                themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                themeIcon.alt = 'Светлая тема';
+            } else {
+                body.classList.remove('light');
+                themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                themeIcon.alt = 'Тёмная тема';
             }
-
+            localStorage.setItem('theme', theme);
+        }
             // инициализация: приоритет: localStorage -> система -> тёмная
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
