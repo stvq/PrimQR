@@ -645,6 +645,22 @@
         }
 
         /* нижняя навигация (без изменений) */
+
+        .bottom-nav.touching {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .bottom-nav.mobile-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-nav.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .bottom-nav {
                 position: fixed;
                 bottom: 30px;
@@ -717,18 +733,18 @@
         /* Стили для светлой темы */
         body.light .nav-link {
             color: #1a1e24;  /* темный текст */
-            background: rgba(179, 146, 240, 0.2);  /* светлый фон */
+            background: rgba(255, 255, 255, 0.1);  /* светлый фон */
         }
 
         .nav-link:hover {
-            background: rgba(179, 146, 240, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Стили для светлой темы при наведении */
         body.light .nav-link:hover {
-            background: rgba(74, 158, 255, 0.15);  /* голубоватый оттенок при наведении */
+            background: rgba(0, 0, 0, 0.1);  /* голубоватый оттенок при наведении */
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
         /* мобильная адаптация — минимальные правки, все сохранено */
@@ -969,116 +985,150 @@
         }
 
         // ----- НИЖНЯЯ НАВИГАЦИЯ (скролл) -----
-let lastScrollTop = 0;
-let hideTimer = null; // единый таймер для скрытия
+        let hideTimer = null;
 
-function showNav() {
-    const nav = document.querySelector('.bottom-nav');
-    if (!nav) return;
-    
-    // Показываем панель
-    nav.classList.add('visible');
-    if (window.innerWidth <= 768) {
-        nav.classList.add('mobile-visible');
-    }
-    
-    // Сбрасываем старый таймер
-    if (hideTimer) clearTimeout(hideTimer);
-    
-    // Устанавливаем новый таймер на скрытие
-    if (window.innerWidth <= 768) {
-        // На мобильных - скрываем через 3 секунды
-        hideTimer = setTimeout(() => {
+        function showNavigation() {
             const nav = document.querySelector('.bottom-nav');
-            // Проверяем, не взаимодействует ли пользователь с панелью
-            if (nav && !nav.matches(':hover')) {
-                nav.classList.remove('mobile-visible');
-                // Не убираем visible полностью, чтобы панель могла снова появиться
-            }
-        }, 3000);
-    } else {
-        // На десктопе - скрываем через 1.5 секунды
-        hideTimer = setTimeout(() => {
-            const nav = document.querySelector('.bottom-nav');
-            if (nav && !nav.matches(':hover')) {
-                nav.classList.remove('visible');
-            }
-        }, 1500);
-    }
-}
-
-function hideNav() {
-    const nav = document.querySelector('.bottom-nav');
-    if (!nav) return;
-    
-    if (window.innerWidth <= 768) {
-        nav.classList.remove('mobile-visible');
-    } else {
-        nav.classList.remove('visible');
-    }
-}
-
-// Обработчик скролла
-window.addEventListener('scroll', () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Показываем панель при любом скролле
-    showNav();
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-});
-
-// Обработчик касаний для мобильных устройств
-if ('ontouchstart' in window) {
-    let touchStartY = 0;
-    
-    // При начале касания запоминаем позицию
-    document.addEventListener('touchstart', (e) => {
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-    
-    // При движении пальцем (скролле)
-    document.addEventListener('touchmove', () => {
-        showNav();
-    }, { passive: true });
-    
-    // При окончании касания
-    document.addEventListener('touchend', () => {
-        // Показываем панель и запускаем таймер на скрытие
-        showNav();
-    });
-    
-    // Если пользователь касается самой панели - не скрываем её
-    const nav = document.querySelector('.bottom-nav');
-    if (nav) {
-        nav.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-            // Сбрасываем таймер и оставляем панель видимой
-            if (hideTimer) clearTimeout(hideTimer);
+            if (!nav) return;
+            
+            // Показываем панель
             nav.classList.add('visible');
-            nav.classList.add('mobile-visible');
-        });
-        
-        nav.addEventListener('touchend', () => {
-            // Когда пользователь убирает палец с панели, запускаем таймер
-            showNav(); // showNav сама установит новый таймер
-        });
-    }
-    
-    // При клике на ссылки в панели
-    document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            // Скрываем панель после перехода
-            setTimeout(() => {
-                hideNav();
-            }, 500);
-        });
-    });
-}
+            if (window.innerWidth <= 768) {
+                nav.classList.add('mobile-visible');
+            }
+            
+            // Сбрасываем старый таймер
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+            
+            // Устанавливаем новый таймер на скрытие (только для мобильных)
+            if (window.innerWidth <= 768) {
+                hideTimer = setTimeout(() => {
+                    const nav = document.querySelector('.bottom-nav');
+                    if (nav) {
+                        // Проверяем, не взаимодействует ли пользователь с панелью
+                        const isHovered = nav.matches(':hover');
+                        const isTouching = nav.classList.contains('touching');
+                        
+                        if (!isHovered && !isTouching) {
+                            nav.classList.remove('mobile-visible');
+                            nav.classList.remove('visible'); // Убираем оба класса
+                        }
+                    }
+                    hideTimer = null;
+                }, 3000);
+            }
+        }
 
-// Показываем панель при загрузке страницы на мобильных
-if (window.innerWidth <= 768) {
-    showNav();
-}    </script>
+        function hideNavigation() {
+            const nav = document.querySelector('.bottom-nav');
+            if (!nav) return;
+            
+            nav.classList.remove('visible');
+            nav.classList.remove('mobile-visible');
+        }
+
+        // Обработчик скролла
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            showNavigation();
+            
+            // Для десктопа отдельная логика
+            if (window.innerWidth > 768) {
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const nav = document.querySelector('.bottom-nav');
+                    if (nav && !nav.matches(':hover')) {
+                        nav.classList.remove('visible');
+                    }
+                }, 1500);
+            }
+        });
+
+        // Обработчики для мобильных устройств
+        if ('ontouchstart' in window) {
+            const nav = document.querySelector('.bottom-nav');
+            
+            if (nav) {
+                // Отмечаем, когда пользователь касается панели
+                nav.addEventListener('touchstart', () => {
+                    nav.classList.add('touching');
+                    // Сбрасываем таймер при касании панели
+                    if (hideTimer) {
+                        clearTimeout(hideTimer);
+                        hideTimer = null;
+                    }
+                });
+                
+                nav.addEventListener('touchend', () => {
+                    nav.classList.remove('touching');
+                    // Запускаем таймер заново после отпускания
+                    showNavigation();
+                });
+                
+                nav.addEventListener('touchcancel', () => {
+                    nav.classList.remove('touching');
+                    showNavigation();
+                });
+            }
+            
+            // При любом касании экрана показываем панель
+            document.addEventListener('touchstart', (e) => {
+                // Не показываем, если касание было по самой панели
+                if (!e.target.closest('.bottom-nav')) {
+                    showNavigation();
+                }
+            }, { passive: true });
+            
+            // При скролле показываем
+            document.addEventListener('touchmove', () => {
+                showNavigation();
+            }, { passive: true });
+        }
+
+        // При клике на ссылки в панели
+        document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Предотвращаем немедленный переход
+                const href = link.getAttribute('href');
+                
+                // Плавно скрываем панель
+                const nav = document.querySelector('.bottom-nav');
+                nav.classList.remove('mobile-visible');
+                nav.classList.remove('visible');
+                
+                // Переходим по ссылке после скрытия
+                setTimeout(() => {
+                    if (href && href !== '#') {
+                        window.location.href = href;
+                    }
+                }, 300);
+            });
+        });
+
+        // Инициализация
+        window.addEventListener('load', () => {
+            if (window.innerWidth <= 768) {
+                // Показываем при загрузке, но с таймером на скрытие
+                setTimeout(() => {
+                    showNavigation();
+                }, 500);
+            }
+        });
+
+        // При изменении размера окна
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                // На десктопе убираем мобильные классы
+                const nav = document.querySelector('.bottom-nav');
+                if (nav) {
+                    nav.classList.remove('mobile-visible');
+                    nav.classList.remove('touching');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
