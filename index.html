@@ -717,7 +717,7 @@
         /* Стили для светлой темы */
         body.light .nav-link {
             color: #1a1e24;  /* темный текст */
-            background: rgba(0, 0, 0, 0.12);  /* светлый фон */
+            background: rgba(179, 146, 240, 0.2);  /* светлый фон */
         }
 
         .nav-link:hover {
@@ -969,110 +969,116 @@
         }
 
         // ----- НИЖНЯЯ НАВИГАЦИЯ (скролл) -----
-let lastScrollTop = 0, hideTimeout, scrollTimeout;
-let inactivityTimer; // новый таймер для бездействия
+let lastScrollTop = 0;
+let hideTimer = null; // единый таймер для скрытия
 
-window.addEventListener('scroll', () => {
+function showNav() {
     const nav = document.querySelector('.bottom-nav');
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (!nav) return;
     
-    // Показываем при скролле
+    // Показываем панель
     nav.classList.add('visible');
-    
     if (window.innerWidth <= 768) {
         nav.classList.add('mobile-visible');
-        clearTimeout(hideTimeout);
-        
-        // Скрываем через 3 секунды после остановки скролла
-        hideTimeout = setTimeout(() => {
-            // Проверяем, не наведена ли мышь на панель (для десктопа) и не скроллит ли пользователь
-            if (!nav.matches(':hover') && window.pageYOffset === lastScrollTop) {
+    }
+    
+    // Сбрасываем старый таймер
+    if (hideTimer) clearTimeout(hideTimer);
+    
+    // Устанавливаем новый таймер на скрытие
+    if (window.innerWidth <= 768) {
+        // На мобильных - скрываем через 3 секунды
+        hideTimer = setTimeout(() => {
+            const nav = document.querySelector('.bottom-nav');
+            // Проверяем, не взаимодействует ли пользователь с панелью
+            if (nav && !nav.matches(':hover')) {
                 nav.classList.remove('mobile-visible');
+                // Не убираем visible полностью, чтобы панель могла снова появиться
             }
         }, 3000);
-    }
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    
-    // Для десктопа
-    if (window.innerWidth > 768) {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            if (!document.querySelector('.bottom-nav:hover')) nav.classList.remove('visible');
+    } else {
+        // На десктопе - скрываем через 1.5 секунды
+        hideTimer = setTimeout(() => {
+            const nav = document.querySelector('.bottom-nav');
+            if (nav && !nav.matches(':hover')) {
+                nav.classList.remove('visible');
+            }
         }, 1500);
     }
+}
+
+function hideNav() {
+    const nav = document.querySelector('.bottom-nav');
+    if (!nav) return;
+    
+    if (window.innerWidth <= 768) {
+        nav.classList.remove('mobile-visible');
+    } else {
+        nav.classList.remove('visible');
+    }
+}
+
+// Обработчик скролла
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Показываем панель при любом скролле
+    showNav();
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 });
 
-// Новый обработчик для касаний - сбрасываем таймер при взаимодействии
+// Обработчик касаний для мобильных устройств
 if ('ontouchstart' in window) {
-    // При касании экрана показываем панель
-    document.addEventListener('touchstart', () => {
-        const nav = document.querySelector('.bottom-nav');
-        nav.classList.add('visible');
-        nav.classList.add('mobile-visible');
-        
-        // Сбрасываем предыдущий таймер
-        clearTimeout(hideTimeout);
-        clearTimeout(inactivityTimer);
-        
-        // Устанавливаем новый таймер на скрытие через 3 секунды
-        inactivityTimer = setTimeout(() => {
-            nav.classList.remove('mobile-visible');
-        }, 3000);
-    });
+    let touchStartY = 0;
     
-    // При скролле тоже показываем и сбрасываем таймер
-    document.addEventListener('scroll', () => {
-        const nav = document.querySelector('.bottom-nav');
-        nav.classList.add('visible');
-        nav.classList.add('mobile-visible');
-        
-        clearTimeout(inactivityTimer);
-        clearTimeout(hideTimeout);
-        
-        inactivityTimer = setTimeout(() => {
-            nav.classList.remove('mobile-visible');
-        }, 3000);
+    // При начале касания запоминаем позицию
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
     }, { passive: true });
     
-    // Чтобы панель не скрывалась, когда пользователь по ней тапает
-    document.querySelector('.bottom-nav')?.addEventListener('touchstart', (e) => {
-        e.stopPropagation(); // предотвращаем всплытие события
-        const nav = document.querySelector('.bottom-nav');
-        
-        // Сбрасываем все таймеры
-        clearTimeout(inactivityTimer);
-        clearTimeout(hideTimeout);
-        
-        // Добавляем класс, чтобы панель оставалась видимой
-        nav.classList.add('mobile-visible');
+    // При движении пальцем (скролле)
+    document.addEventListener('touchmove', () => {
+        showNav();
+    }, { passive: true });
+    
+    // При окончании касания
+    document.addEventListener('touchend', () => {
+        // Показываем панель и запускаем таймер на скрытие
+        showNav();
     });
     
-    // Когда пользователь убирает палец с панели, запускаем таймер на скрытие
-    document.querySelector('.bottom-nav')?.addEventListener('touchend', () => {
-        clearTimeout(inactivityTimer);
-        clearTimeout(hideTimeout);
+    // Если пользователь касается самой панели - не скрываем её
+    const nav = document.querySelector('.bottom-nav');
+    if (nav) {
+        nav.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+            // Сбрасываем таймер и оставляем панель видимой
+            if (hideTimer) clearTimeout(hideTimer);
+            nav.classList.add('visible');
+            nav.classList.add('mobile-visible');
+        });
         
-        inactivityTimer = setTimeout(() => {
-            const nav = document.querySelector('.bottom-nav');
-            nav.classList.remove('mobile-visible');
-        }, 3000);
-    });
+        nav.addEventListener('touchend', () => {
+            // Когда пользователь убирает палец с панели, запускаем таймер
+            showNav(); // showNav сама установит новый таймер
+        });
+    }
     
-    // Обработка кликов по ссылкам внутри панели
+    // При клике на ссылки в панели
     document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
         link.addEventListener('click', () => {
-            // Небольшая задержка, чтобы успел произойти переход
+            // Скрываем панель после перехода
             setTimeout(() => {
-                const nav = document.querySelector('.bottom-nav');
-                nav.classList.remove('mobile-visible');
+                hideNav();
             }, 500);
         });
     });
 }
 
-// Удаляем старый код с обработчиком touchstart, который был выше
-// (тот что начинался с "if ('ontouchstart' in window) {")
-    </script>
+// Показываем панель при загрузке страницы на мобильных
+if (window.innerWidth <= 768) {
+    showNav();
+}    </script>
 </body>
 </html>
