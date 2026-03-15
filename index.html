@@ -646,36 +646,52 @@
 
         /* нижняя навигация (без изменений) */
         .bottom-nav {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: auto;
-            min-width: 400px;
-            max-width: 90%;
-            background: rgba(20, 20, 20, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 15px 25px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            border: 0px solid rgba(255, 255, 255, 0.15);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            overflow-x: auto;
-            white-space: nowrap;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: auto;
+                min-width: 400px;
+                max-width: 90%;
+                background: rgba(20, 20, 20, 0.75);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border-radius: 16px;
+                padding: 15px 25px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+                border: 0px solid rgba(255, 255, 255, 0.15);
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                overflow-x: auto;
+                white-space: nowrap;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            /* Стили для светлой темы */
+            body.light .bottom-nav {
+                background: rgba(240, 244, 250, 0.3);  /* светлый полупрозрачный фон */
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            }
         .bottom-nav.visible { opacity: 1; visibility: visible; }
         @media (max-width: 768px) {
             .bottom-nav {
                 bottom: 20px;
                 min-width: 300px;
             }
-            .bottom-nav.mobile-visible { opacity: 1; visibility: visible; }
+            .bottom-nav.mobile-visible { 
+                opacity: 1; 
+                visibility: visible; 
+            }
+            
+            /* Стили для мобильной навигации в светлой теме */
+            body.light .bottom-nav {
+                background: rgba(240, 244, 250, 0.3);
+                border: 1px solid rgba(0, 0, 0, 0.15);
+            }
         }
         .nav-container {
             display: flex;
@@ -697,12 +713,24 @@
             letter-spacing: 0.5px;
             display: inline-block;
         }
+
+        /* Стили для светлой темы */
+        body.light .nav-link {
+            color: #1a1e24;  /* темный текст */
+            background: rgba(0, 0, 0, 0.12);  /* светлый фон */
+        }
+
         .nav-link:hover {
             background: rgba(179, 146, 240, 0.1);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* Стили для светлой темы при наведении */
+        body.light .nav-link:hover {
+            background: rgba(74, 158, 255, 0.15);  /* голубоватый оттенок при наведении */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
         /* мобильная адаптация — минимальные правки, все сохранено */
         @media (max-width: 768px) {
             .container { padding: 0 1.25rem; }
@@ -941,34 +969,110 @@
         }
 
         // ----- НИЖНЯЯ НАВИГАЦИЯ (скролл) -----
-        let lastScrollTop = 0, hideTimeout, scrollTimeout;
-        window.addEventListener('scroll', () => {
+let lastScrollTop = 0, hideTimeout, scrollTimeout;
+let inactivityTimer; // новый таймер для бездействия
+
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.bottom-nav');
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Показываем при скролле
+    nav.classList.add('visible');
+    
+    if (window.innerWidth <= 768) {
+        nav.classList.add('mobile-visible');
+        clearTimeout(hideTimeout);
+        
+        // Скрываем через 3 секунды после остановки скролла
+        hideTimeout = setTimeout(() => {
+            // Проверяем, не наведена ли мышь на панель (для десктопа) и не скроллит ли пользователь
+            if (!nav.matches(':hover') && window.pageYOffset === lastScrollTop) {
+                nav.classList.remove('mobile-visible');
+            }
+        }, 3000);
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    
+    // Для десктопа
+    if (window.innerWidth > 768) {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (!document.querySelector('.bottom-nav:hover')) nav.classList.remove('visible');
+        }, 1500);
+    }
+});
+
+// Новый обработчик для касаний - сбрасываем таймер при взаимодействии
+if ('ontouchstart' in window) {
+    // При касании экрана показываем панель
+    document.addEventListener('touchstart', () => {
+        const nav = document.querySelector('.bottom-nav');
+        nav.classList.add('visible');
+        nav.classList.add('mobile-visible');
+        
+        // Сбрасываем предыдущий таймер
+        clearTimeout(hideTimeout);
+        clearTimeout(inactivityTimer);
+        
+        // Устанавливаем новый таймер на скрытие через 3 секунды
+        inactivityTimer = setTimeout(() => {
+            nav.classList.remove('mobile-visible');
+        }, 3000);
+    });
+    
+    // При скролле тоже показываем и сбрасываем таймер
+    document.addEventListener('scroll', () => {
+        const nav = document.querySelector('.bottom-nav');
+        nav.classList.add('visible');
+        nav.classList.add('mobile-visible');
+        
+        clearTimeout(inactivityTimer);
+        clearTimeout(hideTimeout);
+        
+        inactivityTimer = setTimeout(() => {
+            nav.classList.remove('mobile-visible');
+        }, 3000);
+    }, { passive: true });
+    
+    // Чтобы панель не скрывалась, когда пользователь по ней тапает
+    document.querySelector('.bottom-nav')?.addEventListener('touchstart', (e) => {
+        e.stopPropagation(); // предотвращаем всплытие события
+        const nav = document.querySelector('.bottom-nav');
+        
+        // Сбрасываем все таймеры
+        clearTimeout(inactivityTimer);
+        clearTimeout(hideTimeout);
+        
+        // Добавляем класс, чтобы панель оставалась видимой
+        nav.classList.add('mobile-visible');
+    });
+    
+    // Когда пользователь убирает палец с панели, запускаем таймер на скрытие
+    document.querySelector('.bottom-nav')?.addEventListener('touchend', () => {
+        clearTimeout(inactivityTimer);
+        clearTimeout(hideTimeout);
+        
+        inactivityTimer = setTimeout(() => {
             const nav = document.querySelector('.bottom-nav');
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop) {
-                nav.classList.add('visible');
-                if (window.innerWidth <= 768) {
-                    nav.classList.add('mobile-visible');
-                    clearTimeout(hideTimeout);
-                    hideTimeout = setTimeout(() => nav.classList.remove('mobile-visible'), 4000);
-                }
-            }
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-            if (window.innerWidth > 768) {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    if (!document.querySelector('.bottom-nav:hover')) nav.classList.remove('visible');
-                }, 1500);
-            }
-        });
-        if ('ontouchstart' in window) {
-            document.addEventListener('touchstart', () => {
+            nav.classList.remove('mobile-visible');
+        }, 3000);
+    });
+    
+    // Обработка кликов по ссылкам внутри панели
+    document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            // Небольшая задержка, чтобы успел произойти переход
+            setTimeout(() => {
                 const nav = document.querySelector('.bottom-nav');
-                nav.classList.add('mobile-visible');
-                clearTimeout(hideTimeout);
-                hideTimeout = setTimeout(() => nav.classList.remove('mobile-visible'), 4000);
-            });
-        }
+                nav.classList.remove('mobile-visible');
+            }, 500);
+        });
+    });
+}
+
+// Удаляем старый код с обработчиком touchstart, который был выше
+// (тот что начинался с "if ('ontouchstart' in window) {")
     </script>
 </body>
 </html>
