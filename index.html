@@ -1068,17 +1068,49 @@ body.light .hero-qr-image {
     text-align: center;
 }
 
-/* Мобильные */
+/* Дополнительные стили для мобильной версии героя */
 @media (max-width: 768px) {
     .hero-content {
-        flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem !important; /* переопределяем inline-стиль */
+        justify-content: center !important; /* центрируем содержимое */
+    }
+    
+    .hero-text {
+        width: 100%;
         text-align: center;
+        padding: 0 1rem;
+    }
+    
+    .hero-qr {
+        margin-right: 0 !important; /* убираем отступ справа */
+        margin: 0 auto; /* центрируем QR-код */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
     .hero-qr-image {
-        width: 280px;
-        height: 280px;
+        width: 240px; /* чуть меньше для мобильных */
+        height: 240px;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+    }
+    
+    .hero-subtitle {
+        text-align: left; /* возвращаем исходное выравнивание */
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 90%;
+    }
+}
+
+/* Дополнительно для очень маленьких экранов */
+@media (max-width: 480px) {
+    .hero-qr-image {
+        width: 200px;
+        height: 200px;
     }
 }
 
@@ -1102,25 +1134,26 @@ body.light .hero-qr-image {
     <main>
 <!-- Герой с QR-кодом -->
 <section class="hero">
-    <div class="container hero-content" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;"> <!-- NEW: flex-контейнер -->
+    <div class="container hero-content" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;"> <!-- NEW: добавил gap -->
         <!-- Текстовая часть (существующая) -->
-        <div style="flex: 1; min-width: 300px;"> <!-- NEW: обертка для текста -->
-<div class="hero-text">
-            <h1>Приморск</h1>
-            <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь на речке Обиточной раскинулся тихий и уютный город – Приморск.</div>
-            <div class="hero-stats">
-                <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">события</div></div>
-                <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личности</div></div>
-                <div class="stat-item"><div class="stat-number">+6</div><div class="stat-label">статьи</div></div>
-</div>
+        <div style="flex: 1; min-width: 300px;"> 
+            <div class="hero-text">
+                <h1>Приморск</h1>
+                <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь на речке Обиточной раскинулся тихий и уютный город – Приморск.</div>
+                <div class="hero-stats">
+                    <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">события</div></div>
+                    <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личности</div></div>
+                    <div class="stat-item"><div class="stat-number">+6</div><div class="stat-label">статьи</div></div>
+                </div>
             </div>
         </div>
         
         <!-- Блок с QR-кодом (справа) -->
-<div class="hero-qr">
-    <div class="hero-qr-image"></div>
-    <div class="hero-qr-caption">QR-код на ресурс</div>
-</div>
+        <div class="hero-qr">
+            <div class="hero-qr-image"></div>
+            <div class="hero-qr-caption">QR-код на ресурс</div>
+        </div>
+    </div>
 </section>
 
         <div class="container">
