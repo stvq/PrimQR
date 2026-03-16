@@ -1020,93 +1020,67 @@
 
 
 
-/* Герой */
+/* Стили для героя - десктопная версия (по умолчанию) */
 .hero-content {
     display: flex;
-    flex-wrap: wrap;
-    align-items: left;
-    gap: 1rem; /* минимальный отступ */
-}
-
-/* Текст hero */
-.hero-text {
-    flex: 1;
-    min-width: 300px;
-}
-
-/* QR-код */
-.hero-qr {
-    margin-top: 0.8rem;
-    margin-right: 11rem;
-    flex: 0 0 auto;
-}
-
-.hero-qr-image {
-    width: 340px;  /* еще больше */
-    height: 340px;
-    background: rgba(255,255,255,0.01);
-    background-size: cover;
-    background-image: url('https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png');
-    border-radius: 15px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-}
-body.light .hero-qr-image {
-    background: rgba(255,255,255,0.7);
-    background-image: url('https://s10.iimage.su/s/16/g2tdd0Gxz0wi137rY06WnyYdcWBhGGbVzZ9IvbW6W.png');
-    background-size: cover;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: nowrap; /* запрещаем перенос на десктопе */
 }
 
-.hero-qr-caption {
-    color: var(--text-secondary);
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    text-align: center;
+.hero-text-wrapper {
+    flex: 1;
+    min-width: 0; /* предотвращает переполнение */
 }
 
-/* Дополнительные стили для мобильной версии героя */
+.hero-qr {
+    flex-shrink: 0; /* запрещаем сжиматься */
+}
+
+/* Мобильная версия */
 @media (max-width: 768px) {
     .hero-content {
-        gap: 1rem !important; /* переопределяем inline-стиль */
-        justify-content: center !important; /* центрируем содержимое */
+        flex-wrap: wrap; /* разрешаем перенос на мобильных */
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .hero-text-wrapper {
+        width: 100%;
+        text-align: center;
     }
     
     .hero-text {
         width: 100%;
-        text-align: center;
-        padding: 0 1rem;
-    }
-    
-    .hero-qr {
-        margin-right: 0 !important; /* убираем отступ справа */
-        margin: 0 auto; /* центрируем QR-код */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .hero-qr-image {
-        width: 240px; /* чуть меньше для мобильных */
-        height: 240px;
     }
     
     .hero-stats {
         justify-content: center;
     }
     
+    .hero-qr {
+        margin: 0 auto; /* центрируем QR-код */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-qr-image {
+        width: 240px;
+        height: 240px;
+    }
+    
     .hero-subtitle {
-        text-align: left; /* возвращаем исходное выравнивание */
+        text-align: left;
         margin-left: auto;
         margin-right: auto;
         max-width: 90%;
     }
 }
 
-/* Дополнительно для очень маленьких экранов */
+/* Для очень маленьких экранов */
 @media (max-width: 480px) {
     .hero-qr-image {
         width: 200px;
@@ -1133,10 +1107,11 @@ body.light .hero-qr-image {
 
     <main>
 <!-- Герой с QR-кодом -->
+<!-- Герой с QR-кодом -->
 <section class="hero">
-    <div class="container hero-content" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;"> <!-- NEW: добавил gap -->
-        <!-- Текстовая часть (существующая) -->
-        <div style="flex: 1; min-width: 300px;"> 
+    <div class="container hero-content"> <!-- Убрали inline-стили -->
+        <!-- Текстовая часть -->
+        <div class="hero-text-wrapper"> <!-- NEW: обертка для текста -->
             <div class="hero-text">
                 <h1>Приморск</h1>
                 <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь на речке Обиточной раскинулся тихий и уютный город – Приморск.</div>
@@ -1148,7 +1123,7 @@ body.light .hero-qr-image {
             </div>
         </div>
         
-        <!-- Блок с QR-кодом (справа) -->
+        <!-- Блок с QR-кодом -->
         <div class="hero-qr">
             <div class="hero-qr-image"></div>
             <div class="hero-qr-caption">QR-код на ресурс</div>
