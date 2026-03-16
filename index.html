@@ -41,14 +41,14 @@
 
         /* Светлая тема (класс light на body) */
         body.light {
-            --bg-primary: #dee0e3;            /* светло-серо-голубоватый */
+            --bg-primary: #d5dce0;            /* светло-серо-голубоватый */
             --bg-secondary: #dbe0e8;
-            --bg-card: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.6);
             --text-primary: #1a1e24;
             --text-secondary: #3f4a5c;
             --glass-bg: rgba(240, 244, 250, 0.7);
             --border-glow: rgba(0, 100, 200, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(62, 77, 89, 0.1);
             --h-sub: rgba(0, 0, 0, 0.2);
             --accent-2: #1a1e24;
             --accent-3: #3f4a5c;
@@ -351,17 +351,213 @@
         }
         body.light .timeline-card {
             border: 1px solid rgba(0,0,0,0.08);
-            background: #ffffff;  /* белый фон для карточек */
+            background: var(--bg-card);
         }
 
         .timeline-card[data-era="imperial"] { --era-color: var(--imperial); --era-glow: rgba(249, 195, 92, 0.3); }
         .timeline-card[data-era="soviet"]   { --era-color: var(--soviet);   --era-glow: rgba(255, 94, 124, 0.3); }
         .timeline-card[data-era="modern"]   { --era-color: var(--modern);   --era-glow: rgba(74, 158, 255, 0.3); }
 
+        /* Эмоджи-слой для каждой эпохи - хаотичное расположение */
+        .timeline-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            font-size: 4rem;
+            background-repeat: no-repeat;
+            background-size: 60px 60px, 50px 50px, 65px 65px, 55px 55px, 70px 70px;
+            mix-blend-mode: overlay;
+        }
+
+        /* Имперские эмоджи: лилия, дерево, свиток */
+        .timeline-card[data-era="imperial"]::before {
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🍎</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🌳</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🗝️</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🎺</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">📜</text></svg>');
+            background-position: 
+                12% 18%,      /* левый верх */
+                88% 15%,     /* правый верх */
+                45% 32%,     /* левый низ */
+                75% 50%,     /* правый низ */
+                15% 60%;     /* центр */
+        }
+
+        /* Советские эмоджи: рупор, книжка, баян, колос */
+        .timeline-card[data-era="soviet"]::before {
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📢</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📚</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🪗</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🌾</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">⚒️</text></svg>');
+            background-position: 
+                85% 10%,     /* правый верх */
+                15% 18%,     /* левый верх */
+                5% 58%,     /* центр-низ слева */
+                85% 65%,     /* центр-низ справа */
+                60% 40%;     /* центр-верх */
+        }
+
+        /* Современные эмоджи: ракушка, глобус, машина, волны */
+        .timeline-card[data-era="modern"]::before {
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🐚</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌐</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🚗</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌊</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🏖️</text></svg>');
+            background-position: 
+                12% 18%,      /* левый верх */
+                88% 15%,     /* правый верх */
+                45% 32%,     /* левый низ */
+                75% 50%,     /* правый низ */
+                15% 60%;     /* центр */
+        }
+
+        /* Показываем эмоджи при наведении */
+        .timeline-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Индивидуальные трансформации для каждого элемента карточки */
+        .timeline-card {
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+
         .timeline-card:hover {
             transform: translateY(-10px) rotateX(2deg);
+        }
+
+        /* Год — наклон в обе стороны (от -1.5deg до 2deg) */
+        .timeline-card:hover .timeline-year {
+            animation: randomTiltYear 0.4s ease forwards;
+            color: var(--era-color);
+            opacity: 0.8;
+        }
+
+        /* Заголовок — наклон в обе стороны (от -1deg до 1.5deg) */
+        .timeline-card:hover .timeline-title {
+            animation: randomTiltTitle 0.4s ease forwards;
+            text-shadow: 0 0 10px var(--era-color);
+        }
+
+        /* Бейдж эпохи — наклон в обе стороны (от -1deg до 1.5deg) */
+        .timeline-card:hover .timeline-era-badge {
+            animation: randomTiltBadge 0.4s ease forwards;
+            box-shadow: 0 0 15px var(--era-color);
+        }
+
+        /* Текст — наклон в обе стороны (от -0.5deg до 1deg) */
+        .timeline-card:hover .timeline-desc {
+            animation: randomTiltDesc 0.4s ease forwards;
+        }
+
+        /* Изображение — наклон в обе стороны (от -2deg до 2.5deg) */
+        .timeline-card:hover .image-glow {
+            animation: randomTiltImage 0.4s ease forwards;
             border-color: var(--era-color);
-            box-shadow: 0 30px 40px -20px var(--era-glow), 0 0 0 1px var(--era-color);
+            border-width: 3px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Анимации с разными рандомными значениями */
+        @keyframes randomTiltYear {
+            0% { transform: scale(1) rotate(0); }
+            100% { transform: scale(1.1) rotate(calc(var(--random-year) * 1deg)); }
+        }
+
+        @keyframes randomTiltTitle {
+            0% { transform: rotate(0) translateY(0); }
+            100% { transform: rotate(calc(var(--random-title) * 1deg)) translateY(-2px); }
+        }
+
+        @keyframes randomTiltBadge {
+            0% { transform: rotate(0) scale(1); }
+            100% { transform: rotate(calc(var(--random-badge) * 1deg)) scale(1.05); }
+        }
+
+        @keyframes randomTiltDesc {
+            0% { transform: rotate(0) translateX(0); }
+            100% { transform: rotate(calc(var(--random-desc) * 1deg)) translateX(3px); }
+        }
+
+        @keyframes randomTiltImage {
+            0% { transform: rotate(0) scale(1); }
+            100% { transform: rotate(calc(var(--random-image) * 1deg)) scale(1.02); }
+        }
+
+        /* Присваиваем случайные значения CSS-переменным для каждой карточки */
+        .timeline-card:nth-child(odd) {
+            --random-year: 1.2;
+            --random-title: -0.7;
+            --random-badge: 1.3;
+            --random-desc: -0.4;
+            --random-image: 1.8;
+        }
+
+        .timeline-card:nth-child(even) {
+            --random-year: -1.5;
+            --random-title: 1.1;
+            --random-badge: -1.2;
+            --random-desc: 0.8;
+            --random-image: -2.2;
+        }
+
+        .timeline-card:nth-child(3n) {
+            --random-year: -1.8;
+            --random-title: 1.4;
+            --random-badge: -1.5;
+            --random-desc: 0.9;
+            --random-image: 2.4;
+        }
+
+        .timeline-card:nth-child(4n) {
+            --random-year: 1.6;
+            --random-title: -1.2;
+            --random-badge: 0.9;
+            --random-desc: -0.7;
+            --random-image: -1.9;
+        }
+
+        .timeline-card:nth-child(5n) {
+            --random-year: -2.0;
+            --random-title: 1.8;
+            --random-badge: -1.9;
+            --random-desc: 1.1;
+            --random-image: 2.1;
+        }
+
+        .timeline-card:nth-child(7n) {
+            --random-year: 1.4;
+            --random-title: -1.6;
+            --random-badge: 1.7;
+            --random-desc: -0.9;
+            --random-image: -1.5;
+        }
+
+        /* Плавный возврат в исходное состояние */
+        .timeline-year,
+        .timeline-title,
+        .timeline-era-badge,
+        .timeline-desc,
+        .image-glow {
+            transition: color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            animation: none;
+            will-change: transform;
+        }
+
+        body.light .timeline-card:hover {
+            transform: translateY(-10px) rotateX(2deg);
         }
 
         .timeline-year {
@@ -377,15 +573,6 @@
         }
         body.light .timeline-year {
             color: rgba(0,0,0,0.1);
-        }
-
-        .timeline-card:hover .timeline-year {
-            color: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
-        }
-        body.light .timeline-card:hover .timeline-year {
-            color: rgba(0, 0, 0, 0.3);
-            transform: scale(1.1);
         }
 
         .timeline-title {
@@ -412,6 +599,8 @@
             font-weight: 600;
             letter-spacing: 1px;
             opacity: 0.9;
+            position: relative;
+            z-index: 2;
         }
 
         .timeline-desc {
@@ -435,20 +624,20 @@
             font-family: var(--font-mono);
             font-size: 0.9rem;
             letter-spacing: 2px;
-            border: 2px dashed rgba(255, 255, 255, 0.05);
+            border: 5px dashed rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            background-size: cover !important;        /* важно */
-            background-position: center !important;   /* важно */
-            background-repeat: no-repeat !important;  /* важно */
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            z-index: 2;
         }
 
         /* Убираем переопределение фона в светлой теме для карточек с изображениями */
         body.light .image-glow {
             border-color: rgba(0,0,0,0.1);
-            /* НЕ переопределяем background, только border */
         }
 
         /* Для плейсхолдеров (без изображений) оставляем градиент */
@@ -457,11 +646,11 @@
         }
 
         body.light .image-glow:not([style*="background-image"]) {
-            background: #eef0f2;  /* светлый фон только для плейсхолдеров */
+            background: #eef0f2;
         }
 
         .image-glow.has-image {
-            border: 2px solid transparent;
+            border: 2px transparent;
             color: transparent;
             text-indent: -9999px;
         }
@@ -477,11 +666,6 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             pointer-events: none;
-        }
-
-        .timeline-card:hover .image-glow {
-            border-color: var(--era-color);
-            box-shadow: 0 0 30px var(--era-glow);
         }
 
         .timeline-card:hover .image-glow::before {
