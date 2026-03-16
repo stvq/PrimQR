@@ -1015,80 +1015,180 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(var(--imperial), var(--soviet), var(--modern)); border-radius: 4px; }
+    </style>
 
-
-
-
-
-/* Стили для героя - десктопная версия (по умолчанию) */
+<style>
+/* Обновленная структура hero */
 .hero-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: nowrap; /* запрещаем перенос на десктопе */
+    gap: 4rem;
+    position: relative;
 }
 
 .hero-text-wrapper {
     flex: 1;
-    min-width: 0; /* предотвращает переполнение */
+    max-width: 600px;
 }
 
-.hero-qr {
-    flex-shrink: 0; /* запрещаем сжиматься */
+.hero-text {
+    max-width: 100%;
 }
 
-/* Мобильная версия */
-@media (max-width: 768px) {
+.hero h1 {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    background: var(--accent-4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleGlow 4s ease-in-out infinite;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    color: var(--text-secondary);
+    max-width: 69%;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--h-sub);
+    padding-left: 2rem;
+    position: relative;
+    left: 10px;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+/* Минималистичный современный QR-код */
+.qr-wrapper {
+    flex-shrink: 0;
+    width: 280px;
+    margin-right: 3rem;
+    position: relative;
+}
+
+.qr-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 20px;
+    background: transparent;
+    padding: 0;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+.qr-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+    border-radius: 16px;
+}
+
+/* Только одна простая анимация при наведении */
+.qr-wrapper:hover .qr-image {
+    transform: scale(1.02);
+}
+
+/* Минималистичная подпись */
+.qr-label {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.3;
+    font-family: var(--font-mono);
+    transition: opacity 0.2s ease;
+}
+
+.qr-wrapper:hover .qr-label {
+    opacity: 0.6;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 1024px) {
     .hero-content {
-        flex-wrap: wrap; /* разрешаем перенос на мобильных */
-        justify-content: center;
-        gap: 1.5rem;
+        gap: 2rem;
     }
     
-    .hero-text-wrapper {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .hero-text {
-        width: 100%;
-    }
-    
-    .hero-stats {
-        justify-content: center;
-    }
-    
-    .hero-qr {
-        margin: 0 auto; /* центрируем QR-код */
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .hero-qr-image {
+    .qr-wrapper {
         width: 240px;
-        height: 240px;
+        margin-right: 2rem;
+    }
+    
+    .hero h1 {
+        font-size: 4rem;
     }
     
     .hero-subtitle {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .hero-text-wrapper {
+        max-width: 55%;
+    }
+
+    .hero-subtitle {
+        border-left: none;
+        padding-left: 1.25rem;
+        left: 0;
         text-align: left;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 90%;
+        max-width: 100%;
     }
-}
 
-/* Для очень маленьких экранов */
-@media (max-width: 480px) {
-    .hero-qr-image {
+    .hero-stats {
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .qr-wrapper {
         width: 200px;
-        height: 200px;
+        margin-right: 0;
+        align-self: center;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
     }
 }
 
+@media (max-width: 480px) {
+    .qr-wrapper {
+        width: 180px;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+    
+    .hero-stats {
+        gap: 1.5rem;
+    }
+}
     </style>
+
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
@@ -1106,15 +1206,15 @@
     </header>
 
     <main>
-<!-- Герой с QR-кодом -->
+
 <!-- Герой с QR-кодом -->
 <section class="hero">
-    <div class="container hero-content"> <!-- Убрали inline-стили -->
+    <div class="container hero-content">
         <!-- Текстовая часть -->
-        <div class="hero-text-wrapper"> <!-- NEW: обертка для текста -->
+        <div class="hero-text-wrapper">
             <div class="hero-text">
                 <h1>Приморск</h1>
-                <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь на речке Обиточной раскинулся тихий и уютный город – Приморск.</div>
+                <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Именно здесь, вбирая в себя терпкий запах чабреца и йодистую свежесть лиманов, раскинулся наш уютный город.</div>
                 <div class="hero-stats">
                     <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">события</div></div>
                     <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личности</div></div>
@@ -1123,13 +1223,19 @@
             </div>
         </div>
         
-        <!-- Блок с QR-кодом -->
-        <div class="hero-qr">
-            <div class="hero-qr-image"></div>
-            <div class="hero-qr-caption">QR-код на ресурс</div>
+        <!-- QR-код с отступом от края -->
+        <div class="qr-wrapper">
+            <div class="qr-container">
+                <img src="https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png" 
+                     alt="QR-код Приморск" 
+                     class="qr-image" 
+                     id="qrImage">
+            </div>
+            <div class="qr-label">сканируй</div>
         </div>
     </div>
 </section>
+
 
         <div class="container">
             <!-- Галерея (полностью оригинал) -->
@@ -1459,5 +1565,37 @@
             }
         });
     </script>
+<script>
+    (function() {
+        // Функция обновления QR-кода при смене темы
+        function updateQRCode() {
+            const qrImage = document.getElementById('qrImage');
+            if (!qrImage) return;
+            
+            const isLight = document.body.classList.contains('light');
+            qrImage.src = isLight 
+                ? 'https://s10.iimage.su/s/16/g2tdd0Gxz0wi137rY06WnyYdcWBhGGbVzZ9IvbW6W.png'
+                : 'https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png';
+        }
+
+        // Обновляем при загрузке
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateQRCode);
+        } else {
+            updateQRCode();
+        }
+
+        // Следим за изменением темы
+        const observer = new MutationObserver(updateQRCode);
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        // Слушаем изменение системной темы
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function() {
+            if (!localStorage.getItem('theme')) {
+                updateQRCode();
+            }
+        });
+    })();
+</script>
 </body>
 </html>
