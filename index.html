@@ -1018,6 +1018,12 @@
     </style>
 
 <style>
+h1, h2, div {
+  text-wrap: balance;
+}
+div {
+  text-wrap: pretty;
+}
 /* Обновленная структура hero */
 .hero-content {
     display: flex;
@@ -1122,12 +1128,19 @@
 /* Адаптация для мобильных устройств */
 @media (max-width: 1024px) {
     .hero-content {
+        margin-top: 1.5rem;
         gap: 2rem;
     }
     
     .qr-wrapper {
         width: 240px;
-        margin-right: 2rem;
+        margin-right: 1.5rem;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        font-family: var(--font-mono);
     }
     
     .hero h1 {
@@ -1152,7 +1165,7 @@
 
     .hero-subtitle {
         border-left: none;
-        padding-left: 2.5rem;
+        padding-left: 2.2rem;
         left: 0;
         text-align: left;
         max-width: 100%;
@@ -1160,6 +1173,7 @@
 
     .hero-stats {
         max-width: 400px;
+        font-size: 1.5rem;
         justify-content: center;
         gap: 2rem;
     }
