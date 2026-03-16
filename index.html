@@ -447,8 +447,11 @@
         /* Год — наклон в обе стороны (от -1.5deg до 2deg) */
         .timeline-card:hover .timeline-year {
             animation: randomTiltYear 0.4s ease forwards;
-            color: var(--era-color);
+            color: rgba(255,255,255,0.6);
             opacity: 0.8;
+        }
+        body.light .timeline-card:hover .timeline-year {
+            color: rgba(0,0,0,0.4);
         }
 
         /* Заголовок — наклон в обе стороны (от -1deg до 1.5deg) */
@@ -464,6 +467,13 @@
         /* Бейдж эпохи — наклон в обе стороны (от -1deg до 1.5deg) */
         .timeline-card:hover .timeline-era-badge {
             animation: randomTiltBadge 0.4s ease forwards;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        body.light .timeline-card:hover .timeline-era-badge {
+            background: rgba(0,0,0,0.05);
+            color: rgba(0,0,0,1);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -1014,7 +1024,7 @@
 .hero-content {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: left;
     gap: 1rem; /* минимальный отступ */
 }
 
@@ -1034,7 +1044,7 @@
 .hero-qr-image {
     width: 340px;  /* еще больше */
     height: 340px;
-    background: rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.01);
     background-size: cover;
     background-image: url('https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png');
     border-radius: 15px;
