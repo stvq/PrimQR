@@ -15,11 +15,12 @@
         /* ----- БАЗОВЫЙ СТИЛЬ (тема будет переопределена скриптом) ----- */
         :root {
             /* цвета эпох — фиксированные, от темы не зависят */
-            --imperial: #f9c35c;
-            --soviet: #ff5e7c;
-            --modern: #4a9eff;
+--imperial: #c2813a; /* Цвет старого медного пятака и осенних листьев */
+--soviet: #c95b4b;   /* Спелая брусника и колхозные поля */
+--modern: #b2d1db;   /* Теплый песок на пляже базы отдыха */
 
             /* системные цвета — будут меняться */
+            --border: rgba(255, 255, 255, 0.05);
             --bg-primary: #0a0c0f;
             --bg-secondary: #14181f;
             --bg-card: rgba(255,255,255,0.02);
@@ -31,7 +32,7 @@
             --h-sub: rgba(255, 255, 255, 0.2);
             --accent-2: rgba(255, 255, 255, 0.9);
             --accent-3: rgba(255, 255, 255, 0.6);
-            --accent-4: linear-gradient(135deg, #00ffa3 10%, #00d4ff 50%);
+            --accent-4: linear-gradient(135deg, #00a3a3 10%, #00d4ff 50%);
             --section-title-color: #a8b3cf;   /* для темной темы - светлый */
 
             /* моно, шрифты */
@@ -41,6 +42,7 @@
 
         /* Светлая тема (класс light на body) */
         body.light {
+            --border: rgba(0, 0, 0, 0.05);
             --bg-primary: #d5dce0;            /* светло-серо-голубоватый */
             --bg-secondary: #dbe0e8;
             --bg-card: rgba(255, 255, 255, 0.6);
@@ -277,6 +279,7 @@
 
         /* Заголовки секций */
         .section-header {
+            border-top: 1px solid var(--border);
             margin-bottom: 0rem;
             margin-top: 4rem;
         }
@@ -388,27 +391,27 @@
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🎺</text></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">📜</text></svg>');
             background-position: 
-                12% 20%,      /* левый верх */
-                80% 21%,     /* правый верх */
-                50% 32%,     /* левый низ */
-                75% 50%,     /* правый низ */
-                15% 60%;     /* центр */
+                12% 28%,      /* левый верх */
+                80% 23%,     /* правый верх */
+                45% 43%,     /* левый низ */
+                75% 63%,     /* правый низ */
+                15% 58%;     /* центр */
         }
 
         /* Советские эмоджи: рупор, книжка, баян, колос */
         .timeline-card[data-era="soviet"]::before {
             background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📻</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📚</text></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🪗</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📚</text></svg>'),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📻</text></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🌾</text></svg>'),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">⚒️</text></svg>');
             background-position: 
-                83% 16%,     /* правый верх */
-                15% 18%,     /* левый верх */
+                83% 35%,     /* правый верх */
+                15% 27%,     /* левый верх */
                 5% 58%,     /* центр-низ слева */
                 85% 65%,     /* центр-низ справа */
-                60% 40%;     /* центр-верх */
+                50% 50%;     /* центр-верх */
         }
 
         /* Современные эмоджи: ракушка, глобус, машина, волны */
@@ -451,13 +454,17 @@
         /* Заголовок — наклон в обе стороны (от -1deg до 1.5deg) */
         .timeline-card:hover .timeline-title {
             animation: randomTiltTitle 0.4s ease forwards;
-            text-shadow: 0 0 10px var(--era-color);
+            background: var(--era-color);
+            color: #000;
+        }
+        body.light .timeline-card:hover .timeline-title {
+            color: #fff;
         }
 
         /* Бейдж эпохи — наклон в обе стороны (от -1deg до 1.5deg) */
         .timeline-card:hover .timeline-era-badge {
             animation: randomTiltBadge 0.4s ease forwards;
-            box-shadow: 0 0 15px var(--era-color);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
         /* Текст — наклон в обе стороны (от -0.5deg до 1deg) */
@@ -470,7 +477,7 @@
             animation: randomTiltImage 0.4s ease forwards;
             border-color: var(--era-color);
             border-width: 3px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Анимации с разными рандомными значениями */
@@ -564,7 +571,7 @@
         }
 
         .timeline-year {
-            font-size: 5rem;           /* увеличили в 1.5 раза (было 4rem) */
+            font-size: 4rem;           /* увеличили в 1.5 раза (было 4rem) */
             font-weight: 800;
             font-family: var(--font-mono);
             color: rgba(255, 255, 255, 0.03);
@@ -582,10 +589,13 @@
 
 
         .timeline-title {
+            transition: 0s;
+            width: fit-content;
             font-size: 2rem;
             margin-bottom: 1rem;
             margin-top: 1.5rem;
             color: #fff;
+            line-height: 1.1;
             position: relative;
             z-index: 2;
         }
@@ -730,10 +740,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        .gallery-item:hover {
-            transform: scale(1.05);
-        }
-
         .gallery-image {
             width: 100%;
             height: 250px;
@@ -755,9 +761,15 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 0.3rem 0.8rem;
-            border-radius: 30px;
+            border-radius: 5px;
             border: 1px solid var(--border);
             z-index: 2;
+            transition: 0.4s;
+        }
+        .gallery-item:hover .gallery-overlay {
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            transform: scale(1.02);
         }
 
         .gallery-title {
@@ -993,6 +1005,73 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(var(--imperial), var(--soviet), var(--modern)); border-radius: 4px; }
+
+
+
+
+
+/* Герой */
+.hero-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem; /* минимальный отступ */
+}
+
+/* Текст hero */
+.hero-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* QR-код */
+.hero-qr {
+    margin-top: 0.8rem;
+    margin-right: 11rem;
+    flex: 0 0 auto;
+}
+
+.hero-qr-image {
+    width: 340px;  /* еще больше */
+    height: 340px;
+    background: rgba(0,0,0,0.3);
+    background-size: cover;
+    background-image: url('https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png');
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+body.light .hero-qr-image {
+    background: rgba(255,255,255,0.7);
+    background-image: url('https://s10.iimage.su/s/16/g2tdd0Gxz0wi137rY06WnyYdcWBhGGbVzZ9IvbW6W.png');
+    background-size: cover;
+}
+
+.hero-qr-caption {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Мобильные */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .hero-qr-image {
+        width: 280px;
+        height: 280px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -1011,22 +1090,33 @@
     </header>
 
     <main>
-        <!-- Герой без изменений -->
-        <section class="hero">
-            <div class="container hero-content">
-                <h1>Приморск</h1>
-                <div class="hero-subtitle">Хронология событий, судьбы людей и визуальная история</div>
-                <div class="hero-stats">
-                    <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">события</div></div>
-                    <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личности</div></div>
-                    <div class="stat-item"><div class="stat-number">+6</div><div class="stat-label">статьи</div></div>
-                </div>
+<!-- Герой с QR-кодом -->
+<section class="hero">
+    <div class="container hero-content" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;"> <!-- NEW: flex-контейнер -->
+        <!-- Текстовая часть (существующая) -->
+        <div style="flex: 1; min-width: 300px;"> <!-- NEW: обертка для текста -->
+<div class="hero-text">
+            <h1>Приморск</h1>
+            <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь на речке Обиточной раскинулся тихий и уютный город – Приморск.</div>
+            <div class="hero-stats">
+                <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">события</div></div>
+                <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личности</div></div>
+                <div class="stat-item"><div class="stat-number">+6</div><div class="stat-label">статьи</div></div>
+</div>
             </div>
-        </section>
+        </div>
+        
+        <!-- Блок с QR-кодом (справа) -->
+<div class="hero-qr">
+    <div class="hero-qr-image"></div>
+    <div class="hero-qr-caption">QR-код на ресурс</div>
+</div>
+</section>
 
         <div class="container">
             <!-- Галерея (полностью оригинал) -->
             <section>
+<div class="section-header"><h2 class="section-title"></h2></div>
                 <div class="gallery">
                     <div class="gallery-item" onclick="location.href='https://stvq.github.io/PrimQR/person.html'">
                         <div class="gallery-image" style="background-image: url('https://s10.iimage.su/s/13/gV0UCqrx1sqe1FDMTBr0N2yDI8L4sPahc4CQyv02I.jpg')"></div>
@@ -1061,7 +1151,7 @@
 
             <!-- Хронология (все тексты и ссылки нетронуты) -->
             <section>
-                <div class="section-header"><h2 class="section-title">Хронология событий</h2></div>
+                <div class="section-header"><h2 class="section-title"></h2></div>
 
                 <div class="timeline-grid" id="timelineGrid">
                     <!-- имперский период (все карточки сохранены) -->
@@ -1079,11 +1169,11 @@
                     <div class="timeline-card" data-era="imperial"><div class="timeline-year">1914</div><span class="timeline-era-badge">Перед ПМВ</span><h3 class="timeline-title">Бурная жизнь</h3><p class="timeline-desc">В 1914 году в Ногайске работало около 20 заводов: кирпичные, мыловаренный и пивоваренный, мельницы и пекарни. Открыли отделение банка и 36 торговых лавок. Ремеслом занимались более 1500 человек. Дважды в год шумели ярмарки. У горожан пользовались популярностью частный театр Ангеловского, синематограф Мироненко, фотография Зиньковского. В городе стояли церкви разных конфессий: 3 православных, армянская, немецкая кирха, еврейская синагога. Работали почта и телеграф, через речку проложили мост, рядом находилась городская баня.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/13/gmYC5DQxLLXfdCVXdKPmGGYVTtEHBr8IIGYlZH4MV.jpg')"></div></div>
                     <!-- советский период -->
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1905</div><span class="timeline-era-badge">Революция</span><h3 class="timeline-title">Революционное движение</h3><p class="timeline-desc">В марте 1905 на стенах городской управы появляются прокламации РСДРП. 16 августа забастовку объявляют возчики и грузчики. Революционные листовки призывали к активной борьбе с царизмом. На следующий год, во время уборки урожая, наёмные рабочие в помещичьем имении пытались разгромить усадьбу. Только после вооруженного вмешательства властям удалось подавить волнения. Однако дальнейшие события приняли неожиданно бурный характер. Первая мировая лишила многие семьи кормильцев, наростало недовольство. Новая революционная волна всколыхнет Ногайск уже в 1917 году.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/07/giwgPxNxiICKUATu4yruXrRnjqJVPGR4wCg1R6BfF.jpg')"></div></div>
-                    <div class="timeline-card" data-era="soviet" id="y1917"><div class="timeline-year">1917</div><span class="timeline-era-badge">Гражд.война</span><h3 class="timeline-title">Первый Ногайский Совет</h3><p class="timeline-desc">В декабре 1917 года, после известий об Октябрьской революции, Советская власть установлена в Ногайске - избран первый Совет рабочих и крестьянских депутатов во главе с А.А.Новицким. Проведена национализация предприятий, оказана помощь инвалидам и семьям погибших в годы первой мировой, открылся приют для сирот, проводилась ликвидация безграмотности. 23 апреля 1918г. захватившие город отряды полковника Дроздова расстреляли членов Совета. Их фамилии сохранились в названиях улиц: Новицкого, Ечина, Кокошко, Голубенко. Годы спустя в центральном сквере сооружен памятник Первому Ногайскому Совету.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gz27VN8x4i4WhcWXosVtOzdi5qUnW5gtAqHwsRi9t.jpg')"></div></div>
-                    <div class="timeline-card" data-era="soviet"><div class="timeline-year">1919</div><span class="timeline-era-badge">Гражд.война</span><h3 class="timeline-title">Повстанческий отряд</h3><p class="timeline-desc">Следом за дроздовцами в Ногайск вошли австро-немецкие войска, население подверглось грабежу, вывозился хлеб. К концу года их сменили деникинцы. Части РККА ненадолго вернули контроль над населённым пунктом, но  вновь были выбиты. Формируется партизанский отряд под командованием Г.З.Голика и комиссара А.Д.Леванисова. За успешные сражения против войск генерала Шкуро под деревней Чумаки на Херсонщине Г.З.Голик награждён орденом Красного Знамени. В 1920 году отряд оказывал помощь 13-й армии Южного фронта в борьбе с врангелевцами. Окончательно Ногайск занят Красной Армией после боёв с махновцами 16 декабря 1920 года.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gZdHPY0xdtwyGHrJs9gkzkhzZe00y6mmMSovtHjED.jpg')"></div></div>
+                    <div class="timeline-card" data-era="soviet" id="y1917"><div class="timeline-year">1917</div><span class="timeline-era-badge">Гр.война</span><h3 class="timeline-title">Первый Ногайский Совет</h3><p class="timeline-desc">В декабре 1917 года, после известий об Октябрьской революции, Советская власть установлена в Ногайске - избран первый Совет рабочих и крестьянских депутатов во главе с А.А.Новицким. Проведена национализация предприятий, оказана помощь инвалидам и семьям погибших в годы первой мировой, открылся приют для сирот, проводилась ликвидация безграмотности. 23 апреля 1918г. захватившие город отряды полковника Дроздова расстреляли членов Совета. Их фамилии сохранились в названиях улиц: Новицкого, Ечина, Кокошко, Голубенко. Годы спустя в центральном сквере сооружен памятник Первому Ногайскому Совету.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gz27VN8x4i4WhcWXosVtOzdi5qUnW5gtAqHwsRi9t.jpg')"></div></div>
+                    <div class="timeline-card" data-era="soviet"><div class="timeline-year">1919</div><span class="timeline-era-badge">Гр.война</span><h3 class="timeline-title">Повстанческий отряд</h3><p class="timeline-desc">Следом за дроздовцами в Ногайск вошли австро-немецкие войска, население подверглось грабежу, вывозился хлеб. К концу года их сменили деникинцы. Части РККА ненадолго вернули контроль над населённым пунктом, но  вновь были выбиты. Формируется партизанский отряд под командованием Г.З.Голика и комиссара А.Д.Леванисова. За успешные сражения против войск генерала Шкуро под деревней Чумаки на Херсонщине Г.З.Голик награждён орденом Красного Знамени. В 1920 году отряд оказывал помощь 13-й армии Южного фронта в борьбе с врангелевцами. Окончательно Ногайск занят Красной Армией после боёв с махновцами 16 декабря 1920 года.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gZdHPY0xdtwyGHrJs9gkzkhzZe00y6mmMSovtHjED.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1920</div><span class="timeline-era-badge">КП(б)У</span><h3 class="timeline-title">Партийные ячейки</h3><p class="timeline-desc">Возобновляется деятельность партийных ячеек: создан ревком, организовавший продразвёрстку. М.М.Сопильник стал секретарем партийной организации, Н.И.Кошкарева возглавила местный комсомол. 60 комсомольцев стали бойцами отряда особого назначения под руководством начальника милиции, созданного для охраны города от остатков банд. В январе 1921 состоялись выборы в новый Совет, председателем которого назначен А.Д.Леванисов. Ряды коммунистов значительно пополнились в ходе Ленинского призыва 1924г.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gxDaOnBx8E9y2VfQBpFRSXcguzrsrMvkBHKfOgUoY.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1923</div><span class="timeline-era-badge">Совхоз</span><h3 class="timeline-title">"Надежда республики"</h3><p class="timeline-desc">В результате разрухи и голода население Ногайска сократилось на 1.8тыс. человек, с октября 1924 населённый пункт получает статус села в составе Бердянского района. Среди населения проводятся мероприятия социалистического переустройства сельского хозяйства: помощь беднейшим крестьянам, привлечение рабочих к потребительской кооперации, пропаганда преимуществ коллективного хозяйства, на базе реального училища в 1921 открывается сельскохозяйственных техникум. В 1923 году открыт совхоз "Надежда Республики", так его назвал Всеукраинский староста Г.И.Петровский. Со временем совхоз стал настоящей агрономической школой семеневодства. За успехи в этом совхоз награжден диплом ВДНХ и легковым автомобилем. </p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gjY6LVnxiMTkoY0qykME7eoSeoMPzOl8NPzMshojy.png')"></div></div>
-                    <div class="timeline-card" data-era="soviet"><div class="timeline-year">1927</div><span class="timeline-era-badge">Колхоз</span><h3 class="timeline-title">"Ударники моря"</h3><p class="timeline-desc">По инициативе В.Смородина, Б.Зайцева и Г.Горобей в 1923 создан профсоюз "Всеработземлес", его возглавил М.М.Онищенко. Организованы кружки по художественной самодеятельности, ликвидации неграмотности. На конец 1924г. в Ногайске действовало 28 частных и 3 кооперативных магазина, 8 небольших предприятий: пивоваренный, кирпичный заводы, маслобойня. По решению бюро райкома партии от 22 июня 1927г. в Обиточном создаётся рыболовецкая артель "Ударники моря". Всего основано около 15 колхозов: "Незаможник", "Вiльна праця", "им.Ленина", "Коминтерн", "Червоний стяг" и др., которые обслуживала Трояновская машинно-тракторная станция.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gXzGyfCx6fjWP3MzDw7GdAkNzg9SeHJo6qZrYog0d.jpg')"></div></div>
+                    <div class="timeline-card" data-era="soviet"><div class="timeline-year">1927</div><span class="timeline-era-badge">Колхозы</span><h3 class="timeline-title">"Ударники моря"</h3><p class="timeline-desc">По инициативе В.Смородина, Б.Зайцева и Г.Горобей в 1923 создан профсоюз "Всеработземлес", его возглавил М.М.Онищенко. Организованы кружки по художественной самодеятельности, ликвидации неграмотности. На конец 1924г. в Ногайске действовало 28 частных и 3 кооперативных магазина, 8 небольших предприятий: пивоваренный, кирпичный заводы, маслобойня. По решению бюро райкома партии от 22 июня 1927г. в Обиточном создаётся рыболовецкая артель "Ударники моря". Всего основано около 15 колхозов: "Незаможник", "Вiльна праця", "им.Ленина", "Коминтерн", "Червоний стяг" и др., которые обслуживала Трояновская машинно-тракторная станция.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gXzGyfCx6fjWP3MzDw7GdAkNzg9SeHJo6qZrYog0d.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1932</div><span class="timeline-era-badge">Бедствия</span><h3 class="timeline-title">Голод и "чёрные доски"</h3><p class="timeline-desc">На рубеже 20-30-х годов поспешная и непродуманная коллективизация нанесла большой урон сельскому хозяйству региона. Во время раскулачивания отбиралось всё имущество, двор, дом. По данным из сводки председателя райисполкома Маркова, в Ногайском районе раскулачено 55 хозяйств. Колхозы "Красный колос", "7 лет без Ленина", "Коминтерн", "Червоний стяг", "Большевик" и др. оказывались в "чорних дошках" - списки саботирующих хлебозаготовки, против которых вводились ограничения. Разразился голод, в глубинных селах случаи смерти от истощения приобрели массовый характер. После 1933 года выжившее в голод население постепенно возобновляет сельское хозяйство. </p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gR0WbhAxmLF0ipRCZezu7G98z2Y2d6VumvpUDv4JL.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1936</div><span class="timeline-era-badge">Репрессии</span><h3 class="timeline-title">Разрушение храмов</h3><p class="timeline-desc">В связи с анти-религиозной политикой большевиков, в это время серьёзно пострадали храмы. Например, в 1933 разобрана колокольня Свято-Троицкой церкви. Здание использовалось в качестве склада. Расположившаяся в центре Ногайска церковь Успения Пресвятой Богородицы взорвана полностью - на её месте сначала будет стадион, затем первая школа. Та же судьба постигла Покровскую (Карапеевскую) церковь. Кроме того, в 1936-1938 гг. регион подвергался сокрушительным ударам карательных органов НКВД, затронувшим также болгарское население близлежащих сёл, репрессированных по сфабрикованным делам как участники "контрреволюционной националистической болгарской организации".</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gOUwsEAxHN8CM518AYFlvFSUfpfAvd3dL19rM7Vi4.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1939</div><span class="timeline-era-badge">ПГТ</span><h3 class="timeline-title">Предвоенные достижения</h3><p class="timeline-desc">1938 г. Ногайск относят к категории поселков городского типа. К тому времени сооружают электростанцию мощностью 50кВт, больничный городок, поликлинику, родильное отделение на 16 коек откроется спустя год. В это время пациентов принимает хирург А.Н.Грибанов, ушедший полевым врачом на фронт в годы ВОВ. Действует народный дом, при котором создан самодеятельный театр. Первый выпуск десятиклассников в ногайской школе отметили летом 1939 года. Работал кинотеатр, библиотека, клубы. Начинается издаваться газета "Красное Приморье". Председателем райсовета избирается Георгий Иович Савинов.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/06/gBODNW3xuaFrjAwkk8eanTtlGIjzsEVGPVXESIVB5.jpg')"></div></div>
@@ -1096,7 +1186,7 @@
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1968</div><span class="timeline-era-badge">Приморск</span><h3 class="timeline-title">Будни созиданий</h3><p class="timeline-desc">1960-е годы. Население Приморска превысило 10тыс человек. Время совершенствования сельского хозяйства: введение комплекса агроприёмов, повышение продуктивности животноводства, высадка лесополос, садов и виноградников. Принятие новых программ развития и социальное строительство: сельские школы, ясли, дома культуры, дорожной инфраструктуры. В с.Елизаветовка построена птицефабрика "Приморская". Средняя школа №1 и здание администрации появляются в Приморске. Первый секретарь райкома партии Петр Москальков и председатель Григорий Косяк принимают активное участие в жизни города.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gv9sYhExGhwzWiEW9KKL6KU1vcCO9vckuY38PP293.png')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1973</div><span class="timeline-era-badge">Приморск</span><h3 class="timeline-title">"Знак качества"</h3><p class="timeline-desc">К 1973 году построены новые здания Ногайского совхоза-техникума и студенческого городка. Несмотря на пыльную бурю 1974г., сельское хозяйство продолжает наращивать валовые показатели. Передовики района получали путёвки в санатории и направлялись на обучение. С 1976 года особое внимание уделялось подбору кадров: конференции с лекторами, профориентация в школах. Шефская поддержка предприятий Мелитополя и Запорожья способствует механизации хозяйства. Координирует работу от Приморского района второй секретарь райкома - Владимир Папу. Каждый колхоз стремится получить собственный "Знак качества".</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gG33Yo2xGIejGPe4SZvzSmAbB9szQpNovGZNtKI1a.png')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1979</div><span class="timeline-era-badge">Афган</span><h3 class="timeline-title">Пламя свечи осветило...</h3><p class="timeline-desc">Афганская война - девять лет песка, гор и цинковых гробов. Среди воинов-интернационалистов 80 жителей Приморского района с честью выполняли свой долг. Четверо парней не вернулись домой: А.Н.Дудниченко, А.С.Данилов, В.И.Матвиенко, В.А.Климов. 15 февраля 1989 года завершился вывод советских войск из Афганистана.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/13/g6Y3VJ9xyZzhXnuoL4VIHI4bu2KdH5R94opwazoiB.jpg')"></div></div>
-                    <div class="timeline-card" data-era="soviet" id="y1980"><div class="timeline-year">1980</div><span class="timeline-era-badge">Приморск</span><h3 class="timeline-title">"Олимпиец"</h3><p class="timeline-desc">Сохранилось множество фотографий и газет социалистического соревнования - ежегодные проводы механизаторов на жатву отмечали торжественно, при участии работников культуры. Накануне Олимпийских игр 1980г. в Приморске обустроен стадион "Олимпиец". Популярностью пользовался футбол. Кроме того, насчитывалось 14 тренеров по различным видам спорта. Постоянно проводились турниры, спортивные игры и эстафеты: "Неделя ГТО", "Весёлые старты", "Зарница". Также по району оборудовано 13 спортзалов, 11 тиров, 25 футбольных полей, зал тяжёлой атлетики в техникуме.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/09/gSzPPT4x8UB2QQFyZ7Ldo2tApunaj5cE2SNy0JJrL.jpg')"></div></div>
+                    <div class="timeline-card" data-era="soviet" id="y1980"><div class="timeline-year">1980</div><span class="timeline-era-badge">Спорт</span><h3 class="timeline-title">"Олимпиец"</h3><p class="timeline-desc">Сохранилось множество фотографий и газет социалистического соревнования - ежегодные проводы механизаторов на жатву отмечали торжественно, при участии работников культуры. Накануне Олимпийских игр 1980г. в Приморске обустроен стадион "Олимпиец". Популярностью пользовался футбол. Кроме того, насчитывалось 14 тренеров по различным видам спорта. Постоянно проводились турниры, спортивные игры и эстафеты: "Неделя ГТО", "Весёлые старты", "Зарница". Также по району оборудовано 13 спортзалов, 11 тиров, 25 футбольных полей, зал тяжёлой атлетики в техникуме.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/09/gSzPPT4x8UB2QQFyZ7Ldo2tApunaj5cE2SNy0JJrL.jpg')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1985</div><span class="timeline-era-badge">СССР</span><h3 class="timeline-title">Противодействие катастрофе</h3><p class="timeline-desc">Весеннее наводнение 1985 года принесло немало бед и разрушений. Много усилий направили на ликвидацию его последствий, провели реконструкцию теплосети, отстроили 260 домов и возвели ещё 100 новых. Личное участие принимал председатель горсовета Л.В.Булашев. 26 апреля 1986 трагедией разразился Чернобыль. Некоторые жители Приморского района приняли участие в ликвидации последствий аварии. Памятный знак им установлен в центральном парке.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gXx6wfhxGk53NKaXJw3Dz4wZBAY6kqsS8c9XosL3R.png')"></div></div>
                     <div class="timeline-card" data-era="soviet"><div class="timeline-year">1989</div><span class="timeline-era-badge">Приморск</span><h3 class="timeline-title">На наших глазах</h3><p class="timeline-desc">80-е годы - рождение знакомого нам микрорайона. Каждый год под ключ сдавалось в среднем 25-30 квартир. Детским садом, школой №2, районной больницей, аптекой, торговыми рядами застраивается ул.Морская. Через р.Обиточную к Юбилейному парку установлен пешеходный мост Елагина. В начале десятилетия введены в очистные сооружения, а 1989 организована городская теплосеть. Работами руководил Д.Ф.Петрик и архитектор В.В.Станишевский. В общепроизводственный ритм вписывалась комсомольская организация, руководимая Н.И.Иванченко.</p><div class="image-glow" onclick="openModal('timeline', this)" style="background-image: url('https://s10.iimage.su/s/11/gkOh8m8xN4i4Aa2SvVhr3bRrnCVzfahyuWZdEvOdP.png')"></div></div>
                     <!-- современные (пустые заглушки) -->

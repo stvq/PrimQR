@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Приморск · Личности</title>
     <style>
-        /* ===== ОСНОВА ===== */
+        /* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ (как в index.html) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,46 +13,66 @@
         }
 
         :root {
-            --bg: #0a0c0f;
-            --card: rgba(255, 255, 255, 0.02);  /* Увеличена прозрачность */
-            --text: #f0f4fa;
-            --text-dim: #a8b3cf;
-            --border: rgba(255, 255, 255, 0.03);
-            --accent: #b1b3b3;
-            --logo-color: #d8dde5;
-            --nav-hover: rgba(177, 179, 179, 0.15);
-            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            /* цвета эпох — фиксированные */
+            --imperial: #c2813a;
+            --soviet: #c95b4b;
+            --modern: #b2d1db;
+
+            /* системные цвета */
+            --border: rgba(255, 255, 255, 0.05);
+            --bg-primary: #0a0c0f;
+            --bg-secondary: #14181f;
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --text-primary: #f0f4fa;
+            --text-secondary: #a8b3cf;
+            --glass-bg: rgba(26, 31, 40, 0.7);
+            --border-glow: rgba(255, 107, 74, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.7);
+            --h-sub: rgba(255, 255, 255, 0.2);
+            --accent-2: rgba(255, 255, 255, 0.9);
+            --accent-3: rgba(255, 255, 255, 0.6);
+            --section-title-color: #a8b3cf;
+
+            /* моно, шрифты */
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        /* Светлая тема */
         body.light {
-            --bg: #dee0e3;
-            --card: rgba(255, 255, 255, 0.02);  /* Увеличена прозрачность */
-            --text: #1a1e24;
-            --text-dim: #3f4a5c;
             --border: rgba(0, 0, 0, 0.05);
-            --logo-color: #2d3748;
-            --nav-hover: rgba(0, 0, 0, 0.08);
-            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --bg-primary: #d5dce0;
+            --bg-secondary: #dbe0e8;
+            --bg-card: rgba(255, 255, 255, 0.6);
+            --text-primary: #1a1e24;
+            --text-secondary: #3f4a5c;
+            --glass-bg: rgba(240, 244, 250, 0.7);
+            --border-glow: rgba(0, 100, 200, 0.2);
+            --shadow-color: rgba(62, 77, 89, 0.1);
+            --h-sub: rgba(0, 0, 0, 0.2);
+            --accent-2: #1a1e24;
+            --accent-3: #3f4a5c;
+            --section-title-color: #2d3748;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.5;
-            transition: background-color 0.2s ease;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
             overflow-x: hidden;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             position: relative;
             z-index: 2;
         }
 
-        /* ===== ДЕКОР ===== */
+        /* ===== ДЕКОР (как в оригинале) ===== */
         .background-decor {
             position: fixed;
             top: 0;
@@ -66,7 +86,7 @@
 
         .decor-item {
             position: absolute;
-            color: var(--accent);
+            color: #b1b3b3;
             font-size: 2rem;
             animation: float 20s infinite ease-in-out;
         }
@@ -93,13 +113,17 @@
 
         /* ===== ШАПКА ===== */
         .site-header {
-            padding: 1.2rem 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
-            background: var(--card);
+            position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 12, 15, 0.7);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        body.light .site-header {
+            background: rgba(238, 242, 246, 0.8);
         }
 
         .header-content {
@@ -112,12 +136,12 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--logo-color);
-            letter-spacing: -0.5px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: var(--accent-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .logo span { color: var(--accent); }
 
         .header-actions {
             display: flex;
@@ -126,21 +150,20 @@
         }
 
         .theme-toggle {
-            background: var(--card);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 0.4rem 0.8rem;
+            padding: 0.4rem 1rem;
             cursor: pointer;
-            color: var(--text);
             backdrop-filter: blur(4px);
-            transition: transform 0.2s ease;
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .theme-toggle:hover { 
             transform: scale(1.05);
-            border-color: var(--accent);
+            border-color: var(--modern);
         }
 
         .theme-icon {
@@ -155,18 +178,18 @@
         }
 
         .back-link {
-            background: var(--card);
+            background: var(--bg-card);
             padding: 0.4rem 1.2rem;
             border-radius: 100px;
             font-size: 0.85rem;
             border: 1px solid var(--border);
-            color: var(--text-dim);
+            color: var(--text-secondary);
             cursor: pointer;
             text-decoration: none;
             transition: all 0.2s ease;
         }
         .back-link:hover {
-            color: var(--text);
+            color: var(--text-primary);
             transform: scale(1.02);
         }
 
@@ -182,11 +205,11 @@
         }
 
         .era-link {
-            padding: 0.6rem 1.2rem;
+            padding: 0.6rem 1.5rem;
             border-radius: 40px;
-            background: var(--card);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            color: var(--text-dim);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
@@ -196,73 +219,69 @@
         }
 
         .era-link:hover {
-            color: var(--text);
-            background: var(--nav-hover);
-            transform: translateY(-1px);
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.05);
+            transform: translateY(-2px);
         }
 
         .era-link.active {
-            background: var(--accent);
-            color: #0a0c0f;
-            border-color: var(--accent);
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
         }
 
         body.light .era-link.active {
+            background: #2d3748;
             color: white;
-            background: #4a5568;
         }
 
         /* ===== ИСТОРИЧЕСКИЙ КОНТЕКСТ ===== */
         .era-context {
-            background: var(--card);
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 1.8rem 2rem;
-            margin-bottom: 2rem;
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 3rem;
             position: relative;
             backdrop-filter: blur(4px);
-            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        .era-context:hover {
+            transform: translateY(-5px);
         }
 
         .context-paperclip {
             position: absolute;
             top: 1rem;
-            left: 1rem;
-            font-size: 1.8rem;
+            left: 1.5rem;
+            font-size: 2rem;
             opacity: 0.5;
             transform: rotate(-15deg);
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         .context-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.75rem;
-            padding-left: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-left: 3rem;
             letter-spacing: -0.3px;
         }
 
         .context-text {
-            color: var(--text-dim);
+            color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.7;
-            padding-left: 2.5rem;
+            padding-left: 3rem;
             font-style: italic;
             border-left: 2px solid var(--border);
         }
 
-        .context-text p {
-            margin-bottom: 0.5rem;
-        }
-
-        .context-text p:last-child {
-            margin-bottom: 0;
-        }
-
         /* ===== СЕКЦИИ ===== */
         .era-section {
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
             scroll-margin-top: 100px;
         }
 
@@ -271,97 +290,234 @@
             display: flex;
             align-items: baseline;
             gap: 1rem;
-            border-top: 2px solid var(--border);  /* Изменено с border-bottom на border-top */
-            padding-top: 0.8rem;  /* Изменено с padding-bottom на padding-top */
+            border-top: 2px solid var(--border);
+            padding-top: 0.8rem;
         }
 
         .section-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--section-title-color);
             letter-spacing: -0.5px;
         }
 
         .section-subtitle {
-            color: var(--text-dim);
+            color: var(--text-secondary);
             font-size: 0.95rem;
         }
 
-        /* ===== СЕТКА КАРТОЧЕК ===== */
+        /* ===== СЕТКА КАРТОЧЕК (3 колонки как в оригинале) ===== */
         .person-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
-        /* ===== КАРТОЧКА ===== */
+        /* ===== КАРТОЧКА ЛИЧНОСТИ (стиль как в index, БЕЗ ЭМОДЖИ) ===== */
         .person-card {
-            background: var(--card);
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 1.5rem;
-            backdrop-filter: blur(4px);
-            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
             display: flex;
             flex-direction: column;
             height: 100%;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        body.light .person-card {
+            border: 1px solid rgba(0,0,0,0.08);
+            background: var(--bg-card);
         }
 
+        /* Цвета для каждого раздела (проявляются при наведении) */
+        .era-section[id="origins"] .person-card { --era-color: #c2813a; --era-glow: rgba(194, 129, 58, 0.3); }
+        .era-section[id="artists"] .person-card { --era-color: #e6b422; --era-glow: rgba(159, 122, 234, 0.3); }
+        .era-section[id="revolution"] .person-card { --era-color: #c95b4b; --era-glow: rgba(201, 91, 75, 0.3); }
+        .era-section[id="thirties"] .person-card { --era-color: #b84a3a; --era-glow: rgba(201, 91, 75, 0.3); }
+        .era-section[id="war"] .person-card { --era-color: #9d4e3c; --era-glow: rgba(201, 91, 75, 0.3); }
+        .era-section[id="construction"] .person-card { --era-color: #8d4a3f; --era-glow: rgba(201, 91, 75, 0.3); }
+
+        /* Эффект наведения как в index (подъем и поворот) */
         .person-card:hover {
-            transform: scale(1.1);  /* Увеличение всей карточки */
+            transform: translateY(-10px) rotateX(2deg);
         }
 
+        /* Имя с цветом эпохи при наведении */
         .person-name {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 0.25rem;
             line-height: 1.3;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        .person-card:hover .person-name {
+            color: var(--era-color);
         }
 
+        /* Роль с нижней границей */
         .person-role {
             font-size: 0.8rem;
-            color: var(--text-dim);
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border);
+            transition: border-color 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        .person-card:hover .person-role {
+            border-bottom-color: var(--era-color);
         }
 
+        /* Биография */
         .person-bio {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
             flex-grow: 1;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 2;
         }
 
+        /* Изображение (точно как .image-glow в index) */
         .person-image {
+            margin-top: auto;
             width: 100%;
             aspect-ratio: 4/3;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #222834, #1a1f28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5162;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border: 2px dashed var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
             background-size: cover !important;
             background-position: center !important;
-            border-radius: 16px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: transform 0.3s ease;
-            margin-top: auto;
+            background-repeat: no-repeat !important;
+            z-index: 2;
+        }
+        body.light .person-image {
+            border-color: rgba(0,0,0,0.1);
+        }
+        .person-card:hover .person-image {
+            border-color: var(--era-color);
+            border-width: 3px;
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px var(--shadow-color);
         }
 
+        /* Радиальный градиент при наведении (как в index) */
+        .person-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--era-color) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .person-card:hover .person-image::before {
+            opacity: 0.15;
+        }
+
+        /* Анимации наклона для разных элементов (как в index) */
+        .person-card:hover .person-name {
+            animation: tiltName 0.4s ease forwards;
+        }
+        .person-card:hover .person-role {
+            animation: tiltRole 0.4s ease forwards;
+        }
+        .person-card:hover .person-bio {
+            animation: tiltBio 0.4s ease forwards;
+        }
+        .person-card:hover .person-image {
+            animation: tiltImage 0.4s ease forwards;
+        }
+
+        /* Разные углы наклона */
+        @keyframes tiltName {
+            0% { transform: rotate(0) translateY(0); }
+            100% { transform: rotate(calc(var(--random-name, 1deg) * 1deg)) translateY(-2px); }
+        }
+        @keyframes tiltRole {
+            0% { transform: rotate(0) scale(1); }
+            100% { transform: rotate(calc(var(--random-role, -0.8deg) * 1deg)) scale(1.02); }
+        }
+        @keyframes tiltBio {
+            0% { transform: rotate(0) translateX(0); }
+            100% { transform: rotate(calc(var(--random-bio, 0.5deg) * 1deg)) translateX(2px); }
+        }
+        @keyframes tiltImage {
+            0% { transform: rotate(0) scale(1); }
+            100% { transform: rotate(calc(var(--random-img, -1.5deg) * 1deg)) scale(1.02); }
+        }
+
+        /* Случайные значения для каждой карточки */
+        .person-card:nth-child(odd) {
+            --random-name: 1.2;
+            --random-role: -0.7;
+            --random-bio: -0.4;
+            --random-img: 1.8;
+        }
+        .person-card:nth-child(even) {
+            --random-name: -1.5;
+            --random-role: 1.1;
+            --random-bio: 0.8;
+            --random-img: -2.2;
+        }
+        .person-card:nth-child(3n) {
+            --random-name: -1.8;
+            --random-role: 1.4;
+            --random-bio: 0.9;
+            --random-img: 2.4;
+        }
+        .person-card:nth-child(4n) {
+            --random-name: 1.6;
+            --random-role: -1.2;
+            --random-bio: -0.7;
+            --random-img: -1.9;
+        }
+        .person-card:nth-child(5n) {
+            --random-name: -2.0;
+            --random-role: 1.8;
+            --random-bio: 1.1;
+            --random-img: 2.1;
+        }
 
         /* ===== ФУТЕР ===== */
         .site-footer {
-            padding: 2rem 0;
-            margin-top: 3rem;
+            background: var(--bg-secondary);
             border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            margin-top: 4rem;
         }
 
         .footer-content {
             display: flex;
             justify-content: space-between;
-            color: var(--text-dim);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             flex-wrap: wrap;
             gap: 1rem;
@@ -379,7 +535,6 @@
             align-items: center;
             padding: 1rem;
         }
-
         .modal.active { display: flex; }
 
         .modal-content {
@@ -410,24 +565,17 @@
         }
         .modal-close:hover { opacity: 1; }
 
-        /* ===== АНИМАЦИИ ===== */
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .person-card, .era-context {
-            animation: fadeUp 0.5s ease forwards;
+            animation: fadeInUp 0.6s ease forwards;
             opacity: 0;
         }
 
-        /* Задержки для плавного появления */
         .person-card:nth-child(1) { animation-delay: 0.1s; }
         .person-card:nth-child(2) { animation-delay: 0.15s; }
         .person-card:nth-child(3) { animation-delay: 0.2s; }
@@ -435,65 +583,37 @@
         .person-card:nth-child(5) { animation-delay: 0.3s; }
         .person-card:nth-child(6) { animation-delay: 0.35s; }
 
+        /* ===== СКРОЛЛБАР ===== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(#c2813a, #c95b4b, #4299e1); border-radius: 4px; }
+
         /* ===== АДАПТИВ ===== */
         @media (max-width: 900px) {
+            .container { padding: 0 1.5rem; }
             .person-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
-            
-            .context-text {
-                padding-left: 2rem;
-                font-size: 0.95rem;
-            }
+            .section-title { font-size: 2.2rem; }
         }
 
         @media (max-width: 600px) {
-            .person-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section-title {
-                font-size: 1.6rem;
-            }
-            
-            .era-nav {
-                gap: 0.4rem;
-            }
-            
+            .container { padding: 0 1.25rem; }
+            .person-grid { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+            .era-nav { gap: 0.4rem; }
             .era-link {
-                padding: 0.4rem 0.8rem;
+                padding: 0.4rem 1rem;
                 font-size: 0.8rem;
             }
-            
-            .decor-item {
-                opacity: 0.08;
-            }
-            
-            .container {
-                padding: 0 1rem;
-            }
-            
-            .era-context {
-                padding: 1.5rem 1.2rem;
-            }
-            
-            .context-title {
-                padding-left: 2rem;
-                font-size: 1.1rem;
-            }
-            
-            .context-text {
-                padding-left: 2rem;
-            }
-
-            .theme-toggle {
-                padding: 0.3rem 0.6rem;
-            }
-
-            .theme-icon {
-                width: 20px;
-                height: 20px;
-            }
+            .decor-item { opacity: 0.08; }
+            .era-context { padding: 1.5rem; }
+            .context-title { padding-left: 2rem; }
+            .context-text { padding-left: 2rem; }
+            .theme-toggle { padding: 0.3rem 0.6rem; }
+            .theme-icon { width: 20px; height: 20px; }
+            .logo { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -513,12 +633,12 @@
     <!-- Шапка -->
     <header class="site-header">
         <div class="container header-content">
-            <div class="logo">ЛИЧНОСТИ</div>
+            <div class="logo">ЛИЧНОСТИ · ПРИМОРСК</div>
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
                     <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
                 </button>
-                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
             </div>
         </div>
     </header>
@@ -534,34 +654,33 @@
             <a href="#construction" class="era-link">1960-80</a>
         </nav>
 
-        <!-- Секция: Истоки -->
+        <!-- Секция: Истоки (цвет: #c2813a) -->
         <section id="origins" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">Истоки. Заштатный город</h2>
                 <span class="section-subtitle">XIX — начало XX века</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Ногайск в XIX столетии</div>
                 <div class="context-text">
-                    <p>Основанный в 1821 году как центр приставства ногайских орд, город быстро стал торговым и административным центром Приазовья. Здесь пересекались пути кочевников-ногайцев, русских крестьян и иностранных колонистов. К концу века Ногайск — уездный город с православными храмами, синагогой, земской больницей и женской гимназией. Особую роль играли казачьи династии Денисовых и Орловых-Денисовых, владевшие обширными землями.</p>
+                    <p>В этих краях, у слияния степи и моря, рождались судьбы, изменившие облик города — здесь вы найдете имена основателей, защитников и подвижников, чья воля и труд стали фундаментом Ногайска. В 1821 году на берегу Азовского моря высочайшим указом был образован заштатный город Ногайск, ставший административным центром для ногайских орд и местом, где пересекались пути кочевников, крестьян и колонистов. В тихую августовскую пору, когда чайки кружат над обрывами, здесь суетились торговые ряды и тихо колыхались яблони городского сада.</p>
                 </div>
             </div>
             
             <div class="person-grid">
                 <div class="person-card">
                     <div class="person-name">Фёдор Петрович Денисов</div>
-                    <div class="person-role">граф · донской казак</div>
-                    <div class="person-bio">Донской казак, дослужившийся до чина генерала от кавалерии. Участник русско-турецких войн, от неприятеля получил прозвище "Денис-паша".</div>
+                    <div class="person-role">Донской казак</div>
+                    <div class="person-bio">Донской казак, дослужившийся до чина генерала от кавалерии. Участник русско-турецких войн, от неприятеля получил прозвище "Денис-паша". В 1799 году Павел I жаловал Денисову земли на побережье Азовского моря.</div>
                     <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/05/grb2xHMxzgVXK1yEDb55dwkOaRcIUG2iSSesvSIV4.jpg')"></div>
                 </div>
 
                 <div class="person-card">
                     <div class="person-name">Василий Васильевич Орлов-Денисов</div>
-                    <div class="person-role">донской казак · внук Ф.П.Денисова</div>
-                    <div class="person-bio">Участник Отечественной войны 1812 года. Современники говорили: "богатырски сложенный, высокого роста, могучий всадник... он любил жизнь роскошную, весёлую".</div>
+                    <div class="person-role">Внук Ф.П.Денисова</div>
+                    <div class="person-bio">Участник Отечественной войны 1812 года. Современники говорили: "богатырски сложенный, высокого роста, могучий всадник... он любил жизнь роскошную, весёлую". С его именем связано основание села Обиточного и строительство Свято-Троицкого храма.</div>
                     <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/05/gbImwAoxohItoV65OcERDReaTJjaAH1JJQJZKnKvR.jpg')"></div>
                 </div>
 
@@ -616,19 +735,18 @@
             </div>
         </section>
 
-        <!-- Секция: Художники -->
+        <!-- Секция: Художники (цвет: #9f7aea) -->
         <section id="artists" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">Художники</h2>
                 <span class="section-subtitle">XIX — начало XX века</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Художественная жизнь Ногайска</div>
                 <div class="context-text">
-                    <p>Небольшой уездный город дал миру нескольких ярких художников. Здесь сформировалась династия Смоктиев, чья мастерская стала центром притяжения для творческой молодёжи. Афанасий Сластион, проведший детство в Ногайске, создал уникальную "кобзарскую серию" — более 50 портретов народных певцов. А Саул Раскин увёз воспоминания о родном городе в Нью-Йорк, где создавал картины на библейские сюжеты.</p>
+                    <p>Провинциальная тишина этого приморского городка обманчива — здесь, в тени акаций и тополей, зрели таланты: кисть и вдохновение искали те, чьи имена вошли в историю искусства. Девятнадцатый век стал временем, когда заштатный Ногайск обретал свое культурное лицо: здесь работали зодчие, расписывались храмы, а в дворянских усадьбах собирались библиотеки. К вечеру, когда над Азовским морем зажигались первые звезды, из-под кисти Сластиона при свечах рождались первые наброски будущих известных полотен.</p>
                 </div>
             </div>
             
@@ -656,19 +774,18 @@
             </div>
         </section>
 
-        <!-- Секция: Революция и Гражданская война -->
+        <!-- Секция: Революция и Гражданская война (цвет: #c95b4b) -->
         <section id="revolution" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">Революция и Гражданская война</h2>
                 <span class="section-subtitle">1917–1921</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Годы испытаний</div>
                 <div class="context-text">
-                    <p>Гражданская война расколола Ногайск. В 1918 году власть несколько раз переходила из рук в руки. Особенно трагическим стал расстрел дроздовцами первого Ногайского Совета. Город стал ареной борьбы красных повстанцев, войск Деникина и махновцев. В 1921-м окончательно установилась советская власть, но раны братоубийственной войны заживали десятилетиями.</p>
+                    <p>Эти люди заплатили своими жизнями за то, чтобы их город обрел новую власть — здесь, на этих улицах, решалась судьба Ногайска в огне братоубийственной войны. В декабре 1917 года в городе был избран первый Совет рабочих и крестьянских депутатов, расстрелянный отрядами дроздовцев. Ногайск несколько раз переходил из рук в руки, пока в 1920-м окончательно не утвердилась советская власть.</p>
                 </div>
             </div>
             
@@ -677,7 +794,7 @@
                     <div class="person-name">Первый Ногайский Совет</div>
                     <div class="person-role">расстрелянные дроздовцами</div>
                     <div class="person-bio">Председатель: Антон Антонович Новицкий. Сергей Новицкий, Ефим Голубенко, Григорий Кокошко, Владимир Гарбузов и др. Выжил Иван Ечин.</div>
-                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/07/gYBw6vYxpdR9QXSTdz8se88QkBgYzEaenKloY6DuA.png')"></div>
+                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/16/goxL0uLx8PNaNwMOf89ht7l8yAY3JiOtXO5WlYyAN.jpg')"></div>
                 </div>
 
                 <div class="person-card">
@@ -688,34 +805,33 @@
                 </div>
 
                 <div class="person-card">
-                    <div class="person-name">С.И.Кара</div>
-                    <div class="person-role">Гражданская война</div>
-                    <div class="person-bio">Бывший балтийский матрос. Председатель второго ногайского совета 1919г.</div>
-                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/13/g2cb2tGxogHo1sSYFjE9SHjde4EL9QfV6LAUijrz2.jpg')"></div>
-                </div>
-
-                <div class="person-card">
                     <div class="person-name">А.Д.Леванисов</div>
                     <div class="person-role">Гражданская война</div>
                     <div class="person-bio">Комиссар первого ногайского повстанческого отряда. В январе 1921 избран председателем нового Ногайского Совета.</div>
                     <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/06/gq81oUGxbw2cZyvRPuScLu5hK3vviQWVuLa8TBw79.jpg')"></div>
                 </div>
+
+                <div class="person-card">
+                    <div class="person-name">С.И.Кара</div>
+                    <div class="person-role">Гражданская война</div>
+                    <div class="person-bio">Бывший балтийский матрос. Председатель второго ногайского совета 1919г.</div>
+                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/13/g2cb2tGxogHo1sSYFjE9SHjde4EL9QfV6LAUijrz2.jpg')"></div>
+                </div>
             </div>
         </section>
 
-        <!-- Секция: 1920-1930-е гг. -->
+        <!-- Секция: 1920-1930-е гг. (цвет: #48bb78) -->
         <section id="thirties" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">1920-1930-е гг.</h2>
                 <span class="section-subtitle">Межвоенный период</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Строительство новой жизни</div>
                 <div class="context-text">
-                    <p>В 1920-30-е годы город, переименованный в Ногайск, переживал индустриализацию и коллективизацию. Создавались комсомольские ячейки, открывались первые профсоюзы. Особое внимание уделялось здравоохранению — именно тогда начал свою легендарную практику хирург Александр Грибанов. В 1938 году Ногайск стал районным центром, началось строительство типовых школ и больниц.</p>
+                    <p>В этом разделе собраны имена тех, кто, не жалея сил, строил новую жизнь на руинах старого мира — комсомольцы, врачи, председатели, которые поднимали город из разрухи и голода. К концу 30-х годов, когда Ногайск стал поселком городского типа, здесь уже работали электростанция и больничный городок, а в 1939 году в школе прогремел первый выпуск десятиклассников. "Они были первыми" — так заметка в газете "Красное Приморье" обозначила роль Натальи Кошкарёвой и других комсомольцев в истори нашего района.</p>
                 </div>
             </div>
             
@@ -731,7 +847,7 @@
                     <div class="person-name">Н.И.Кошкарёва</div>
                     <div class="person-role">ЛКСМУ</div>
                     <div class="person-bio">Возглавила комсомол г.Ногайск. В рядах первых комсомольцев: Ю.П.Ганина, М.И.Гладкова, Л.Захарова.</div>
-                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/08/gTw4yynxWruEjr6GGaskMAzmze80qmktgj6JbUD4e.png')"></div>
+                    <div class="person-image" onclick="openModal(this)" style="background-image: url('https://s10.iimage.su/s/16/gFCxe5fxadXzfpcMid8Y7Ywe6z4SD4bmLoVD09cUH.png')"></div>
                 </div>
 
                 <div class="person-card">
@@ -757,19 +873,18 @@
             </div>
         </section>
 
-        <!-- Секция: Великая Отечественная Война -->
+        <!-- Секция: Великая Отечественная Война (цвет: #f56565) -->
         <section id="war" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">Великая Отечественная Война</h2>
                 <span class="section-subtitle">1941–1945</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Приморск в годы войны</div>
                 <div class="context-text">
-                    <p>С октября 1941 по сентябрь 1943 года город был оккупирован немецко-фашистскими войсками. За это время погибли тысячи жителей, многие были угнаны на принудительные работы. Приморск дал фронту двух Героев Советского Союза — лётчика Петра Кударя и артиллериста Фёдора Нестеренко, павших смертью храбрых. А рядовой Александр Дерипаско прошёл всю войну и участвовал в легендарном Параде Победы 1945 года.</p>
+                    <p>Склоните голову перед памятью тех, кто ушел на фронт и не вернулся, и тех, кто прошел через ужас оккупации. Осенью 1941 года, когда немецкие войска ворвались в район, более пяти с половиной тысяч жителей ушли на фронт, а оставшиеся познали горечь оккупации, длившейся до сентября 1943-го.</p>
                 </div>
             </div>
             
@@ -797,19 +912,18 @@
             </div>
         </section>
 
-        <!-- Секция: Будни созиданий -->
+        <!-- Секция: Будни созиданий (цвет: #4299e1) -->
         <section id="construction" class="era-section">
             <div class="section-header">
                 <h2 class="section-title">Будни созиданий</h2>
                 <span class="section-subtitle">1950–1980-е</span>
             </div>
             
-            <!-- Исторический контекст -->
             <div class="era-context">
                 <div class="context-paperclip">📎</div>
                 <div class="context-title">Расцвет Приморска</div>
                 <div class="context-text">
-                    <p>В послевоенные десятилетия Приморск (название с 1964 года) неузнаваемо преобразился. Под руководством Петра Москалькова урожайность в районе выросла втрое, все сёла получили асфальтированные дороги. Главврач Израил Финарёв расширил больницу в 3,5 раза. А председатель горсовета Семён Дейнега построил стадион, жилые микрорайоны и провёл освещение. Это было время, когда город обрёл своё современное лицо.</p>
+                    <p>Эти люди превратили пыльный посёлок в цветущий город — при них асфальтировались улицы, вырастали микрорайоны, и Приморск обретал знакомый нам облик. Именно в послевоенные десятилетия Ногайск был переименован в Приморск, развернулось государственное строительство: к 1973 году появились новые здания техникума и студенческий городок, а урожайность в колхозах выросла втрое. В субботний вечер по новой асфальтовой дороге к Юбилейному парку катили велосипеды, семьи спешили в кинотеатр, а старики, сидя на лавочках у подъездов, вспоминали, как на этом месте еще недавно пасли коров.</p>
                 </div>
             </div>
             
@@ -840,7 +954,6 @@
             </div>
         </section>
     </main>
-
 
     <footer class="site-footer">
         <div class="container footer-content">
@@ -902,7 +1015,7 @@
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
 
-        function openModal(el) {
+        window.openModal = function(el) {
             modal.classList.add('active');
             const bg = el.style.backgroundImage;
             const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
@@ -910,14 +1023,12 @@
                 modalImg.src = match[1];
             }
             document.body.style.overflow = 'hidden';
-        }
-        window.openModal = openModal;
+        };
 
-        function closeModal() {
+        window.closeModal = function() {
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
-        }
-        window.closeModal = closeModal;
+        };
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
