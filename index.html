@@ -32,7 +32,7 @@
     --h-sub: rgba(255, 255, 255, 0.2);
     --accent-2: rgba(255, 255, 255, 0.9);
     --accent-3: rgba(255, 255, 255, 0.6);
-    --accent-4: linear-gradient(135deg, #c21152, #bf2c36);
+    --accent-4: linear-gradient(135deg, #fff, #fff);
     --section-title-color: #a8b3cf;
 
     /* шрифты */
@@ -75,7 +75,7 @@ body {
     left: 0;
     width: 0%;
     height: 3px;
-    background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4));
     z-index: 1000;
     transition: width 0.1s ease;
     box-shadow: 0 0 20px var(--imperial);
@@ -86,6 +86,7 @@ body {
     margin: 0 auto;
     padding: 0 2rem;
 }
+
 
 /* Шапка */
 .site-header {
@@ -123,12 +124,15 @@ body.light .site-header {
 .logo::after {
     content: '';
     position: absolute;
-    bottom: -4px;
+    bottom: -1px;
     left: 0;
     width: 30%;
-    height: 2px;
-    background: var(--accent-4);
+    height: 4px;
+    background: linear-gradient(135deg, #cc103f, #cc101d);
     transition: width 0.3s ease;
+}
+body.light .logo::after {
+    background: var(--accent-4);
 }
 
 .header-right {
@@ -252,6 +256,10 @@ body.light .nav-links a:hover {
     padding-left: 2rem;
     position: relative;
     left: 10px;
+}
+.hero-subtitle {
+    word-break: keep-all; /* Слова не разрываются */
+    hyphens: none;       /* Отключает автоматические переносы */
 }
 
 .hero-stats {
@@ -516,6 +524,7 @@ body.light .timeline-card:hover .timeline-year {
     line-height: 1.1;
     position: relative;
     z-index: 2;
+    transition: 0s;
 }
 
 body.light .timeline-title {
@@ -720,7 +729,7 @@ body.light .image-glow:not([style*="background-image"]) {
 .timeline-era-badge,
 .timeline-desc,
 .image-glow {
-    transition: color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: color 0s ease, text-shadow 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     will-change: transform;
 }
 
@@ -905,7 +914,7 @@ body.light .gallery-item {
     border-radius: 16px;
     padding: 15px 25px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 0px solid rgba(255, 255, 255, 0.15);
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
@@ -996,7 +1005,7 @@ body.light .nav-link:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(var(--imperial), var(--soviet), var(--modern));
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4));
     border-radius: 4px;
 }
 
@@ -1028,7 +1037,8 @@ div {
     }
 
     .hero h1 {
-        font-size: 6rem;
+        font-size: 5.8rem;
+        transform: scaleX(0.8);
     }
 
     .hero-subtitle {
@@ -1061,28 +1071,32 @@ div {
 
     .hero h1 {
         font-size: 3.5rem;
-        transform: scaleX(1);
     }
 
     .hero-subtitle {
+        line-height: 1.3;
         border-left: none;
         margin-bottom: 0.4rem;
-        padding-left: 1.5rem;
-        left: 0;
+        padding-left: 1.35rem;
         text-align: left;
-        max-width: 100%;
+        max-width: 80%;
+    }
+    .hero-subtitle {
+        word-break: keep-all; /* Слова не разрываются */
+        hyphens: none;       /* Отключает автоматические переносы */
     }
 
     .hero-stats {
-        max-width: 400px;
+        max-width: 80%;
+        padding-left: 0.2rem;
         justify-content: center;
-        gap: 2.2rem;
+        gap: 1rem;
     }
 
     .qr-wrapper {
-        width: 200px;
-        margin-right: 0;
-        align-self: center;
+        width: 35%;
+        margin-right: 3rem;
+        align-self: left;
     }
 
     .section-title {
@@ -1109,7 +1123,8 @@ div {
 
     .bottom-nav {
         bottom: 20px;
-        min-width: 300px;
+        width: 80%;
+        border: 0.1px solid rgba(255, 255, 255, 0.05);
     }
 
     body.light .bottom-nav {
