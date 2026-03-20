@@ -1073,9 +1073,12 @@ div {
 
     .hero h1 {
         text-align: center;      /* заголовок по центру */
-        font-size: 4rem;
-        transform: scaleX(0.78);
-        width: 90%;
+        font-size: 4.5rem;
+        transform: none;         /* убираем scaleX, он искажает буквы */
+        width: 100%;             /* полная ширина */
+        transform: scaleX(0.8);
+        display: block;          /* делаем блочным для центрирования */
+        margin-left: 1rem;
     }
 
     .hero-subtitle {
