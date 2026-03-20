@@ -4,1042 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Приморск.QR</title>
-    <style>
-        /* ----- ОСНОВНЫЕ ПЕРЕМЕННЫЙ (темы подключаются позже) ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* ----- БАЗОВЫЙ СТИЛЬ (тема будет переопределена скриптом) ----- */
-        :root {
-            /* цвета эпох — фиксированные, от темы не зависят */
---imperial: #c2813a; /* Цвет старого медного пятака и осенних листьев */
---soviet: #c95b4b;   /* Спелая брусника и колхозные поля */
---modern: #b2d1db;   /* Теплый песок на пляже базы отдыха */
-
-            /* системные цвета — будут меняться */
-            --border: rgba(255, 255, 255, 0.05);
-            --bg-primary: #0a0c0f;
-            --bg-secondary: #14181f;
-            --bg-card: rgba(255,255,255,0.02);
-            --text-primary: #f0f4fa;
-            --text-secondary: #a8b3cf;
-            --glass-bg: rgba(26, 31, 40, 0.7);
-            --border-glow: rgba(255, 107, 74, 0.3);
-            --shadow-color: rgba(0, 0, 0, 0.7);
-            --h-sub: rgba(255, 255, 255, 0.2);
-            --accent-2: rgba(255, 255, 255, 0.9);
-            --accent-3: rgba(255, 255, 255, 0.6);
-            --accent-4: linear-gradient(135deg, #00a3a3 10%, #00d4ff 50%);
-            --section-title-color: #a8b3cf;   /* для темной темы - светлый */
-
-            /* моно, шрифты */
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        /* Светлая тема (класс light на body) */
-        body.light {
-            --border: rgba(0, 0, 0, 0.05);
-            --bg-primary: #d5dce0;            /* светло-серо-голубоватый */
-            --bg-secondary: #dbe0e8;
-            --bg-card: rgba(255, 255, 255, 0.6);
-            --text-primary: #1a1e24;
-            --text-secondary: #3f4a5c;
-            --glass-bg: rgba(240, 244, 250, 0.7);
-            --border-glow: rgba(0, 100, 200, 0.2);
-            --shadow-color: rgba(62, 77, 89, 0.1);
-            --h-sub: rgba(0, 0, 0, 0.2);
-            --accent-2: #1a1e24;
-            --accent-3: #3f4a5c;
-            --accent-4: linear-gradient(135deg, #0066cc, #00a3a3);
-            --section-title-color: #2d3748;    /* для светлой темы - темно-серый */
-            
-            /* переопределяем фон для карточек и элементов */
-            --bg-card-solid: #ffffff;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            overflow-x: hidden;
-            width: 100%;
-            position: relative;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        /* Прогресс-бар */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
-            z-index: 1000;
-            transition: width 0.1s ease;
-            box-shadow: 0 0 20px var(--imperial);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Шапка */
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(12px);
-            background: rgba(10, 12, 15, 0.7);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 1rem 0;
-        }
-        body.light .site-header {
-            background: rgba(238, 242, 246, 0.8);  /* под новый фон */
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            background: var(--accent-2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 30%;
-            height: 2px;
-            background: var(--accent-4);
-            transition: width 0.3s ease;
-        }
-
-        /* Кнопка темы */
-        .theme-toggle {
-            background: none;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 40px;
-            padding: 0.4rem 1rem;
-            font-size: 1.4rem;
-            line-height: 1;
-            cursor: pointer;
-            color: var(--text-primary);
-            background-color: var(--bg-card);
-            backdrop-filter: blur(4px);
-            transition: 0.2s;
-        }
-        .theme-toggle:hover {
-            border-color: var(--modern);
-            transform: scale(1.05);
-        }
-
-        .theme-icon {
-            width: 24px;
-            height: 24px;
-            display: block;
-            transition: transform 0.2s ease;
-        }
-
-        .theme-toggle:hover .theme-icon {
-            transform: scale(1.1);
-        }
-
-        /* Навигация справа (лого + кнопка) */
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 3rem;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-2);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #fff;
-        }
-        body.light .nav-links a:hover {
-            color: #000;
-        }
-
-        .nav-links a:hover::before {
-            width: 100%;
-        }
-
-        /* Герой */
-        .hero {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        h2 {
-            color: #9590a6;
-            margin: 5px;
-            margin-top: 25px;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-        }
-
-        .hero h1 {
-            font-size: 5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: var(--accent-4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes titleGlow {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(78, 201, 176, 0.3)); }
-            50% { filter: drop-shadow(0 0 40px rgba(255, 94, 124, 0.5)); }
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin-bottom: 0.1rem;
-            border-left: 4px solid var(--h-sub);
-            padding-left: 1.75rem;
-            position: relative;
-            left: 10px;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 5rem;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Заголовки секций */
-        .section-header {
-            border-top: 1px solid var(--border);
-            margin-bottom: 0rem;
-            margin-top: 4rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--section-title-color);  /* однотонный, без градиента */
-            display: inline-block;
-        }
-
-        /* Легенда эпох */
-        .era-legend {
-            display: flex;
-            gap: 2rem;
-            margin: 2rem 0;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        body.light .era-legend {
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .era-tag {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .era-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .era-dot.imperial { background: var(--imperial); box-shadow: 0 0 10px var(--imperial); }
-        .era-dot.soviet { background: var(--soviet); box-shadow: 0 0 10px var(--soviet); }
-        .era-dot.modern { background: var(--modern); box-shadow: 0 0 10px var(--modern); }
-
-        .tag {
-            background: rgba(255,255,255,0.03);
-            padding: 0.3rem 1rem;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            color: rgb(150,150,150);
-        }
-
-        /* Хронология */
-        .timeline-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-        }
-
-        .timeline-card {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background: var(--bg-card);
-            border-radius: 30px;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255,255,255,0.05);
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        body.light .timeline-card {
-            border: 1px solid rgba(0,0,0,0.08);
-            background: var(--bg-card);
-        }
-
-        .timeline-card[data-era="imperial"] { --era-color: var(--imperial); --era-glow: rgba(249, 195, 92, 0.3); }
-        .timeline-card[data-era="soviet"]   { --era-color: var(--soviet);   --era-glow: rgba(255, 94, 124, 0.3); }
-        .timeline-card[data-era="modern"]   { --era-color: var(--modern);   --era-glow: rgba(74, 158, 255, 0.3); }
-
-        /* Эмоджи-слой для каждой эпохи - хаотичное расположение */
-        .timeline-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 1;
-            font-size: 4rem;
-            background-repeat: no-repeat;
-            background-size: 60px 60px, 50px 50px, 65px 65px, 55px 55px, 70px 70px;
-            mix-blend-mode: overlay;
-        }
-
-        /* Имперские эмоджи: лилия, дерево, свиток */
-        .timeline-card[data-era="imperial"]::before {
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🍎</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🌳</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🗝️</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🎺</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">📜</text></svg>');
-            background-position: 
-                12% 28%,      /* левый верх */
-                80% 23%,     /* правый верх */
-                45% 43%,     /* левый низ */
-                75% 63%,     /* правый низ */
-                15% 58%;     /* центр */
-        }
-
-        /* Советские эмоджи: рупор, книжка, баян, колос */
-        .timeline-card[data-era="soviet"]::before {
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🪗</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📚</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📻</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🌾</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">⚒️</text></svg>');
-            background-position: 
-                83% 35%,     /* правый верх */
-                15% 27%,     /* левый верх */
-                5% 58%,     /* центр-низ слева */
-                85% 65%,     /* центр-низ справа */
-                50% 50%;     /* центр-верх */
-        }
-
-        /* Современные эмоджи: ракушка, глобус, машина, волны */
-        .timeline-card[data-era="modern"]::before {
-            background-image: 
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🐚</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌐</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🚗</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌊</text></svg>'),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🏖️</text></svg>');
-            background-position: 
-                12% 18%,      /* левый верх */
-                88% 15%,     /* правый верх */
-                45% 32%,     /* левый низ */
-                75% 50%,     /* правый низ */
-                15% 60%;     /* центр */
-        }
-
-        /* Показываем эмоджи при наведении */
-        .timeline-card:hover::before {
-            opacity: 1;
-        }
-
-        /* Индивидуальные трансформации для каждого элемента карточки */
-        .timeline-card {
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-        }
-
-        .timeline-card:hover {
-            transform: translateY(-10px) rotateX(2deg);
-        }
-
-        /* Год — наклон в обе стороны (от -1.5deg до 2deg) */
-        .timeline-card:hover .timeline-year {
-            animation: randomTiltYear 0.4s ease forwards;
-            color: rgba(255,255,255,0.6);
-            opacity: 0.8;
-        }
-        body.light .timeline-card:hover .timeline-year {
-            color: rgba(0,0,0,0.4);
-        }
-
-        /* Заголовок — наклон в обе стороны (от -1deg до 1.5deg) */
-        .timeline-card:hover .timeline-title {
-            animation: randomTiltTitle 0.4s ease forwards;
-            background: var(--era-color);
-            color: #000;
-        }
-        body.light .timeline-card:hover .timeline-title {
-            color: #fff;
-        }
-
-        /* Бейдж эпохи — наклон в обе стороны (от -1deg до 1.5deg) */
-        .timeline-card:hover .timeline-era-badge {
-            animation: randomTiltBadge 0.4s ease forwards;
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        body.light .timeline-card:hover .timeline-era-badge {
-            background: rgba(0,0,0,0.05);
-            color: rgba(0,0,0,1);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Текст — наклон в обе стороны (от -0.5deg до 1deg) */
-        .timeline-card:hover .timeline-desc {
-            animation: randomTiltDesc 0.4s ease forwards;
-        }
-
-        /* Изображение — наклон в обе стороны (от -2deg до 2.5deg) */
-        .timeline-card:hover .image-glow {
-            animation: randomTiltImage 0.4s ease forwards;
-            border-color: var(--era-color);
-            border-width: 3px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Анимации с разными рандомными значениями */
-        @keyframes randomTiltYear {
-            0% { transform: scale(1) rotate(0); }
-            100% { transform: scale(1.1) rotate(calc(var(--random-year) * 1deg)); }
-        }
-
-        @keyframes randomTiltTitle {
-            0% { transform: rotate(0) translateY(0); }
-            100% { transform: rotate(calc(var(--random-title) * 1deg)) translateY(-2px); }
-        }
-
-        @keyframes randomTiltBadge {
-            0% { transform: rotate(0) scale(1); }
-            100% { transform: rotate(calc(var(--random-badge) * 1deg)) scale(1.05); }
-        }
-
-        @keyframes randomTiltDesc {
-            0% { transform: rotate(0) translateX(0); }
-            100% { transform: rotate(calc(var(--random-desc) * 1deg)) translateX(3px); }
-        }
-
-        @keyframes randomTiltImage {
-            0% { transform: rotate(0) scale(1); }
-            100% { transform: rotate(calc(var(--random-image) * 1deg)) scale(1.02); }
-        }
-
-        /* Присваиваем случайные значения CSS-переменным для каждой карточки */
-        .timeline-card:nth-child(odd) {
-            --random-year: 1.2;
-            --random-title: -0.7;
-            --random-badge: 1.3;
-            --random-desc: -0.4;
-            --random-image: 1.8;
-        }
-
-        .timeline-card:nth-child(even) {
-            --random-year: -1.5;
-            --random-title: 1.1;
-            --random-badge: -1.2;
-            --random-desc: 0.8;
-            --random-image: -2.2;
-        }
-
-        .timeline-card:nth-child(3n) {
-            --random-year: -1.8;
-            --random-title: 1.4;
-            --random-badge: -1.5;
-            --random-desc: 0.9;
-            --random-image: 2.4;
-        }
-
-        .timeline-card:nth-child(4n) {
-            --random-year: 1.6;
-            --random-title: -1.2;
-            --random-badge: 0.9;
-            --random-desc: -0.7;
-            --random-image: -1.9;
-        }
-
-        .timeline-card:nth-child(5n) {
-            --random-year: -2.0;
-            --random-title: 1.8;
-            --random-badge: -1.9;
-            --random-desc: 1.1;
-            --random-image: 2.1;
-        }
-
-        .timeline-card:nth-child(7n) {
-            --random-year: 1.4;
-            --random-title: -1.6;
-            --random-badge: 1.7;
-            --random-desc: -0.9;
-            --random-image: -1.5;
-        }
-
-        /* Плавный возврат в исходное состояние */
-        .timeline-year,
-        .timeline-title,
-        .timeline-era-badge,
-        .timeline-desc,
-        .image-glow {
-            transition: color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            animation: none;
-            will-change: transform;
-        }
-
-        body.light .timeline-card:hover {
-            transform: translateY(-10px) rotateX(2deg);
-        }
-
-        .timeline-year {
-            font-size: 4rem;           /* увеличили в 1.5 раза (было 4rem) */
-            font-weight: 800;
-            font-family: var(--font-mono);
-            color: rgba(255, 255, 255, 0.03);
-            position: absolute;
-            line-height: 1;
-            right: 1.5rem;
-            transition: all 0.3s ease;
-            z-index: 1;
-            pointer-events: none;
-        }
-        body.light .timeline-year {
-            color: rgba(0,0,0,0.1);
-        }
-
-
-
-        .timeline-title {
-            transition: 0s;
-            width: fit-content;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            margin-top: 1.5rem;
-            color: #fff;
-            line-height: 1.1;
-            position: relative;
-            z-index: 2;
-        }
-        body.light .timeline-title {
-            color: #1a1e24;
-        }
-
-        .timeline-era-badge {
-            display: inline-block;
-            max-width: 70%;          /* не вылезать за пределы */
-            width: fit-content;       /* подстраиваться под текст */
-            white-space: nowrap;      /* запретить перенос текста */
-            overflow: hidden;
-            text-overflow: ellipsis;  /* если не влезает — обрезать с троеточием */
-            padding: 0.3rem 0.7rem;
-            margin-top: 0.5rem;
-            background: var(--era-color);
-            color: #000;
-            font-size: 1.1rem;
-            font-family: var(--font-mono);
-            border-radius: 50px;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            opacity: 0.9;
-            position: relative;
-            z-index: 2;
-        }
-
-        .timeline-desc {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Исправленный код для изображений */
-        .image-glow {
-            margin-top: auto;
-            width: 100%;
-            height: 200px;
-            border-radius: 20px;
-            background: linear-gradient(145deg, #222834, #1a1f28);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a5162;
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            border: 5px dashed rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            background-size: cover !important;
-            background-position: center !important;
-            background-repeat: no-repeat !important;
-            z-index: 2;
-        }
-
-        /* Убираем переопределение фона в светлой теме для карточек с изображениями */
-        body.light .image-glow {
-            border-color: rgba(0,0,0,0.1);
-        }
-
-        /* Для плейсхолдеров (без изображений) оставляем градиент */
-        .image-glow:not([style*="background-image"]) {
-            background: linear-gradient(145deg, #222834, #1a1f28);
-        }
-
-        body.light .image-glow:not([style*="background-image"]) {
-            background: #eef0f2;
-        }
-
-        .image-glow.has-image {
-            border: 2px transparent;
-            color: transparent;
-            text-indent: -9999px;
-        }
-
-        .image-glow::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--era-color) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .timeline-card:hover .image-glow::before {
-            opacity: 0.15;
-        }
-
-        @media (max-width: 768px) {
-            /* адаптация плашки и года для мобильных */
-            .timeline-era-badge {
-                max-width: 70%;        /* ограничим ширину, чтобы не налезать на год */
-                font-size: 1.1rem;
-                padding: 0.3rem 0.7rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .timeline-year {
-                font-size: 3.2rem;           /* увеличили в 1.5 раза (было 4rem) */
-                font-weight: 800;
-                font-family: var(--font-mono);
-                color: rgba(255, 255, 255, 0.03);
-                position: absolute;
-                right: 1.5rem;
-                line-height: 1;
-                transition: all 0.3s ease;
-                z-index: 1;
-                pointer-events: none;
-            }
-        }
-
-        /* Галерея (полностью сохранена) */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-        }
-
-        .gallery-item {
-            background: var(--bg-card);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-        body.light .gallery-item {
-            background: #ffffff;  /* белый фон */
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-
-        .gallery-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(145deg, #222834, #1a1f28);
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .gallery-overlay {
-            position: absolute;
-            top: 0.8rem;
-            left: 0.8rem;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 0.3rem 0.8rem;
-            border-radius: 5px;
-            border: 1px solid var(--border);
-            z-index: 2;
-            transition: 0.4s;
-        }
-        .gallery-item:hover .gallery-overlay {
-            background: rgba(0, 0, 0, 0.9);
-            color: #fff;
-            transform: scale(1.02);
-        }
-
-        .gallery-title {
-            font-size: 1.1rem;
-            color: #ffffff;  /* белый всегда */
-        }
-
-        .gallery-year {
-            color: #e0e4ec;  /* светлый серый для светлой темы (и темной тоже норм) */
-            font-family: var(--font-mono);
-        }
-
-        /* модалка */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-        }
-        .modal.active { display: flex; }
-
-        .modal-content {
-            max-width: 90vw;
-            max-height: 90vh;
-        }
-
-        .modal-content img {
-            width: 100%;
-            height: auto;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 16px;
-            border: 2px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .modal-close {
-            position: fixed;
-            top: 1rem; right: 1rem;
-            color: white;
-            font-size: 3rem;
-            cursor: pointer;
-            opacity: 0.7;
-            background: none;
-            border: none;
-            z-index: 1001;
-            line-height: 1;
-        }
-
-        /* Футер */
-        .site-footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 4rem 0;
-            margin-top: 6rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .footer-wave {
-            position: absolute;
-            top: -50px;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
-            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>');
-            mask-size: cover;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            background: var(--accent-2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-2);
-        }
-
-        /* нижняя навигация (без изменений) */
-
-        .bottom-nav.touching {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        .bottom-nav.mobile-visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .bottom-nav.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .bottom-nav {
-                position: fixed;
-                bottom: 30px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: auto;
-                min-width: 400px;
-                max-width: 90%;
-                background: rgba(20, 20, 20, 0.75);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border-radius: 16px;
-                padding: 15px 25px;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-                border: 0px solid rgba(255, 255, 255, 0.15);
-                z-index: 1000;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-                overflow-x: auto;
-                white-space: nowrap;
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
-            /* Стили для светлой темы */
-            body.light .bottom-nav {
-                background: rgba(240, 244, 250, 0.3);  /* светлый полупрозрачный фон */
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            }
-        .bottom-nav.visible { opacity: 1; visibility: visible; }
-        @media (max-width: 768px) {
-            .bottom-nav {
-                bottom: 20px;
-                min-width: 300px;
-            }
-            .bottom-nav.mobile-visible { 
-                opacity: 1; 
-                visibility: visible; 
-            }
-            
-            /* Стили для мобильной навигации в светлой теме */
-            body.light .bottom-nav {
-                background: rgba(240, 244, 250, 0.3);
-                border: 1px solid rgba(0, 0, 0, 0.15);
-            }
-        }
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: nowrap;
-        }
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            padding: 8px 18px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            border: 0px solid rgba(255, 255, 255, 0.1);
-            letter-spacing: 0.5px;
-            display: inline-block;
-        }
-
-        /* Стили для светлой темы */
-        body.light .nav-link {
-            color: #1a1e24;  /* темный текст */
-            background: rgba(255, 255, 255, 0.1);  /* светлый фон */
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Стили для светлой темы при наведении */
-        body.light .nav-link:hover {
-            background: rgba(0, 0, 0, 0.1);  /* голубоватый оттенок при наведении */
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-        /* мобильная адаптация — минимальные правки, все сохранено */
-        @media (max-width: 768px) {
-            .container { padding: 0 1.25rem; }
-            .logo { font-size: 1.5rem; }
-            .nav-links { gap: 1.5rem; }
-            .hero h1 { font-size: 2.8rem; }
-            .hero-subtitle { font-size: 1.1rem; padding-left: 1.25rem; }
-            .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
-            .section-title { font-size: 2rem; }
-            .timeline-grid { grid-template-columns: 1fr; }
-        }
-
-        /* анимации */
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* скроллбар */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--imperial), var(--soviet), var(--modern)); border-radius: 4px; }
-    </style>
 
 <style>
-h1, h2, div {
-  text-wrap: balance;
+/* ----- ОСНОВНЫЕ ПЕРЕМЕННЫЕ ----- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-div {
-  text-wrap: pretty;
+
+:root {
+    /* цвета эпох — фиксированные, от темы не зависят */
+    --imperial: #c2813a;
+    --soviet: #c95b4b;
+    --modern: #b2d1db;
+
+    /* системные цвета — будут меняться */
+    --border: rgba(255, 255, 255, 0.05);
+    --bg-primary: #0a0c0f;
+    --bg-secondary: #14181f;
+    --bg-card: rgba(255, 255, 255, 0.02);
+    --text-primary: #f0f4fa;
+    --text-secondary: #a8b3cf;
+    --glass-bg: rgba(26, 31, 40, 0.7);
+    --border-glow: rgba(255, 107, 74, 0.3);
+    --shadow-color: rgba(0, 0, 0, 0.7);
+    --h-sub: rgba(255, 255, 255, 0.2);
+    --accent-2: rgba(255, 255, 255, 0.9);
+    --accent-3: rgba(255, 255, 255, 0.6);
+    --accent-4: linear-gradient(135deg, #c21152, #bf2c36);
+    --section-title-color: #a8b3cf;
+
+    /* шрифты */
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
-/* Обновленная структура hero */
+
+/* Светлая тема */
+body.light {
+    --border: rgba(0, 0, 0, 0.05);
+    --bg-primary: #d5dce0;
+    --bg-secondary: #dbe0e8;
+    --bg-card: rgba(255, 255, 255, 0.6);
+    --text-primary: #1a1e24;
+    --text-secondary: #3f4a5c;
+    --glass-bg: rgba(240, 244, 250, 0.7);
+    --border-glow: rgba(0, 100, 200, 0.2);
+    --shadow-color: rgba(62, 77, 89, 0.1);
+    --h-sub: rgba(0, 0, 0, 0.2);
+    --accent-2: #1a1e24;
+    --accent-3: #3f4a5c;
+    --accent-4: linear-gradient(135deg, #2a1d63, #201d63);
+    --section-title-color: #2d3748;
+    --bg-card-solid: #ffffff;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Прогресс-бар */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
+    z-index: 1000;
+    transition: width 0.1s ease;
+    box-shadow: 0 0 20px var(--imperial);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Шапка */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(10, 12, 15, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 1rem 0;
+}
+
+body.light .site-header {
+    background: rgba(238, 242, 246, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: var(--accent-2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 30%;
+    height: 2px;
+    background: var(--accent-4);
+    transition: width 0.3s ease;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-2);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+body.light .nav-links a:hover {
+    color: #000;
+}
+
+.nav-links a:hover::before {
+    width: 100%;
+}
+
+/* Кнопка темы */
+.theme-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: 0.4rem 1rem;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-primary);
+    background-color: var(--bg-card);
+    backdrop-filter: blur(4px);
+    transition: 0.2s;
+}
+
+.theme-toggle:hover {
+    border-color: var(--modern);
+    transform: scale(1.05);
+}
+
+.theme-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.theme-toggle:hover .theme-icon {
+    transform: scale(1.1);
+}
+
+/* Герой */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
 .hero-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4rem;
     position: relative;
+    z-index: 2;
+    width: 100%;
 }
 
 .hero-text-wrapper {
     flex: 1;
     max-width: 600px;
-}
-
-.hero-text {
-    max-width: 100%;
 }
 
 .hero h1 {
@@ -1049,10 +235,12 @@ div {
     margin-bottom: 0.2rem;
     background: var(--accent-4);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: titleGlow 4s ease-in-out infinite;
-    max-width: 100%;
-    word-wrap: break-word;
+    transform: scaleX(0.8);
+    transform-origin: 0 0;
+    display: inline-block;
 }
 
 .hero-subtitle {
@@ -1072,7 +260,25 @@ div {
     flex-wrap: wrap;
 }
 
-/* Минималистичный современный QR-код */
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* QR-код */
 .qr-wrapper {
     flex-shrink: 0;
     width: 280px;
@@ -1086,8 +292,6 @@ div {
     aspect-ratio: 1;
     border-radius: 20px;
     background: transparent;
-    padding: 0;
-    transition: transform 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1103,12 +307,10 @@ div {
     border-radius: 16px;
 }
 
-/* Только одна простая анимация при наведении */
 .qr-wrapper:hover .qr-image {
     transform: scale(1.01);
 }
 
-/* Минималистичная подпись */
 .qr-label {
     text-align: center;
     margin-top: 0.5rem;
@@ -1125,34 +327,728 @@ div {
     opacity: 0.6;
 }
 
-/* Адаптация для мобильных устройств */
+/* Заголовки секций */
+h2 {
+    color: #9590a6;
+    margin: 5px;
+    margin-top: 25px;
+}
+
+.section-header {
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--section-title-color);
+    display: inline-block;
+}
+
+/* Легенда эпох */
+.era-legend {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light .era-legend {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.era-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.era-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.era-dot.imperial {
+    background: var(--imperial);
+    box-shadow: 0 0 10px var(--imperial);
+}
+
+.era-dot.soviet {
+    background: var(--soviet);
+    box-shadow: 0 0 10px var(--soviet);
+}
+
+.era-dot.modern {
+    background: var(--modern);
+    box-shadow: 0 0 10px var(--modern);
+}
+
+.tag {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.3rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgb(150, 150, 150);
+}
+
+/* Хронология */
+.timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin: 4rem 0;
+}
+
+.timeline-card {
+    background: var(--bg-card);
+    border-radius: 30px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+body.light .timeline-card {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: var(--bg-card);
+}
+
+.timeline-card[data-era="imperial"] {
+    --era-color: var(--imperial);
+    --era-glow: rgba(249, 195, 92, 0.3);
+}
+
+.timeline-card[data-era="soviet"] {
+    --era-color: var(--soviet);
+    --era-glow: rgba(255, 94, 124, 0.3);
+}
+
+.timeline-card[data-era="modern"] {
+    --era-color: var(--modern);
+    --era-glow: rgba(74, 158, 255, 0.3);
+}
+
+.timeline-card:hover {
+    transform: translateY(-10px) rotateX(2deg);
+}
+
+/* Эмоджи-слой */
+.timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+    background-repeat: no-repeat;
+    background-size: 60px 60px, 50px 50px, 65px 65px, 55px 55px, 70px 70px;
+    mix-blend-mode: overlay;
+}
+
+.timeline-card:hover::before {
+    opacity: 1;
+}
+
+.timeline-card[data-era="imperial"]::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🍎</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🌳</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🗝️</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">🎺</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23f9c35c" opacity="0.25">📜</text></svg>');
+    background-position: 12% 28%, 80% 23%, 45% 43%, 75% 63%, 15% 58%;
+}
+
+.timeline-card[data-era="soviet"]::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🪗</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📚</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">📻</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">🌾</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%23ff5e7c" opacity="0.25">⚒️</text></svg>');
+    background-position: 83% 35%, 15% 27%, 5% 58%, 85% 65%, 50% 50%;
+}
+
+.timeline-card[data-era="modern"]::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🐚</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌐</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🚗</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🌊</text></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="80" font-size="80" fill="%234a9eff" opacity="0.25">🏖️</text></svg>');
+    background-position: 12% 18%, 88% 15%, 45% 32%, 75% 50%, 15% 60%;
+}
+
+.timeline-year {
+    font-size: 4rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: rgba(255, 255, 255, 0.03);
+    position: absolute;
+    line-height: 1;
+    right: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+body.light .timeline-year {
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.timeline-card:hover .timeline-year {
+    animation: randomTiltYear 0.4s ease forwards;
+    color: rgba(255, 255, 255, 0.6);
+    opacity: 0.8;
+}
+
+body.light .timeline-card:hover .timeline-year {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.timeline-title {
+    width: fit-content;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    color: #fff;
+    line-height: 1.1;
+    position: relative;
+    z-index: 2;
+}
+
+body.light .timeline-title {
+    color: #1a1e24;
+}
+
+.timeline-card:hover .timeline-title {
+    animation: randomTiltTitle 0.4s ease forwards;
+    background: var(--era-color);
+    color: #000;
+}
+
+body.light .timeline-card:hover .timeline-title {
+    color: #fff;
+}
+
+.timeline-era-badge {
+    display: inline-block;
+    max-width: 70%;
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.3rem 0.7rem;
+    margin-top: 0.5rem;
+    background: var(--era-color);
+    color: #000;
+    font-size: 1.1rem;
+    font-family: var(--font-mono);
+    border-radius: 50px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-card:hover .timeline-era-badge {
+    animation: randomTiltBadge 0.4s ease forwards;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light .timeline-card:hover .timeline-era-badge {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-desc {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-card:hover .timeline-desc {
+    animation: randomTiltDesc 0.4s ease forwards;
+}
+
+/* Изображения */
+.image-glow {
+    margin-top: auto;
+    width: 100%;
+    height: 200px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #222834, #1a1f28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5162;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    border: 5px dashed rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    z-index: 2;
+}
+
+body.light .image-glow {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.image-glow:not([style*="background-image"]) {
+    background: linear-gradient(145deg, #222834, #1a1f28);
+}
+
+body.light .image-glow:not([style*="background-image"]) {
+    background: #eef0f2;
+}
+
+.image-glow.has-image {
+    border: 2px solid transparent;
+    color: transparent;
+    text-indent: -9999px;
+}
+
+.image-glow::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--era-color) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.timeline-card:hover .image-glow {
+    animation: randomTiltImage 0.4s ease forwards;
+    border-color: var(--era-color);
+    border-width: 3px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-card:hover .image-glow::before {
+    opacity: 0.15;
+}
+
+/* Анимации наклона */
+@keyframes randomTiltYear {
+    100% { transform: scale(1.1) rotate(calc(var(--random-year) * 1deg)); }
+}
+
+@keyframes randomTiltTitle {
+    100% { transform: rotate(calc(var(--random-title) * 1deg)) translateY(-2px); }
+}
+
+@keyframes randomTiltBadge {
+    100% { transform: rotate(calc(var(--random-badge) * 1deg)) scale(1.05); }
+}
+
+@keyframes randomTiltDesc {
+    100% { transform: rotate(calc(var(--random-desc) * 1deg)) translateX(3px); }
+}
+
+@keyframes randomTiltImage {
+    100% { transform: rotate(calc(var(--random-image) * 1deg)) scale(1.02); }
+}
+
+/* Случайные значения для карточек */
+.timeline-card:nth-child(odd) {
+    --random-year: 1.2;
+    --random-title: -0.7;
+    --random-badge: 1.3;
+    --random-desc: -0.4;
+    --random-image: 1.8;
+}
+
+.timeline-card:nth-child(even) {
+    --random-year: -1.5;
+    --random-title: 1.1;
+    --random-badge: -1.2;
+    --random-desc: 0.8;
+    --random-image: -2.2;
+}
+
+.timeline-card:nth-child(3n) {
+    --random-year: -1.8;
+    --random-title: 1.4;
+    --random-badge: -1.5;
+    --random-desc: 0.9;
+    --random-image: 2.4;
+}
+
+.timeline-card:nth-child(4n) {
+    --random-year: 1.6;
+    --random-title: -1.2;
+    --random-badge: 0.9;
+    --random-desc: -0.7;
+    --random-image: -1.9;
+}
+
+.timeline-card:nth-child(5n) {
+    --random-year: -2.0;
+    --random-title: 1.8;
+    --random-badge: -1.9;
+    --random-desc: 1.1;
+    --random-image: 2.1;
+}
+
+.timeline-card:nth-child(7n) {
+    --random-year: 1.4;
+    --random-title: -1.6;
+    --random-badge: 1.7;
+    --random-desc: -0.9;
+    --random-image: -1.5;
+}
+
+.timeline-year,
+.timeline-title,
+.timeline-era-badge,
+.timeline-desc,
+.image-glow {
+    transition: color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
+}
+
+/* Галерея */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 4rem 0;
+}
+
+.gallery-item {
+    background: var(--bg-card);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+body.light .gallery-item {
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(145deg, #222834, #1a1f28);
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+    color: #fff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    z-index: 2;
+    transition: 0.4s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.02);
+}
+
+.gallery-title {
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.gallery-year {
+    color: #e0e4ec;
+    font-family: var(--font-mono);
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.modal-close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    opacity: 0.7;
+    background: none;
+    border: none;
+    z-index: 1001;
+    line-height: 1;
+}
+
+/* Футер */
+.site-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    padding: 4rem 0;
+    margin-top: 6rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-wave {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(90deg, var(--imperial), var(--soviet), var(--modern));
+    mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"/></svg>');
+    mask-size: cover;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    background: var(--accent-2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-2);
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    min-width: 400px;
+    max-width: 90%;
+    background: rgba(20, 20, 20, 0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 15px 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.bottom-nav.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.bottom-nav.touching,
+.bottom-nav.mobile-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.light .bottom-nav {
+    background: rgba(240, 244, 250, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+body.light .nav-link {
+    color: #1a1e24;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.light .nav-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--imperial), var(--soviet), var(--modern));
+    border-radius: 4px;
+}
+
+/* Текст */
+h1,
+h2,
+div {
+    text-wrap: balance;
+}
+
+div {
+    text-wrap: pretty;
+}
+
+/* Адаптация */
 @media (max-width: 1024px) {
     .hero-content {
         margin-top: 1.5rem;
         gap: 2rem;
     }
-    
+
     .qr-wrapper {
         width: 240px;
         margin-right: 1.5rem;
     }
+
     .stat-number {
         font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-secondary);
-        font-family: var(--font-mono);
     }
-    
+
     .hero h1 {
         font-size: 6rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1.2rem;
     }
 }
 
 @media (max-width: 768px) {
+    .container {
+        padding: 0 1.25rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-links {
+        gap: 1.5rem;
+    }
+
     .hero-content {
         flex-direction: column;
         text-align: center;
@@ -1161,6 +1057,11 @@ div {
 
     .hero-text-wrapper {
         max-width: 400px;
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        transform: scaleX(1);
     }
 
     .hero-subtitle {
@@ -1174,7 +1075,6 @@ div {
 
     .hero-stats {
         max-width: 400px;
-        font-size: 1.5rem;
         justify-content: center;
         gap: 2.2rem;
     }
@@ -1185,8 +1085,36 @@ div {
         align-self: center;
     }
 
-    .hero h1 {
-        font-size: 3.5rem;
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .timeline-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-era-badge {
+        max-width: 70%;
+        font-size: 1.1rem;
+        padding: 0.3rem 0.7rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .timeline-year {
+        font-size: 3.2rem;
+        right: 1.5rem;
+    }
+
+    .bottom-nav {
+        bottom: 20px;
+        min-width: 300px;
+    }
+
+    body.light .bottom-nav {
+        background: rgba(240, 244, 250, 0.3);
+        border: 1px solid rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -1194,7 +1122,7 @@ div {
     .qr-wrapper {
         width: 180px;
     }
-    
+
     .hero-stats {
         gap: 1.5rem;
     }
@@ -1225,7 +1153,7 @@ div {
         <!-- Текстовая часть -->
         <div class="hero-text-wrapper">
             <div class="hero-text">
-                <h1>Приморск</h1>
+                <h1>ПРИМОРСК</h1>
                 <div class="hero-subtitle">Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Именно здесь, вбирая в себя терпкий запах полыни и йодистую свежесть лиманов, раскинулся наш уютный город.</div>
                 <div class="hero-stats">
                     <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">событий</div></div>
@@ -1238,7 +1166,7 @@ div {
         <!-- QR-код с отступом от края -->
         <div class="qr-wrapper">
             <div class="qr-container">
-                <img src="https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png" 
+                <img
                      alt="QR-код Приморск" 
                      class="qr-image" 
                      id="qrImage">
@@ -1586,8 +1514,8 @@ div {
             
             const isLight = document.body.classList.contains('light');
             qrImage.src = isLight 
-                ? 'https://s10.iimage.su/s/16/g2tdd0Gxz0wi137rY06WnyYdcWBhGGbVzZ9IvbW6W.png'
-                : 'https://s10.iimage.su/s/16/gzSmidkxfDOjegGIlkFvNKTfJWaki0zmqMQgAoDg7.png';
+                ? 'https://s10.iimage.su/s/20/gDOfI07xhUKzEygLH2eFEzk55EApU1hYdXQ8drlKU.png'
+                : 'https://s10.iimage.su/s/20/g8jsadBxOzXrz8df1IODOfKGOgbIQneVqmAJ6z0Wb.png';
         }
 
         // Обновляем при загрузке
@@ -1608,6 +1536,29 @@ div {
             }
         });
     })();
+</script>
+<script>
+document.querySelector('.hero-subtitle').innerHTML = [
+"Есть на карте Запорожской области место, где вековая степь подступает к Азовскому морю. Здесь, вбирая запах полыни и свежесть лиманов, раскинулся наш уютный город.",
+"Граф де Мезон в 1811-м учил ногайцев оседлости, сжигая кибитки. Урок не задался, но сад, заложенный им, все ещё шепчет легенды о кочевых звёздах над Азовом.",
+"Земский врач Фомин сажал дубы, лечил бедных и учил гимназистов. Его дуб всё ещё стоит на ул. Кирова, помня шорох платьев и звон гильз, сменившиеся гулом машин.",
+"Театр Ангеловского не сохранился, но в памяти города остались бинокли, афиши и тайны за кулисами. Ногайск любил искусство, даже будучи заштатным.",
+"В 1941-м простой тракторист нашёл в глиняном обрыве бивни южного слона. Древний гигант, Mammuthus meridionalis, шагнул из вечности, чтобы стать легендой.",
+"Ногайский слон пережил оккупацию и вывоз в Германию, чтобы оказаться в Ленинграде. Его скелет — крупнейший в мире, молчаливый страж доисторических эпох.",
+"В 1923-м здесь появился совхоз «Надежда Республики». Оправдывая названье, труд механизаторов превратил приазовские степи в море пшеницы и гордости.",
+"Трактор «Универсал» на постаменте — памятник эпохе МТС. Железный конь пахал землю, на которой потом выросли дома, школы и судьбы нашего района.",
+"Партизаны в 1943-м готовили нападение на комендатуру. Их расстреляли в Мерликовой Балке, но память о героях отражена в Вечном огне у мемориала.",
+"В 1964-м Ногайск стал Приморском. Город сменил имя, но не характер: такой же спокойный, с запахом хлеба и вкусом солёного ветра с лиманов.",
+"Стадион «Олимпиец» строили к Олимпиаде-80. Здесь звучал свисток судьи и топот бутс, а мальчишки гоняли мяч, мечтая о больших победах.",
+"Болгарские колонисты принесли в эти степи особый колорит. Сёла Преслав, Бановка, Инзовка — это коктейль культур, замешанный на приазовской земле.",
+"Успенский храм не уцелел, его взорвали в 30-е. Теперь на месте святыни — школа, храм знаний, где будто слышен далёкий перезвон колоколов.",
+"Комсомольцы нашего района строили культурную жизнь. Песни звучали на полевых станах, а в выходные крутили фильмы в кинотеатре, где пахло опилками и счастьем.",
+"В 1973-м провожали на жатву с гармонью и флагами. Механизаторы знали: от их темпа зависит, будет ли страна с хлебом, а в газетах — успешные сводки.",
+"Летом пляжи Приморска наполняются отдыхающими. Палатки, мангалы и детский смех — море лечит души, а местные говорят: «Приезжайте, у нас тихо и душевно».",
+"Приморский краеведческий музей бережно хранит бивни мамонта, фото Ногайска и письма с фронта. Это дом, где каждый экспонат шепчет свою историю.",
+"Лиманы у города — это солёные озёра с целебной грязью. Их берега облюбовали цапли и лебеди, нередко попадающие в объективы фотокамер.",
+"Азовское море у Приморска мелкое и тёплое, его дно — песок и ракушечник. Летом вода напоминает парное молоко, а осенью становится свинцовой, как кольчуга."
+][Math.floor(Math.random()*7)];
 </script>
 </body>
 </html>
