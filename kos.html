@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Приморск · Бой у косы</title>
+    <style>
+        /* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ (темы подключаются позже) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* цвета эпох и акценты (не зависят от темы) */
+            --imperial: #f9c35c;
+            --soviet: #ff5e7c;
+            --modern: #4a9eff;
+            --accent: #b1b3b3;
+            
+            /* системные цвета – будут меняться */
+            --bg: #0a0c0f;
+            --card: rgba(255,255,255,0.02);
+            --text: #f0f4fa;
+            --text-dim: #a8b3cf;
+            --border: rgba(255,255,255,0.05);
+            --spacing: 1.5rem;
+            --logo-color: #d8dde5;
+        }
+
+        /* Светлая тема */
+        body.light {
+            --bg: #eef2f6;
+            --card: #ffffff;
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0,0,0,0.08);
+            --logo-color: #2d3748;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            position: relative;
+            overflow-x: hidden;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
+        .background-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.2;
+        }
+
+        .decor-item {
+            position: absolute;
+            color: var(--accent);
+            font-size: 2rem;
+            filter: drop-shadow(0 0 5px rgba(177, 179, 179, 0.3));
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .decor-item::before {
+            content: "🏴‍☠️";
+        }
+
+        .decor-item.star::before {
+            content: "⛵️";
+        }
+
+        .decor-item.gear::before {
+            content: "⚓️";
+        }
+
+        .decor-item.wheat::before {
+            content: "💥";
+        }
+
+        .decor-item.sickle::before {
+            content: "🌊";
+        }
+
+        .decor-1 { top: 15%; left: 2%; animation-delay: 0s; font-size: 2.5rem; }
+        .decor-2 { top: 15%; right: 3%; animation-delay: 3s; font-size: 2rem; }
+        .decor-3 { bottom: 10%; left: 5%; animation-delay: 1s; font-size: 3rem; }
+        .decor-4 { top: 40%; right: 5%; animation-delay: 5s; font-size: 2.2rem; }
+        .decor-5 { bottom: 30%; left: 2%; animation-delay: 2s; font-size: 2.8rem; }
+        .decor-6 { top: 70%; right: 2%; animation-delay: 4s; font-size: 2.4rem; }
+        .decor-7 { bottom: 5%; right: 8%; animation-delay: 6s; font-size: 2.6rem; }
+        .decor-8 { top: 85%; left: 10%; animation-delay: 2.5s; font-size: 2rem; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            75% { transform: translateY(10px) rotate(-5deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .site-header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+            transition: border-color 0.2s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--logo-color);
+            transition: color 0.2s ease;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            color: var(--text);
+            background-color: var(--card);
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
+        }
+
+        .tag {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        body.light .tag {
+            background: rgba(0,0,0,0.02);
+        }
+        .tag:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .compact-card {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        .card:nth-child(7) { animation-delay: 0.7s; }
+        .card:nth-child(8) { animation-delay: 0.8s; }
+        .compact-card:nth-child(1) { animation-delay: 0.9s; }
+        .compact-card:nth-child(2) { animation-delay: 1.0s; }
+        .compact-card:nth-child(3) { animation-delay: 1.1s; }
+        .compact-card:nth-child(4) { animation-delay: 1.2s; }
+
+        /* ===== КАРТОЧКИ ===== */
+        .card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        body.light .card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-title {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+
+        .card-date {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.02);
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+        }
+        body.light .card-date {
+            background: rgba(0,0,0,0.02);
+        }
+
+        .card-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 20px;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            margin: 1rem 0;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card-text {
+            color: var(--text-dim);
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            flex-wrap: wrap;
+        }
+
+        /* компактная карточка */
+        .compact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .compact-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        .compact-card .card-image {
+            margin: 0 0 0.75rem 0;
+            aspect-ratio: 4/3;
+        }
+
+        .compact-card .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .compact-card .card-date {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            display: inline-block;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .site-footer {
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* ===== МОДАЛКА ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 1rem; right: 1rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            opacity: 0.7;
+            background: none;
+            border: none;
+            z-index: 1001;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* ===== МОБИЛКИ ===== */
+        @media (max-width: 600px) {
+            .card {
+                padding: 1.2rem;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .compact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .compact-card .card-image {
+                aspect-ratio: 16/9;
+            }
+
+            .decor-item {
+                opacity: 0.1;
+                font-size: 1.5rem;
+            }
+            
+            .header-right {
+                gap: 0.5rem;
+            }
+            
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- фоновые декоративные элементы -->
+    <div class="background-decor">
+        <div class="decor-item wheat decor-1"></div>
+        <div class="decor-item star decor-2"></div>
+        <div class="decor-item gear decor-3"></div>
+        <div class="decor-item wheat decor-4"></div>
+        <div class="decor-item sickle decor-5"></div>
+        <div class="decor-item star decor-6"></div>
+        <div class="decor-item gear decor-7"></div>
+        <div class="decor-item wheat decor-8"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="logo">Бой у Обиточной косы</div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+                </button>
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- 1. о косе -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Обиточная коса</div>
+            </div>
+            <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/gS8qT6cx56eiUEKigwIrFdfFd2XagqOCYcA5ErtcF.png');" onclick="openModal(this)"></div>
+            <div class="card-text">
+                Речь идёт о низкой травянистой косе на севере Азовского моря. Она сложена песком и ракушечником, которые нанесла река Обиточная. Коса вдаётся в море на 30 километров, разделяя Обиточный и Бердянский заливы, Обиточный залив она окаймляет с востока. Западный берег косы изрезан бухтами, а напротив его средней части находятся несколько островов, заросших камышом. Дно в этих местах песчано-ракушечное.
+            </div>
+        </div>
+
+        <!-- 2. бой -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Бой у Обиточной косы</div>
+                <div class="card-date">📅 15 сентября 1920</div>
+            </div>
+            <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/gv6pvvxxWZXk7KwiQGCTJaalPdrIokh1RRMNKj8fE.png');" onclick="openModal(this)"></div>
+            <div class="card-text">
+                    Именно здесь состоялось морское сражение периода Гражданской войны между кораблями красной и белой флотилий 15 сентября 1920 года. Красная Азовская военная флотилия во главе с командующим С. А. Хвицким насчитывала 4 канонерки и 3 катера. С задачей атаковать противника, обстрелявшего Бердянск, вышла из Мариуполя. Белая флотилия под командованием Б. В. Карпова включала 2 канонерки, 2 вооруженных ледокола, миноносец, тральщик и катер.
+            </div>
+        </div>
+
+        <!-- 3. бой -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Ход сражения</div>
+            </div>
+            <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/gKK7Yywx3qzyqAFeKoHSeTWdNoyhzzH8RMYOD56p4.png');" onclick="openModal(this)"></div>
+            <div class="card-text">
+                На первом этапе красная флотилия атаковала белых, но у большинства её кораблей сразу заклинило орудия. Белые контратаковали двумя канонерками, расстроили строй красных и заставили их отступать. Преследование прекратилось из-за поломки орудия у белых. Затем к середине дня белые, получив подкрепление, догнали красную флотилию в открытом море, и после перестрелки на дальней дистанции им удалось повредить красный судно «Знамя социализма». Однако затем красные добились успеха, тяжело повредив и потопив белую канонерку «Салгир». У белых закончились снаряды, они совершили манёвр и ушли к Керчи, а красные, не сумев их догнать, повернули к Мариуполю.
+            </div>
+        </div>
+
+        <!-- 4. значение -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Значение</div>
+            </div>
+            <div class="card-text">
+                Обе стороны объявили себя победителями. Белые защитили транспортные корабли в районе Геническа, снабжавшие Крым зерном. Красные получили преимущество на Азовском море, лишив поддержки с моря наступавшую на Донбасс Белую армию. «Андреевский флаг в последний раз гордо развевался среди грохота неприятельских снарядов и боевого дыма верных России кораблей, — писал командующий Карпов. — Но верим и страстно желаем, чтобы он снова взвился и под своей сенью повёл бы нас, русских моряков, на освобождение Родины».
+            </div>
+        </div>
+
+
+
+
+
+        <!-- 8. Компактная сетка для четырёх фото -->
+        <div style="margin-bottom: 1rem;">
+            <h3 style="margin-bottom: 1rem; font-weight: bold; color: var(--text); font-size: 1.5rem;">Кадры истории</h3>
+            <div class="compact-grid">
+                <div class="compact-card">
+                    <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/g4F9vuXxDCGmnWj1zcvwSKQ5HOuKLN8zEh8fbbQcm.png');" onclick="openModal(this)"></div>
+                    <div class="card-title">Коса Обиточная на карте</div>
+                </div>
+                <div class="compact-card">
+                    <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/g0f8rEpxGMGdnlSL9Cv4cq1AteMD8v0lumH2OSukc.png');" onclick="openModal(this)"></div>
+                    <div class="card-title">Книга "Бой у косы обиточной" Г.А.Бутаков</div>
+                </div>
+                <div class="compact-card">
+                    <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/gXBXOVgxb7Cb1QcdqF5BKYqgTRaeOhQyRk2VNRWqg.png');" onclick="openModal(this)"></div>
+                    <div class="card-title">Медведев Василий Федорович, участник боя у Обиточной косы</div>
+                </div>
+                <div class="compact-card">
+                    <div class="card-image" style="background-image: url('https://s10.iimage.su/s/07/gvaz7PcxdAly4ln57zb8HCUVh38FqQ6mmkd3dN1Cw.png');" onclick="openModal(this)"></div>
+                    <div class="card-title">Участники боя у косы Обиточной 15.09.1920 г. Лужанский Е. И., Тычкин А., Крючков П. Н., Полтавский Л. А., Полеуген А. П., Медведе В. Ф. Н. Макушенко. 1960г.</div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+            <div class="header-right">
+                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            </div>
+
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div>ПРИМОРСК · QR</div>
+            <div>Запорожская обл.</div>
+        </div>
+    </footer>
+
+    <!-- модалка -->
+    <div class="modal" id="modal" onclick="closeModal()">
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImg" src="">
+        </div>
+    </div>
+
+    <script>
+        // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+
+            // определение системной темы
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            // установка темы
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                    themeIcon.alt = 'Светлая тема';
+                } else {
+                    body.classList.remove('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                    themeIcon.alt = 'Тёмная тема';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            // инициализация
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            // переключение по клику
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            // слушаем изменение системной темы
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
+        // ===== МОДАЛКА =====
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(el) {
+            modal.classList.add('active');
+            const bg = el.style.backgroundImage;
+            const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+            if (match && match[1]) {
+                modalImg.src = match[1];
+            }
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.openModal = openModal;
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        window.closeModal = closeModal;
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // наблюдатель для анимации при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .compact-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
