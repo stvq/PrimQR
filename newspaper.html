@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Приморск · Ракурс Эпохи</title>
+    <title>Приморск · Между строк</title>
     <style>
+        /* ===== ОСНОВА ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,12 +14,23 @@
 
         :root {
             --bg: #0a0c0f;
-            --card: #14181f;
+            --card: rgba(255, 255, 255, 0.02);
             --text: #f0f4fa;
             --text-dim: #a8b3cf;
             --accent: #b1b3b3;
-            --border: rgba(255,255,255,0.05);
-            --spacing: 1.5rem;
+            --border: rgba(255, 255, 255, 0.05);
+            --logo-color: #d8dde5;
+            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        body.light {
+            --bg: #eef2f6;
+            --card: rgba(255, 255, 255, 0.02);
+            --text: #1a1e24;
+            --text-dim: #3f4a5c;
+            --border: rgba(0, 0, 0, 0.05);
+            --logo-color: #2d3748;
+            --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -26,11 +38,19 @@
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.5;
-            position: relative;
+            transition: background-color 0.2s ease;
             overflow-x: hidden;
         }
 
-        /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ===== */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== ДЕКОР ===== */
         .background-decor {
             position: fixed;
             top: 0;
@@ -50,14 +70,15 @@
             animation: float 20s infinite ease-in-out;
         }
 
-        .decor-item.city1::before { content: "🏛️"; }  /* Старое здание */
-        .decor-item.city2::before { content: "🏢"; }  /* Новостройка */
-        .decor-item.city3::before { content: "🕰️"; }  /* Часы */
-        .decor-item.city4::before { content: "📻"; }  /* Радиола/прошлое */
-        .decor-item.city5::before { content: "📸"; }  /* Фотоаппарат */
-        .decor-item.city6::before { content: "⚽️"; }  /* Светофор */
-        .decor-item.city7::before { content: "🌳"; }  /* Дерево */
-        .decor-item.city8::before { content: "🏘️"; }  /* Дома */
+        .decor-item::before { content: "🏛️"; }
+        .decor-item.city1::before { content: "🏛️"; }
+        .decor-item.city2::before { content: "🕍"; }
+        .decor-item.city3::before { content: "🕰️"; }
+        .decor-item.city4::before { content: "🏡"; }
+        .decor-item.city5::before { content: "🌳"; }
+        .decor-item.city6::before { content: "🗝️"; }
+        .decor-item.city7::before { content: "📜"; }
+        .decor-item.city8::before { content: "🏘️"; }
 
         .decor-1 { top: 10%; left: 1%; animation-delay: 0s; font-size: 2.5rem; }
         .decor-2 { top: 20%; right: 2%; animation-delay: 2s; font-size: 2rem; }
@@ -74,30 +95,15 @@
             75% { transform: translateY(10px) rotate(-3deg); }
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* шапка */
+        /* ===== ШАПКА ===== */
         .site-header {
-            padding: 1.5rem 0;
+            padding: 1.2rem 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .tag {
-            background: rgba(255,255,255,0.03);
-            padding: 0.3rem 1rem;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            border: 1px solid var(--border);
-            color: var(--text-dim);
+            backdrop-filter: blur(10px);
+            background: var(--card);
+            top: 0;
+            z-index: 100;
         }
 
         .header-content {
@@ -105,33 +111,69 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
         .logo {
             font-size: 1.8rem;
-            font-weight: bold;
-            color: #d8dde5;
+            font-weight: 600;
+            color: var(--logo-color);
+            letter-spacing: -0.5px;
         }
 
         .logo span {
             color: var(--accent);
         }
 
-        .nav-link {
-            background: rgba(255,255,255,0.03);
-            padding: 0.3rem 1rem;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            color: var(--text);
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { 
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .theme-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: scale(1.1);
+        }
+
+        .back-link {
+            background: var(--card);
+            padding: 0.4rem 1.2rem;
             border-radius: 100px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             border: 1px solid var(--border);
             color: var(--text-dim);
             cursor: pointer;
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
-        .nav-link:hover {
-            background: rgba(255,255,255,0.08);
-            color: #fff;
+        .back-link:hover {
+            color: var(--text);
+            transform: scale(1.02);
         }
 
         /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
@@ -146,99 +188,84 @@
             }
         }
 
-        .comparison-card, .text-block {
+        .section-card, .photo-pair, .text-block, .mini-card {
             animation: fadeUp 0.6s ease-out forwards;
             opacity: 0;
         }
 
-        /* ===== ОСНОВНОЙ БЛОК СРАВНЕНИЯ ===== */
-        .comparison-card {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 1.8rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
+        .section-card:nth-child(1) { animation-delay: 0.1s; }
+        .section-card:nth-child(2) { animation-delay: 0.2s; }
 
-        .comparison-title {
+        /* ===== ЗАГОЛОВКИ ===== */
+        h2 {
             font-size: 2rem;
-            font-weight: bold;
-            color: #d0d6e0;
+            font-weight: 600;
+            color: var(--text);
             letter-spacing: -0.5px;
-            margin-bottom: 1.5rem;
-            padding-left: 1rem;
+            margin: 2.5rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
         }
 
+        h3 {
+            color: var(--text);
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        /* ===== БЛОКИ С ФОТО ===== */
         .photo-pair {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .photo-item {
             width: 100%;
             aspect-ratio: 4/3;
-            background-size: cover;
-            background-position: center;
+            background-size: cover !important;
+            background-position: center !important;
             cursor: pointer;
-            transition: 0.3s;
+            transition: transform 0.3s ease;
             border-radius: 16px;
-            margin-top: 0.2rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
+
         .photo-item:hover {
-            border-color: var(--accent);
             transform: scale(1.01);
         }
 
         .photo-label {
-            background: rgba(10, 12, 15, 0.7);
+            position: absolute;
+            top: 0.8rem;
+            left: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
-            color: var(--text-dim);
+            color: #fff;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 0.3rem 0.8rem;
-            display: inline-block;
             border-radius: 30px;
-            margin: 0.8rem 0 0.2rem 0.8rem;
             border: 1px solid var(--border);
+            z-index: 2;
         }
 
-        .photo-image {
-            width: 100%;
-            aspect-ratio: 4/3;
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 16px;
-            margin-top: 0.2rem;
-        }
-        .photo-image:hover {
-            opacity: 0.9;
-        }
-
-        .photo-caption {
-            padding: 0.8rem 1rem 1rem 1rem;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            border-top: 1px solid var(--border);
-            margin-top: 0.2rem;
-        }
-
-        /* текстовый блок (общий для пары) */
+        /* ===== ТЕКСТОВЫЕ БЛОКИ ===== */
         .text-block {
-            margin-top: 15px;
-            margin-bottom: 30px;
-            background: rgba(255,255,255,0.02);
+            margin-bottom: 15px;
+            background: var(--card);
             border-radius: 24px;
             padding: 1.8rem;
-            margin: 1rem 0 1.5rem 0;
             border: 1px solid var(--border);
             font-size: 1.05rem;
-            color: #d3d9e6;
+            color: var(--text-dim);
+            backdrop-filter: blur(4px);
+            box-shadow: var(--card-shadow);
+            line-height: 1.7;
         }
 
         .text-block p {
@@ -249,8 +276,7 @@
         }
 
         .block-footer {
-            margin-top: 3rem;
-            margin-bottom: 2.7rem;
+            margin: 2rem 0 1rem;
             color: var(--text-dim);
             font-size: 0.9rem;
             display: flex;
@@ -260,41 +286,51 @@
             padding-top: 1rem;
         }
 
-        /* дополнительные карточки (по желанию) */
+        /* ===== МИНИ-ГАЛЕРЕЯ ===== */
         .mini-gallery {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             margin: 2rem 0;
         }
+
         .mini-card {
             background: var(--card);
             border-radius: 20px;
             padding: 1rem;
             border: 1px solid var(--border);
-            opacity: 0;
-            animation: fadeUp 0.6s ease-out forwards;
+            backdrop-filter: blur(4px);
+            transition: transform 0.3s ease;
         }
+        .mini-card:hover {
+            transform: scale(1.01);
+        }
+
         .mini-card .photo-image {
+            width: 100%;
             aspect-ratio: 4/3;
+            background-size: cover !important;
+            background-position: center !important;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 1px solid var(--border);
             margin-bottom: 0.5rem;
         }
         .mini-card .card-title {
             font-weight: 500;
             margin-bottom: 0.2rem;
+            color: var(--text);
         }
         .mini-card .card-date {
             font-size: 0.75rem;
             color: var(--text-dim);
         }
 
-        /* футер */
+        /* ===== ФУТЕР ===== */
         .site-footer {
             padding: 2rem 0;
             margin-top: 3rem;
             border-top: 1px solid var(--border);
-            position: relative;
-            z-index: 2;
         }
 
         .footer-content {
@@ -306,7 +342,7 @@
             gap: 1rem;
         }
 
-        /* модалка */
+        /* ===== МОДАЛКА ===== */
         .modal {
             display: none;
             position: fixed;
@@ -347,23 +383,47 @@
         }
         .modal-close:hover { opacity: 1; color: var(--accent); }
 
-        @media (max-width: 600px) {
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
             .photo-pair {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            .comparison-title {
+            
+            h2 {
                 font-size: 1.6rem;
             }
+            
             .mini-gallery {
                 grid-template-columns: 1fr;
             }
-            .decor-item { opacity: 0.1; font-size: 1.5rem; }
+            
+            .decor-item {
+                opacity: 0.1;
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .text-block {
+                padding: 1.4rem;
+            }
+
+            .theme-toggle {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- фоновые элементы (городская тематика) -->
+    <!-- Фоновые элементы (городская тематика) -->
     <div class="background-decor">
         <div class="decor-item city1 decor-1"></div>
         <div class="decor-item city2 decor-2"></div>
@@ -375,316 +435,213 @@
         <div class="decor-item city8 decor-8"></div>
     </div>
 
+    <!-- Шапка -->
     <header class="site-header">
         <div class="container header-content">
-            <div class="logo">ПРИМОРСК <span>·</span> Ракурс Эпохи</div>
-            <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'" style="cursor: pointer;">← НАЗАД</div>
+            <div class="logo">МЕЖДУ СТРОК</div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                    <img src="https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png" alt="Тёмная тема" class="theme-icon" id="themeIcon">
+                </button>
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НАЗАД</div>
+            </div>
         </div>
     </header>
 
     <main class="container">
-
-
-
-            <!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/goFXZMExWMs6EcTcSp1ZFiw8EsGvLovyRNBXREzYD.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <!-- Вступительный блок -->
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gWhrfY5xU46LGmC6cASkyPuaNX2pfaPC6QgQBDZQL.jpg');" onclick="openModal(this)">
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
             <div class="text-block">
-Дом культуры
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+                <p>В этой статье мы рассмотрим подлинные исторические источники и «между строк» заглянем в историю нашего уютного города. Как известно, в начале XX века в тогда ещё Ногайске открылись ремесленное училище и женская гимназия. Выпускники этих учебных заведений получали аттестаты. Например, окончившая гимназию с золотой медалью Валентина Николаенок получила право быть домашней наставницей по русскому языку и математике.</p>
             </div>
         </div>
 
-
-            <!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gjae8jfxdA6zgJhGaSTG3yJ0CNihKhQpVCvYz5Sa4.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gAfsEFbxq569WtHyVVeGkv3EuGMQUe2b8MpzTM2Mh.jpg');" onclick="openModal(this)">
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Общий вид здания районного государственной администрации
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gPHMKmOxTARttyMtAEJUXyZ8zA7vebp6w14b07fEV.jpg');" onclick="openModal(this)">
             </div>
         </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gPJPzkdxBzUA3DuSJl6WoiRS2Z6NJDtDLZH4jJ3Jh.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Парк. Памятник Первому Ногайскому Совету
-            </div>
+        <!-- блок -->
+        <h2>Дореволюционные деньги</h2>
 
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+        <div class="text-block">
+            <p>Как известно, в Приморске сохранилось несколько купеческих зданий. Однако, говоря о купечестве, прежде всего на ум приходят деньги. Дореволюционные деньги сочетали в себе имперское изящество и практичность: их легко различали по цветам и размерам — от компактных синих «пятерок» до огромных «петенек» (500 рублей) величиной с тетрадный лист. На бумаге красовались сложные гравюры и портреты царей, а в кошельках звенела весомая медь, серебро и статусные золотые червонцы. Это была эпоха «золотого стандарта», когда каждый рубль обладал реальной тяжестью драгоценного металла и художественной ценностью.</p>
+        </div>
+
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gv50MR5x87TBd9AjY799oCaj7yFK9y2SatXKMbYp2.png');" onclick="openModal(this)">
+            </div>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gi4n3B5xQt9PoV2P2YCzJ4WB4M12wPi8Vl5hKSMIM.png');" onclick="openModal(this)">
+            </div>
+        </div>
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gNkE70XxRUW1jX0BJkBUGnzBzYbomA2RKk87orbNV.png');" onclick="openModal(this)">
+            </div>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gbrfaCmxId48gnFMepsYIdrVWQ7cmE9az28SC02yB.png');" onclick="openModal(this)">
             </div>
         </div>
 
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gxGZepRx931PlmiuFzKBdueLkagYZX1mnGDnYphSo.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+<div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gcxqklHxOrNZlRYClSGW9jF6tN4S8sWF0EdLUEfyo.png');" onclick="openModal(this)">
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Районный Дом быта, г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gDpZov1xCAmkUY97MXqRNQuho7TI5oTLjdLVfLwS6.png');" onclick="openModal(this)">
             </div>
         </div>
 
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gsYNXXQx0HMTdDC0djHYnMoXAUcCCRD7vgkYWPzQN.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Автовокзал г. Приморск
-            </div>
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+        <!-- печать -->
+        <h2>Печать в революцию</h2>
+
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gkF2SNXxRugROAv5y067kfTLkbPu2meMNDzuGC8ET.png');" onclick="openModal(this)">
+            </div>
+            <div class="text-block">
+                <p>События Октябрьской революции нашли живой отклик в Ногайске: по всему городу распространялись листовки и декреты советской власти. Несмотря на трагическую судьбу первого Ногайского совета, красным удалось отбить регион сначала у деникинцев, а позже и у врангелевцев. Советская эпоха оставила после себя огромное количество письменных исторических источников, детально запечатлевших эти перемены.</p>
             </div>
         </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
+        <!-- Храмы -->
+        <h2>Красное приморье</h2>
 
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/g2f6DmUxdFDlzdPwEYLCEoJKQLbLJcNmIivhLBIj2.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="photo-pair">
             <div class="text-block">
-Гостиница "Южная", г. Приморск
+                <p>В советской прессе нередко печатались статьи о передовиках социалистического производства, первопроходцах революции, деятелях искусства и других выдающихся личностях. В одной из таких заметок под названием «Они были первыми» рассказывается о создании в Ногайске ячейки коммунистической молодёжной организации.</p>
             </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gYEaJ37x5wPJzw80gjkWKDWdWRKncmVCzc1PIVwlD.png');" onclick="openModal(this)">
             </div>
         </div>
 
-
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/g5ZnFcTxSzUNdX1k0esATzyeyNuKdWuDGzOEv7RB1.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="photo-pair">
             <div class="text-block">
-Районный узел связи.
+                <p>Издание газеты «Красное Приморье» в Ногайске началось к концу 1930-х годов. Ветхие экземпляры её страниц до сих пор хранятся в краеведческом музее. Трудовые успехи, выборы в местные органы власти, важные объявления и поздравления с праздниками, народное творчество, статьи о происходящем в мире, активная пропаганда социализма — всё это ключевые темы газеты.</p>
             </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gAHYUgzxHQA91TH9ZTRHQBz79YrawyYJdpKozsLhr.jpg');" onclick="openModal(this)">
             </div>
         </div>
 
-
-
-
-
-
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gSzPPT4x8UB2QQFyZ7Ldo2tApunaj5cE2SNy0JJrL.jpg');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="photo-pair">
             <div class="text-block">
-Олимпиец стадион
+                <p>Помимо трудовых успехов, в «Красном Приморье» порицались халатность и безответственность отдельных колхозов и управленцев. Это было неотъемлемой частью социалистического соревнования. Нередко встречаются заметки, где очередной колхоз обвиняется в отсутствии борьбы за высокий урожай или в медленной заготовке удобрений. Или осуждаются прогулы старого тракториста Ротарева.</p>
             </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gKRoNYuxO1ay2F3EPG8UMID2hNm5r7dh9uZEdktvz.jpg');" onclick="openModal(this)">
             </div>
         </div>
 
-
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/glKtlXEx6VhcZrkacAwfY68fjqgCY2bPqGs3lYQaa.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
+        <div class="photo-pair">
             <div class="text-block">
-Детский сад "Сказка". г. Приморск
+                <p>Страницы газет пестрели сводками о сборе хлопка: передовики района становились на «стахановскую вахту», чтобы встретить очередную годовщину Октября сверхплановым урожаем. Ход соревнований сопровождался активной агитацией, ведь выполнение нормы считалось обязательством колхозов перед государством. Также в прессе тех лет часто упоминались лесопосадки и другие примеры сельскохозяйственного новаторства.</p>
             </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gR98sIgxf1PZJAgOPVVSQVzfIPlSfh9QgiASKoHvi.jpg');" onclick="openModal(this)">
+            </div>
+        </div>
+        <div class="photo-pair">
+            <div class="text-block">
+                <p>В газетах того времени находилось место для юмора и, как бы сейчас сказали, мемов. Сатирическая подборка «Приморский перец» неизменно поднимала настроение, а мишенью для иронии становились всё те же нерадивые руководители колхозов. Порой такое высмеивание приносило реальные плоды: так, после очередного памфлета руководство колхоза «Большевик» наконец-то занялось ремонтом клуба в селе Зеленовка.</p>
+            </div>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gIp49cIx2tnS4pJvzRoq8bay5s05C0Avr8cqpoVSU.jpg');" onclick="openModal(this)">
             </div>
         </div>
 
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gZAc0V8xi5A0OjRnQiODjPkraXHAAZpOrB2V91CRf.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
-            </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Строительство корпусов Центральной районной больницы, г. Приморск
-            </div>
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+        <!-- деньги -->
+        <h2>Советские рубли</h2>
+
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gEHcEqsxmXwbCzRbTfSorkpEASr4iGc3a7e41XqTr.png');" onclick="openModal(this)">
+            </div>
+            <div class="text-block">
+                <p>Их главной особенностью была четкая цветовая кодировка: зеленые «трешки», синие «пятерки» и красные «червонцы». На крупных билетах Госбанка неизменно печатался профиль Ленина, а сами деньги имели классический вид с тонкими графическими узорами. Такая система делала бумажные деньги узнаваемыми и символизировала финансовый порядок огромной страны.</p>
             </div>
         </div>
 
-
-<!-- Пара фото: 1980-е и сейчас -->
-            <div class="photo-pair">
-                <!-- 1980-е -->
-                <div class="photo-item" class="photo-image" style="background-image: url('https://s10.iimage.su/s/09/gFWWRfJxNgvjRn0PduS83NpVtH5muatsBkzY7N5BA.png');" onclick="openModal(this)">
-                    <span class="photo-label">📷 1980</span>
-                </div>
-                <!-- сейчас -->
-                <div class="photo-item" class="photo-image" style="background-image: url('ссылка');" onclick="openModal(this)">
-                    <span class="photo-label">📷 2026</span>
-                </div>
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gfWW6ujxwnoJJ3SMC5cFz80KN0vDz4qTgdkzu0iYU.png');" onclick="openModal(this)">
             </div>
-            <!-- Единый блок текста (сравнение, история, изменения) -->
-            <div class="text-block">
-Ногайский совхоз-техникум, г. Приморск
-            </div>
-
-            <div class="block-footer">
-                <span></span>
-                <span></span>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gKx7SVWxe9sR0a43Iwi4ULfJGaBob0A1OIlDRvla5.png');" onclick="openModal(this)">
             </div>
         </div>
 
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
 
+        <!-- Степь -->
+        <h2>Приморская степь</h2>
 
-
-
-
-        <!-- Мини-галерея для дополнительных кадров (опционально) -->
-        <h3 style="color: #d0d6e0; margin: 2rem 0 1rem; font-size: 1.5rem;">Ещё кадры города</h3>
-        <div class="mini-gallery">
-            <div class="mini-card">
-                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%A2%D1%80%D0%B0%D0%BC%D0%B2%D0%B0%D0%B9');" onclick="openModal(this)"></div>
-                <div class="card-title">Текст текст</div>
-                <div class="card-date">📅 1982</div>
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gNZIYXSx3VTzsGSDJl4PKZ4jvSNTs0TG57cjQqg2c.jpg');" onclick="openModal(this)">
             </div>
-            <div class="mini-card">
-                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%9F%D0%B0%D1%80%D0%BA');" onclick="openModal(this)"></div>
-                <div class="card-title">Текст текст</div>
-                <div class="card-date">📅 1988</div>
+            <div class="text-block">
+                <p>С 1962 года газета районного комитета партии стала называться «Приморская степь». На протяжении многих десятилетий издание вело летопись жизни района и, в соответствии с реалиями тех лет, служило мощным инструментом идеологического воздействия. Доверие жителей к газете было чрезвычайно высоким: это стало закономерным следствием того, что ни одна критическая публикация не оставалась без внимания властей. Над авторитетом издания работали многие талантливые журналисты.</p>
             </div>
-            <div class="mini-card">
-                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%9C%D0%BE%D1%81%D1%82');" onclick="openModal(this)"></div>
-                <div class="card-title">Текст текст</div>
-                <div class="card-date">📅 1984</div>
+        </div>
+
+        <div class="block-footer">
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- блок -->
+        <h2>Награды и медали</h2>
+
+        <div class="text-block">
+            <p>Советское государство никогда не скупилось на награды: почетные грамоты вручались как отдельным гражданам, отличившимся своим трудом, так и целым коллективам. С той эпохи сохранилось и множество орденов и медалей — безмолвных свидетелей личных и общих достижений. Все они бережно хранят память о трудовых, военных и культурных подвигах нашего народа. Эти реликвии, передаваемые из поколения в поколение, сегодня служат напоминанием о самоотверженности и несгибаемой воле предков. В каждой такой награде заключена история человека, чьи усилия заложили фундамент будущего нашей страны.</p>
+        </div>
+
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/g4jP51qx2X3r6Fc8cvPzzWXu0ljOsJXscAXsa7RmL.png');" onclick="openModal(this)">
             </div>
-            <div class="mini-card">
-                <div class="photo-image" style="background-image: url('https://via.placeholder.com/500x400/1e232b/ffffff?text=%D0%A6%D0%B8%D1%80%D0%BA');" onclick="openModal(this)"></div>
-                <div class="card-title">Текст текст</div>
-                <div class="card-date">📅 1987</div>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gTDaJXpxisIK69upBI0SuDrdKJSpTLZig9Rva8RjR.png');" onclick="openModal(this)">
             </div>
+        </div>
+        <div class="photo-pair">
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/gWqPo9MxU2HNjTlSfCXMZM4Kw59fdQHwzjuiokLdi.png');" onclick="openModal(this)">
+            </div>
+            <div class="photo-item" style="background-image: url('https://s10.iimage.su/s/07/g2La8G9xIUcZA1t8PLqLmDt3ySK7FF5QvmAXN7as9.png');" onclick="openModal(this)">
+            </div>
+        </div>
+
+        
+
+            <div class="header-actions">
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            </div>
+
         </div>
     </main>
 
+    <!-- Футер -->
     <footer class="site-footer">
         <div class="container footer-content">
-            <div>ПРИМОРСК · ИСТОРИЯ В ФОТОГРАФИЯХ</div>
+            <div>НОГАЙСКЪ · ИСТОРИЯ В ФОТОГРАФИЯХ</div>
             <div></div>
         </div>
     </footer>
 
-    <!-- модалка (увеличение фото) -->
+    <!-- Модалка (увеличение фото) -->
     <div class="modal" id="modal" onclick="closeModal()">
         <span class="modal-close">&times;</span>
         <div class="modal-content">
@@ -693,6 +650,47 @@
     </div>
 
     <script>
+        // Переключение темы
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+
+            const getSystemTheme = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    body.classList.add('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/gFhUTyWxtYN0Sqe2terHfvFzcUgt82SaRZoB9gt8S.png';
+                    themeIcon.alt = 'Светлая тема';
+                } else {
+                    body.classList.remove('light');
+                    themeIcon.src = 'https://s10.iimage.su/s/15/g2GXzVjx0Cm9kT1W8wVO7sf1kJywheRTaTtG0C4w0.png';
+                    themeIcon.alt = 'Тёмная тема';
+                }
+                localStorage.setItem('theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(getSystemTheme());
+            }
+
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.classList.contains('light');
+                setTheme(isLight ? 'dark' : 'light');
+            });
+
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'light' : 'dark');
+                }
+            });
+        })();
+
+        // Модалка для изображений
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modalImg');
 
@@ -702,9 +700,6 @@
             const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
             if (match && match[1]) {
                 modalImg.src = match[1];
-            } else {
-                // fallback для placeholder / если через url не получилось
-                modalImg.src = 'https://via.placeholder.com/1200x800?text=Photo';
             }
             document.body.style.overflow = 'hidden';
         }
@@ -716,21 +711,20 @@
         }
         window.closeModal = closeModal;
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
 
-        // Наблюдатель для анимаций (на случай подгрузки)
+        // Наблюдатель для анимации появления
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
                 }
             });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.comparison-card, .text-block, .mini-card').forEach(el => {
+        document.querySelectorAll('.photo-pair, .text-block, .mini-card, .photo-item').forEach(el => {
             observer.observe(el);
         });
     </script>
