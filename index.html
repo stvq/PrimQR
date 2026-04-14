@@ -80,10 +80,9 @@ body {
     left: 0;
     width: 0%;
     height: 3px;
-    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+    background: rgba(0,0,0,0.2);
     z-index: 1000;
     transition: width 0.1s ease;
-    box-shadow: 0 0 20px var(--imperial);
 }
 
 .container {
@@ -98,15 +97,14 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(12px);
-    background: rgba(10, 12, 15, 0.7);
+    background: var(--bg-primary);
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     padding: 1rem 0;
 }
 
 body.light .site-header {
-    background: rgba(238, 242, 246, 0.8);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(230, 230, 250, 1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -1573,8 +1571,8 @@ body.light .nav-close {
                 <h1>ПРИМОРСК</h1>
                 <div class="hero-subtitle">Есть на карте Запорожской области <br>место, где вековая степь подступает <br>к Азовскому морю. Именно здесь,<br> вбирая терпкий аромат полыни и<br> йодистую свежесть лиманов, между<br>полей раскинулся наш уютный город.</div>
                 <div class="hero-stats">
-                    <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">событий</div></div>
-                    <div class="stat-item"><div class="stat-number">30</div><div class="stat-label">личностей</div></div>
+                    <div class="stat-item"><div class="stat-number">74</div><div class="stat-label">событий</div></div>
+                    <div class="stat-item"><div class="stat-number">60</div><div class="stat-label">личностей</div></div>
                     <div class="stat-item"><div class="stat-number">+6</div><div class="stat-label">статей</div></div>
                 </div>
             </div>
@@ -1859,35 +1857,67 @@ body.light .nav-close {
             });
             container.innerHTML = html;
             
-            // Обработчики кликов
-            document.querySelectorAll('.nav-year').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const targetId = el.getAttribute('data-target');
-                    
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        
-                        const era = el.getAttribute('data-era');
-                        let glowColor = '#4DB8FF';
-                        if (era === 'imperial') glowColor = '#c2813a';
-                        if (era === 'soviet') glowColor = '#c95b4b';
-                        
-                        targetElement.style.transition = 'all 0.3s ease';
-                        targetElement.style.background = `rgba(${hexToRgb(glowColor)}, 0.1)`;
-                        targetElement.style.border = `1px solid ${glowColor}`;
-                        setTimeout(() => {
-                            targetElement.style.background = '';
-                            targetElement.style.border = '';
-                        }, 800);
-                    }
-                    
-                    document.querySelectorAll('.nav-year').forEach(nav => nav.classList.remove('active'));
-                    el.classList.add('active');
-                    
-                    
-                });
+            // Обработчики кликов для навигации
+document.querySelectorAll('.nav-year').forEach(el => {
+    el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const targetId = el.getAttribute('data-target');
+        
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            const era = el.getAttribute('data-era');
+            const isLight = document.body.classList.contains('light');
+            
+            // Определяем цвета для разных эпох с учётом темы
+            let glowColor, bgColor;
+            
+            if (era === 'imperial') {
+                if (isLight) {
+                    glowColor = '#5dd124';  // Светлый вариант
+                    bgColor = 'rgba(93, 209, 36, 0.08)';
+                } else {
+                    glowColor = '#c2813a';  // Тёмный вариант
+                    bgColor = 'rgba(194, 129, 58, 0.1)';
+                }
+            } 
+            else if (era === 'soviet') {
+                if (isLight) {
+                    glowColor = '#e83c67';
+                    bgColor = 'rgba(232, 60, 103, 0.08)';
+                } else {
+                    glowColor = '#c95b4b';
+                    bgColor = 'rgba(201, 91, 75, 0.1)';
+                }
+            } 
+            else { // modern
+                if (isLight) {
+                    glowColor = '#3e97d6';
+                    bgColor = 'rgba(62, 151, 214, 0.08)';
+                } else {
+                    glowColor = '#4DB8FF';
+                    bgColor = 'rgba(77, 184, 255, 0.1)';
+                }
+            }
+            
+            // Применяем эффект подсветки
+            targetElement.style.transition = 'all 0.3s ease';
+            targetElement.style.background = bgColor;
+            targetElement.style.border = `1px solid ${glowColor}`;
+            targetElement.style.boxShadow = `0 0 15px ${glowColor}`;
+            
+            setTimeout(() => {
+                targetElement.style.background = '';
+                targetElement.style.border = '';
+                targetElement.style.boxShadow = '';
+            }, 800);
+        }
+        
+        document.querySelectorAll('.nav-year').forEach(nav => nav.classList.remove('active'));
+        el.classList.add('active');
+    });
+
             });
         }
 
