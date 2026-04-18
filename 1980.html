@@ -251,7 +251,7 @@
         .photo-label {
             background: rgba(10, 12, 15, 0.7);
             backdrop-filter: blur(4px);
-            color: var(--text-dim);
+            color: #fff;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -297,6 +297,7 @@
             color: #d3d9e6;
         }
         body.light .text-block {
+            background: rgba(255,255,255,1);
             color: #2d3748;
         }
 
@@ -432,6 +433,33 @@
                 height: 20px;
             }
         }
+
+
+
+
+.header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+.back-link {
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        body.light .back-link {
+            background: rgba(0,0,0,0.02);
+        }
+        .back-link:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
     </style>
 </head>
 <body>
@@ -654,10 +682,6 @@
         </div>
         
 
-        <div class="block-footer">
-            <span></span>
-            <span></span>
-        </div>
 
         <!-- Мини-галерея для дополнительных кадров (опционально) 
         <h3 style="color: var(--text); margin: 2rem 0 1rem; font-size: 1.5rem;">Ещё кадры города</h3>
@@ -690,8 +714,8 @@
 
 -->
 
-<div class="header-right">
-                <div class="tag" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
+            <div class="header-actions">
+                <div class="back-link" onclick="location.href='https://stvq.github.io/PrimQR/index.html'">← НА ГЛАВНУЮ</div>
             </div>
 
     <footer class="site-footer">

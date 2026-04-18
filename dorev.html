@@ -161,19 +161,21 @@
         }
 
         .back-link {
-            background: var(--card);
-            padding: 0.4rem 1.2rem;
+            background: rgba(255,255,255,0.03);
+            padding: 0.3rem 1rem;
             border-radius: 100px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             border: 1px solid var(--border);
             color: var(--text-dim);
             cursor: pointer;
-            text-decoration: none;
             transition: all 0.2s ease;
         }
+        body.light .back-link {
+            background: rgba(0,0,0,0.02);
+        }
         .back-link:hover {
+            border-color: var(--accent);
             color: var(--text);
-            transform: scale(1.02);
         }
 
         /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
@@ -255,17 +257,21 @@
         }
 
         /* ===== ТЕКСТОВЫЕ БЛОКИ ===== */
+        /* текстовый блок (общий для пары) */
         .text-block {
-            margin-bottom: 15px;
-            background: var(--card);
+            margin-top: 15px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.02);
             border-radius: 24px;
             padding: 1.8rem;
+            margin: 1rem 0 1.5rem 0;
             border: 1px solid var(--border);
             font-size: 1.05rem;
-            color: var(--text-dim);
-            backdrop-filter: blur(4px);
-            box-shadow: var(--card-shadow);
-            line-height: 1.7;
+            color: #d3d9e6;
+        }
+        body.light .text-block {
+            background: rgba(255,255,255,1);
+            color: #2d3748;
         }
 
         .text-block p {
@@ -301,6 +307,9 @@
             border: 1px solid var(--border);
             backdrop-filter: blur(4px);
             transition: transform 0.3s ease;
+        }
+        body.light .mini-card {
+            background: rgba(255,255,255,1);
         }
         .mini-card:hover {
             transform: scale(1.01);
