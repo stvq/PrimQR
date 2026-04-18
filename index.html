@@ -230,6 +230,17 @@ body.light .nav-links a:hover {
     position: relative;
     overflow: hidden;
 }
+.hero {
+    padding-top: 0.2rem;
+    min-height: 70vh;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        margin-top: -0.5rem;
+        padding-top: 0;
+    }
+}
 
 .hero-content {
     display: flex;
@@ -963,7 +974,7 @@ div {
 /* Адаптация */
 @media (max-width: 1024px) {
     .hero-content {
-        margin-top: 0rem;
+        margin-top: 0px;
         gap: 2rem;
     }
 
