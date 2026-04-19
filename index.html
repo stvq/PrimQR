@@ -996,6 +996,10 @@ div {
         font-size: 2rem;
     }
 
+.hero {
+        transition: 0.5s;
+    }
+
     .hero h1 {
         text-align: center;  
         font-size: 6rem;
@@ -1112,7 +1116,7 @@ div {
         align-self: center;
         transition: 0.3s;
     }
-    .qr-wrapper.scrolled2 {
+    .hero.scrolled2 {
         transform: scale(1.15);
         opacity: 0.5;
         
@@ -2061,7 +2065,7 @@ document.querySelectorAll('.nav-year').forEach(el => {
 
 window.addEventListener('scroll', () => {
   const element = document.querySelector('.site-header');
-  const element2 = document.querySelector('.qr-wrapper');
+  const element2 = document.querySelector('.hero');
   // Если прокрутка больше 0, добавляем класс, иначе убираем
   if (window.scrollY > 0) {
     element.classList.add('scrolled');
