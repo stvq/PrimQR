@@ -115,7 +115,7 @@ body {
 body.light .site-header {
     background: var(--bg-card);
     backdrop-filter: blur(100px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -1071,7 +1071,7 @@ div {
         align-items: center;
         gap: 0.1rem;
         width: 90%;
-        margin: 0.1rem auto 1.25rem;  /* ← меняем: увеличиваем нижний отступ до QR-кода */
+        margin: 0.1rem auto 1rem;  /* ← меняем: увеличиваем нижний отступ до QR-кода */
         flex-wrap: nowrap;
         margin-left: 1rem;
     }
@@ -1116,8 +1116,16 @@ div {
 .qr-wrapper {
     width: 50%;
     margin: 0 auto;
-    margin-top: 0rem;   /* ← уменьшаем отрицательный отступ, чтобы QR был чуть ниже статистики */
+    margin-top: -0.75rem;   /* ← уменьшаем отрицательный отступ, чтобы QR был чуть ниже статистики */
     align-self: center;
+    background: #06080a;
+    border: 0.5px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+}
+body.light .qr-wrapper {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(100px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
     .section-title {
@@ -1611,7 +1619,6 @@ body.light .nav-close {
                      class="qr-image" 
                      id="qrImage">
             </div>
-            <div class="qr-label">сканируй</div>
         </div>
     </div>
 </section>
