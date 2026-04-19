@@ -1034,20 +1034,22 @@ div {
     .hero h1 {
         text-align: center;
         font-size: 4.25rem;
-        display: inline-block;     /* меняем с block на inline-block */
-        transform: scaleX(0.75);   /* оставляем сжатие */
-        margin-left: 1rem;            /* убираем лишний отступ */
+        display: inline-block;
+        transform: scaleX(0.75);
+        margin-left: 1rem;
         margin-right: 0;
-        width: auto;               /* авто-ширина */
+        margin-bottom: 0.25rem;  /* ← добавляем: уменьшаем отступ до текста */
+        width: auto;
         position: relative;
-        left: 0;                   /* сбрасываем возможные смещения */
+        left: 0;
     }
 
     .hero-subtitle {
         line-height: 1.35;
         font-size: 1rem;
         border-left: none;
-        margin-bottom: 1.2rem;
+        margin-top: 0.2rem;      /* ← добавляем: уменьшаем отступ от заголовка */
+        margin-bottom: 0.75rem;  /* ← уменьшаем: отступ до статистики */
         padding-left: 10px;
         text-align: left;
         max-width: 100%;
@@ -1069,11 +1071,10 @@ div {
         align-items: center;
         gap: 0.2rem;
         width: 90%;
-        margin: 0.1rem auto 0;
+        margin: 0.1rem auto 1.25rem;  /* ← меняем: увеличиваем нижний отступ до QR-кода */
         flex-wrap: nowrap;
         margin-left: 1rem;
     }
-
     .stat-item {
         flex: 1;                    /* все блоки растягиваются одинаково */
         min-width: 0;               /* разрешаем сжатие при необходимости */
@@ -1112,12 +1113,12 @@ div {
     }
 
 
-    .qr-wrapper {
-        width: 50%;  
-        margin: 0 auto;
-        margin-top: -1rem;  
-        align-self: center;  
-    }
+.qr-wrapper {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 0.25rem;   /* ← уменьшаем отрицательный отступ, чтобы QR был чуть ниже статистики */
+    align-self: center;
+}
 
     .section-title {
         font-size: 2rem;
