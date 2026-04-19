@@ -1110,6 +1110,12 @@ div {
         width: 50%;
         margin: 0 auto;
         align-self: center;
+        transition: 0.3s;
+    }
+    .qr-wrapper.scrolled2 {
+        transform: scale(1.15);
+        opacity: 0.5;
+        
     }
 
 
@@ -2055,11 +2061,14 @@ document.querySelectorAll('.nav-year').forEach(el => {
 
 window.addEventListener('scroll', () => {
   const element = document.querySelector('.site-header');
+  const element2 = document.querySelector('.qr-wrapper');
   // Если прокрутка больше 0, добавляем класс, иначе убираем
   if (window.scrollY > 0) {
     element.classList.add('scrolled');
+    element2.classList.add('scrolled2');
   } else {
     element.classList.remove('scrolled');
+    element2.classList.remove('scrolled2');
   }
 });
 </script>
